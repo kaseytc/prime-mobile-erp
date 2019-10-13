@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'erp',
 ]
 
 MIDDLEWARE = [
@@ -74,7 +75,9 @@ WSGI_APPLICATION = 'capstoneproject.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
+    'default': {
 
+    }
 }
 
 

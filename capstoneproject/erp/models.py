@@ -9,9 +9,16 @@ from django.db import models
 
 
 class Accounts(models.Model):
-    acct_id = models.IntegerField(primary_key=True)
+    acct_id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=50, blank=True, null=True)
     pwd = models.CharField(max_length=100, blank=True, null=True)
+
+    #ACCT_TYPE_CHOICES = [
+    #    ('Administrator', 'Administrator'),
+    #    ('Standard', 'Standard'),
+    #]
+
+    # acct_type = models.CharField(max_length=20, blank=True, null=True, choices=ACCT_TYPE_CHOICES)
     acct_type = models.CharField(max_length=20, blank=True, null=True)
     emp = models.ForeignKey('Employees', models.DO_NOTHING)
 
@@ -21,7 +28,7 @@ class Accounts(models.Model):
 
 
 class Customers(models.Model):
-    cust_id = models.IntegerField(primary_key=True)
+    cust_id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, blank=True, null=True)
     lname = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
@@ -39,7 +46,7 @@ class Customers(models.Model):
 
 
 class Employees(models.Model):
-    emp_id = models.IntegerField(primary_key=True)
+    emp_id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, blank=True, null=True)
     lname = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
@@ -59,16 +66,16 @@ class Employees(models.Model):
 
 
 class Inventory(models.Model):
-    inventory_id = models.IntegerField(primary_key=True)
+    inventory_id = models.AutoField(primary_key=True)
     sku = models.CharField(max_length=12)
     make = models.CharField(max_length=50, blank=True, null=True)
     model = models.CharField(max_length=50, blank=True, null=True)
     inv_desc = models.TextField(blank=True, null=True)
-    inv_price = models.TextField(blank=True, null=True)  # This field type is a guess.
-    inv_cost = models.TextField(blank=True, null=True)  # This field type is a guess.
-    quantity = models.IntegerField(blank=True, null=True)
-    bin_aisle = models.IntegerField()
-    bin_bay = models.IntegerField()
+    inv_price = models.DecimalField(max_digits=10, decimal_places=2)
+    inv_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(blank=True, null=True)
+    bin_aisle = models.PositiveIntegerField()
+    bin_bay = models.PositiveIntegerField()
 
     class Meta:
         managed = False
@@ -76,8 +83,15 @@ class Inventory(models.Model):
 
 
 class Invoices(models.Model):
-    invoice_id = models.IntegerField(primary_key=True)
+    invoice_id = models.AutoField(primary_key=True)
     invoice_dt = models.DateTimeField()
+
+    #PAY_TYPE_CHOICES= [
+    #    ('Cash', 'Cash'),
+    #    ('Credit', 'Credit'),
+    #]
+
+    #pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
     pay_type = models.CharField(max_length=10, blank=True, null=True)
     emp = models.ForeignKey(Employees, models.DO_NOTHING)
     invoice_num = models.IntegerField()
@@ -87,13 +101,21 @@ class Invoices(models.Model):
         db_table = 'Invoices'
 
 class Orders(models.Model):
-    order_id = models.IntegerField(primary_key=True)
+    order_id = models.AutoField(primary_key=True)
     order_dt = models.DateTimeField(blank=True, null=True)
+
+    #STATUS_CHOICES= [
+    #    ('Complete', 'Complete'),
+    #    ('Pending', 'Pending'),
+    #]
+
     status = models.CharField(max_length=20, blank=True, null=True)
+    #status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
     cust = models.ForeignKey(Customers, models.DO_NOTHING)
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
-    quantity = models.IntegerField()
+    quantity = models.PositiveIntegerField()
     invoice = models.ForeignKey(Invoices, models.DO_NOTHING)
+    #emp = models.ForeignKey(Employees, models.DO_NOTHING)
 
     class Meta:
         managed = False

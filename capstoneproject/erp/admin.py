@@ -7,6 +7,8 @@ from erp.models import Accounts, Customers, Employees, Inventory, Invoices, Orde
 class AccountAdmin(admin.ModelAdmin):
     model = Accounts
     list_display = ('username', 'acct_type', 'get_name')
+    search_fields = ('acct_type',)
+    ordering = ('acct_id',)
 
     def get_name(self, obj):
         return obj.emp.fname + ' ' + obj.emp.lname
@@ -14,19 +16,27 @@ class AccountAdmin(admin.ModelAdmin):
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('fname', 'lname', 'dob')
+    list_display = ('fname', 'lname')
+    search_fields = ('fname', 'lname')
+    ordering = ('cust_id',)
 
 
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('fname', 'lname', 'title' )
+    list_display = ('fname', 'lname', 'title')
+    search_fields = ('title','fname', 'lname')
+    ordering = ('emp_id',)
 
 
 class InventoryAdmin(admin.ModelAdmin):
     list_display = ('make', 'model', 'bin_bay', 'bin_aisle', 'inv_price', 'quantity')
+    search_fields = ('make',)
+    ordering = ('inventory_id',)
 
 
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = ('invoice_id', 'invoice_dt', 'pay_type', 'invoice_num', 'get_name')
+    search_fields = ('invoice_id', 'invoice_dt')
+    ordering = ('invoice_id',)
 
     def get_name(self, obj):
         return obj.emp.fname + ' ' + obj.emp.lname
@@ -35,6 +45,8 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_id', 'order_dt', 'status', 'quantity', 'get_inventory', 'get_invoice')
+    search_fields = ('order_id', 'order_dt')
+    ordering = ('order_id',)
 
     def get_inventory(self, obj):
         return obj.inventory.make + ' ' + obj.inventory.model

@@ -109,12 +109,12 @@ class Orders(models.Model):
     #    ('Pending', 'Pending'),
     #]
 
+    # status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
     status = models.CharField(max_length=20, blank=True, null=True)
-    #status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
     cust = models.ForeignKey(Customers, models.DO_NOTHING)
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
-    invoice = models.ForeignKey(Invoices, models.DO_NOTHING)
+    invoice = models.ForeignKey(Invoices, models.DO_NOTHING, blank=True)
     #emp = models.ForeignKey(Employees, models.DO_NOTHING)
 
     class Meta:

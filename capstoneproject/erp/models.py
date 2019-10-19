@@ -13,12 +13,13 @@ class Account(models.Model):
     username = models.CharField(max_length=50, blank=True, null=True)
     pwd = models.CharField(max_length=100, blank=True, null=True)
 
-    ACCT_TYPE_CHOICES = [
-        ('ADMIN', 'administrator'),
-        ('STD', 'standard'),
-    ]
+    #ACCT_TYPE_CHOICES = [
+    #    ('ADMIN', 'administrator'),
+    #    ('STD', 'standard'),
+    #]
 
-    acct_type = models.CharField(max_length=20, blank=True, null=True, choices=ACCT_TYPE_CHOICES)
+    #acct_type = models.CharField(max_length=20, blank=True, null=True, choices=ACCT_TYPE_CHOICES)
+    acct_type = models.CharField(max_length=20, blank=True, null=True,)
     emp = models.ForeignKey('Employee', models.DO_NOTHING)
 
     class Meta:
@@ -85,12 +86,13 @@ class Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True)
     invoice_dt = models.DateTimeField()
 
-    PAY_TYPE_CHOICES= [
-        ('CA', 'Cash'),
-        ('CR', 'Credit'),
-    ]
+    #PAY_TYPE_CHOICES= [
+    #    ('CA', 'Cash'),
+    #    ('CR', 'Credit'),
+    #]
 
-    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
+    #pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
+    pay_type = models.CharField(max_length=10, blank=True, null=True,)
     emp = models.ForeignKey(Employee, models.DO_NOTHING)
     invoice_num = models.IntegerField()
 
@@ -102,12 +104,13 @@ class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
     order_dt = models.DateTimeField(blank=True, null=True)
 
-    STATUS_CHOICES= [
-        ('C', 'Complete'),
-        ('P', 'Pending'),
-    ]
+    #STATUS_CHOICES= [
+    #    ('C', 'Complete'),
+    #    ('P', 'Pending'),
+    #]
 
-    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
+    #status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, blank=True, null=True)
     cust = models.ForeignKey(Customer, models.DO_NOTHING)
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
     quantity = models.PositiveIntegerField()

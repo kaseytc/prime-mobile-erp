@@ -12,10 +12,10 @@ def home(request):
     return render(request, 'home.html', )
 
 
-def listall(request):
+def listAllEmployee(request):
 
     employee = Employee.objects.all().order_by('emp_id')
-    return render(request,'listall.html',locals())
+    return render(request,'listAllEmployee.html',locals())
 
 
 

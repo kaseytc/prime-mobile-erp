@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Show employees data</title>
+</head>
+<body>
+    <h2>Show employees data {{errormessage}}</h2>
+    {% for employee in employee%}
+    Employee ID: {{employee.emp_id}}  <br  />
+    Title: {{employee.title}} <br/>
+    First Name: {{employee.fname}}  <br  />
+    Last Name: {{employee.lname}}  <br  />
+    Birthday: {{employee.dob}}  <br  />
+    Email: {{employee.email}}  <br  />
+    Phone: {{employee.phone}}  <br  />
+    City: {{employee.city}}  <br  />
+    <br/>
+    {% endfor %}
+
+</body>
+</html>

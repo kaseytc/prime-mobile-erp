@@ -8,7 +8,7 @@
 from django.db import models
 
 
-class Accounts(models.Model):
+class Account(models.Model):
     acct_id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=50, blank=True, null=True)
     pwd = models.CharField(max_length=100, blank=True, null=True)
@@ -20,14 +20,14 @@ class Accounts(models.Model):
 
     # acct_type = models.CharField(max_length=20, blank=True, null=True, choices=ACCT_TYPE_CHOICES)
     acct_type = models.CharField(max_length=20, blank=True, null=True)
-    emp = models.ForeignKey('Employees', models.DO_NOTHING)
+    emp = models.ForeignKey('Employee', models.DO_NOTHING)
 
     class Meta:
         managed = False
-        db_table = 'Accounts'
+        db_table = 'Account'
 
 
-class Customers(models.Model):
+class Customer(models.Model):
     cust_id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, blank=True, null=True)
     lname = models.CharField(max_length=50, blank=True, null=True)
@@ -42,10 +42,10 @@ class Customers(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'Customers'
+        db_table = 'Customer'
 
 
-class Employees(models.Model):
+class Employee(models.Model):
     emp_id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, blank=True, null=True)
     lname = models.CharField(max_length=50, blank=True, null=True)
@@ -62,7 +62,7 @@ class Employees(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'Employees'
+        db_table = 'Employee'
 
 
 class Inventory(models.Model):
@@ -82,7 +82,7 @@ class Inventory(models.Model):
         db_table = 'Inventory'
 
 
-class Invoices(models.Model):
+class Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True)
     invoice_dt = models.DateTimeField()
 
@@ -93,14 +93,14 @@ class Invoices(models.Model):
 
     #pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
     pay_type = models.CharField(max_length=10, blank=True, null=True)
-    emp = models.ForeignKey(Employees, models.DO_NOTHING)
+    emp = models.ForeignKey(Employee, models.DO_NOTHING)
     invoice_num = models.IntegerField()
 
     class Meta:
         managed = False
-        db_table = 'Invoices'
+        db_table = 'Invoice'
 
-class Orders(models.Model):
+class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
     order_dt = models.DateTimeField(blank=True, null=True)
 
@@ -111,15 +111,15 @@ class Orders(models.Model):
 
     # status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
     status = models.CharField(max_length=20, blank=True, null=True)
-    cust = models.ForeignKey(Customers, models.DO_NOTHING)
+    cust = models.ForeignKey(Customer, models.DO_NOTHING)
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
-    invoice = models.ForeignKey(Invoices, models.DO_NOTHING, blank=True)
-    #emp = models.ForeignKey(Employees, models.DO_NOTHING)
+    invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
+    #emp = models.ForeignKey(Employee, models.DO_NOTHING)
 
     class Meta:
         managed = False
-        db_table = 'Orders'
+        db_table = 'Order'
 
 
 class AuthGroup(models.Model):

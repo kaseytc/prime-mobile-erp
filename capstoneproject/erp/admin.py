@@ -1,11 +1,11 @@
 from django.contrib import admin
-from erp.models import Accounts, Customers, Employees, Inventory, Invoices, Orders
+from erp.models import Account, Customer, Employee, Inventory, Invoice, Order
 
 # Register your models here.
 
 
 class AccountAdmin(admin.ModelAdmin):
-    model = Accounts
+    model = Account
     list_display = ('username', 'acct_type', 'get_name')
     search_fields = ('acct_type',)
     ordering = ('acct_id',)
@@ -59,11 +59,11 @@ class OrderAdmin(admin.ModelAdmin):
     get_invoice.short_description = 'Invoice ID'
 
 
-admin.site.register(Accounts, AccountAdmin)
-admin.site.register(Customers, CustomerAdmin)
-admin.site.register(Employees, EmployeeAdmin)
+admin.site.register(Account, AccountAdmin)
+admin.site.register(Customer, CustomerAdmin)
+admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Inventory, InventoryAdmin)
-admin.site.register(Invoices, InvoiceAdmin)
-admin.site.register(Orders, OrderAdmin)
+admin.site.register(Invoice, InvoiceAdmin)
+admin.site.register(Order, OrderAdmin)
 
 

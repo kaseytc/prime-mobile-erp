@@ -5,7 +5,6 @@ from erp.models import Account, Customer, Employee, Inventory, Invoice, Order
 
 
 class AccountAdmin(admin.ModelAdmin):
-    model = Account
     list_display = ('username', 'acct_type', 'get_name')
     search_fields = ('acct_type',)
     ordering = ('acct_id',)

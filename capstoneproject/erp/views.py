@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
-from erp.models import Employee
+from django.http import HttpResponseRedirect
+from django .views import generic
+from .models import Employee
+from .forms import EmployeeForm
 # Create your views here.
 
 def index(request):
@@ -9,13 +11,34 @@ def index(request):
 
 
 def home(request):
-    return render(request, 'home.html', )
+    return render(request, 'home.html', locals())
+
+
+def add_employee(request):
+    submitted = False
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('./?submitted=True')
+    else:
+        form = EmployeeForm()
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'add_employee.html', {'form': form, 'submitted': submitted})
+
+
+#???
+class EmployeeListView(generic.ListView):
+    model = Employee
+
 
 
 def listAllEmployee(request):
 
-    employee = Employee.objects.all().order_by('emp_id')
-    return render(request,'listAllEmployee.html',locals())
+    employees = Employee.objects.all().order_by('emp_id')
+    return render(request,'listAllEmployee.html', locals())
 
-
+def searchEmployee(request):
+    return render(request, 'searchEmployee.html', locals())
 

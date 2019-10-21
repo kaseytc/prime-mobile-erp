@@ -1,22 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Show employees data</title>
-</head>
-<body>
-    <h2>Show employees data {{errormessage}}</h2>
-    {% for employee in employee%}
-    Employee ID: {{employee.emp_id}}  <br  />
-    Title: {{employee.title}} <br/>
-    First Name: {{employee.fname}}  <br  />
-    Last Name: {{employee.lname}}  <br  />
-    Birthday: {{employee.dob}}  <br  />
-    Email: {{employee.email}}  <br  />
-    Phone: {{employee.phone}}  <br  />
-    City: {{employee.city}}  <br  />
-    <br/>
-    {% endfor %}
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}Show employees data{% endblock %}
+
+{% block content %}
+<h1>Show employees data</h1>
+
+{% for employee in employees %}
+    <!--<p>{{ article.headline }}</p>
+    <p>By {{ article.reporter.full_name }}</p>
+    <p>Published {{ article.pub_date|date:"F j, Y" }}</p>-->
+    Employee ID: {{employee.emp_id}}  <br/>
+    Title: {{employee.title}} <br/>
+    First Name: {{employee.fname}}  <br/>
+    Last Name: {{employee.lname}}  <br/>
+    Birthday: {{employee.dob}}  <br/>
+    Email: {{employee.email}}  <br/>
+    Phone: {{employee.phone}}  <br/>
+    City: {{employee.city}}  <br/>
+    <br/>
+{% endfor %}
+{% endblock %}
+

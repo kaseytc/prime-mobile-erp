@@ -1,5 +1,5 @@
 from django import forms
-from .models import Employee
+from .models import Account, Customer, Employee, Inventory, Invoice, Order
 
 class EmployeeForm(forms.ModelForm):
     required_css_class = 'required'

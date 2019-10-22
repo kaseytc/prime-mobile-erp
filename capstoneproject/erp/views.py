@@ -28,16 +28,18 @@ def add_employee(request):
     return render(request, 'add_employee.html', {'form': form, 'submitted': submitted})
 
 
-#???
 class EmployeeListView(generic.ListView):
     model = Employee
+    queryset = Employee.objects.all()
+    template_name = 'employee_list.html'
+    #def get_context_data(self, **kwargs):
+    #    context = super().get_context_data(**kwargs)
+    #    return context
 
 
+class EmployeeDetailView(generic.DeleteView):
+    model = Employee
 
-def listAllEmployee(request):
-
-    employees = Employee.objects.all().order_by('emp_id')
-    return render(request,'listAllEmployee.html', locals())
 
 def searchEmployee(request):
     return render(request, 'searchEmployee.html', locals())

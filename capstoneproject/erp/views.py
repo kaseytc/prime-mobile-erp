@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect
 from django .views import generic
 from .models import Employee
 from .forms import EmployeeForm
+from django.views.generic.edit import CreateView
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 def index(request):
@@ -27,6 +29,10 @@ def add_employee(request):
             submitted = True
     return render(request, 'add_employee.html', {'form': form, 'submitted': submitted})
 
+#class  EmployeeCreateView(CreateView):
+#    model =  Employee
+#    fields = '__all__'
+#    template_name = 'employee_form.html'
 
 class EmployeeListView(generic.ListView):
     model = Employee
@@ -37,9 +43,20 @@ class EmployeeListView(generic.ListView):
     #    return context
 
 
-class EmployeeDetailView(generic.DeleteView):
+class EmployeeDetailView(generic.DetailView):
     model = Employee
+    template_name = 'employee_detail.html'
+#    def get_context_data(self, **kwargs):
+#        context = super().get_context_data(**kwargs)
+#        #context['now'] = timezone.now()
+#        return context
 
+
+'''
+def employee_detail_view(request, emp_id):
+    employee = get_object_or_404(Employee, pk=emp_id)
+    return render(request, 'employee_detail.html', context={'employee': employee})
+'''
 
 def searchEmployee(request):
     return render(request, 'searchEmployee.html', locals())

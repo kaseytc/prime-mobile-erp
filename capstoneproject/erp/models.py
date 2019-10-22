@@ -70,6 +70,7 @@ class Employee(models.Model):
     class Meta:
         managed = False
         db_table = 'Employee'
+        ordering = ['title', 'lname',]
 
 
 class Inventory(models.Model):

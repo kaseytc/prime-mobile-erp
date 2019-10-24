@@ -12,18 +12,17 @@
         <th>First Name</th>
         <th>Last Name</th>
     </tr>
+
 {% for employee in object_list %}
-    <!--<p>{{ article.headline }}</p>
-    <p>By {{ article.reporter.full_name }}</p>
-    <p>Published {{ article.pub_date|date:"F j, Y" }}</p>-->
     <tr>
         <td>{{employee.emp_id}}</td>
         <td>{{employee.title}}</td>
         <td>{{employee.fname}}</td>
         <td>{{employee.lname}}</td>
         <td><a href="{{employee.emp_id}}">View</a></td>
+        <td><a href="#">Update</a></td>
         {% if employee.title != "Owner" and employee.title != "Manager" %}
-             <td><a href="">Delete</a></td>
+             <td><a href="employee_confirm_delete">Delete</a></td>
         {% endif %}
     </tr>
 {% empty %}

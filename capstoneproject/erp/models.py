@@ -6,7 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-
+#from datetime import datetime
 
 class Account(models.Model):
     acct_id = models.AutoField(primary_key=True)
@@ -21,6 +21,9 @@ class Account(models.Model):
     acct_type = models.CharField(max_length=20, blank=True, null=True, choices=ACCT_TYPE_CHOICES)
     #acct_type = models.CharField(max_length=20, blank=True, null=True,)
     emp = models.ForeignKey('Employee', models.DO_NOTHING)
+
+    def __str__(self):
+        return self.username
 
     class Meta:
         managed = False
@@ -39,6 +42,9 @@ class Customer(models.Model):
     state = models.CharField(max_length=2, blank=True, null=True)
     zip = models.CharField(max_length=5, blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return self.fname + " " + self.lname
 
     class Meta:
         managed = False
@@ -67,10 +73,15 @@ class Employee(models.Model):
     zip = models.CharField(max_length=5, blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
 
+    def __str__(self):
+        return self.fname + " " + self.lname
+
     class Meta:
         managed = False
         db_table = 'Employee'
         ordering = ['title', 'lname',]
+
+
 
 
 class Inventory(models.Model):
@@ -84,6 +95,9 @@ class Inventory(models.Model):
     quantity = models.PositiveIntegerField(blank=True, null=True)
     bin_aisle = models.PositiveIntegerField()
     bin_bay = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.make + " " + self.model
 
     class Meta:
         managed = False
@@ -103,6 +117,12 @@ class Invoice(models.Model):
     #pay_type = models.CharField(max_length=10, blank=True, null=True,)
     emp = models.ForeignKey(Employee, models.DO_NOTHING)
     invoice_num = models.IntegerField()
+
+    def __str__(self):
+        return str(self.invoice_id)
+
+    #def __str__(self):
+    #    return str(self.invoice_id) + ". " + strftime(self.invoice_dt)
 
     class Meta:
         managed = False
@@ -125,6 +145,12 @@ class Order(models.Model):
     quantity = models.PositiveIntegerField()
     invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
     #emp = models.ForeignKey(Employee, models.DO_NOTHING)
+
+    def __unicode__(self):
+        return self.order_id
+
+   # def __unicode__(self):
+    #    return self.order_id + " " + self.order_dt
 
     class Meta:
         managed = False

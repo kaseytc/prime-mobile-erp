@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Show account detail{% endblock %}
+
+{% block content %}
+
+<h1>Show account detail</h1>
+<p><strong>Account ID:</strong> {{account.acct_id}}</p>
+<p><strong>Account Type:</strong> {{account.acct_type}}</p>
+<p><strong>Username:</strong> {{account.username}}</p>
+<p><strong>Employee ID:</strong> {{account.emp.emp_id}}</p>
+<p><strong>Employee Name:</strong> {{account.emp}}</p>
+
+<a href="./">Back</a>
+
+{% endblock %}

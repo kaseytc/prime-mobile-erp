@@ -15,8 +15,8 @@ class Account(models.Model):
     pwd = models.CharField(max_length=100, blank=True, null=True)
 
     ACCT_TYPE_CHOICES = [
-        ('ADMIN', 'Administrator'),
-        ('STD', 'Standard'),
+        ('Administrator', 'Administrator'),
+        ('Standard', 'Standard'),
     ]
 
     acct_type = models.CharField(max_length=20, blank=True, null=True, choices=ACCT_TYPE_CHOICES)
@@ -26,9 +26,13 @@ class Account(models.Model):
     def __str__(self):
         return self.username
 
+    def get_absolute_url(self):
+        return reverse('account-detail', kwargs={'pk': self.acct_id})
+
     class Meta:
         managed = False
         db_table = 'Account'
+        ordering = ['acct_type', ]
 
 
 class Customer(models.Model):
@@ -47,9 +51,13 @@ class Customer(models.Model):
     def __str__(self):
         return self.fname + " " + self.lname
 
+    def get_absolute_url(self):
+        return reverse('customer-detail', kwargs={'pk': self.cust_id})
+
     class Meta:
         managed = False
         db_table = 'Customer'
+        #ordering = ['lname', ]
 
 
 class Employee(models.Model):
@@ -83,7 +91,7 @@ class Employee(models.Model):
     class Meta:
         managed = False
         db_table = 'Employee'
-        ordering = ['title', 'lname',]
+        ordering = ['title', 'emp_id',]
 
 
 
@@ -103,9 +111,13 @@ class Inventory(models.Model):
     def __str__(self):
         return self.make + " " + self.model
 
+    def get_absolute_url(self):
+        return reverse('inventory-detail', kwargs={'pk': self.inventory_id})
+
     class Meta:
         managed = False
         db_table = 'Inventory'
+        ordering = ['make', ]
 
 
 class Invoice(models.Model):

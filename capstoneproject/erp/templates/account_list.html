@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Show accounts data{% endblock %}
+
+{% block content %}
+<h1>Show accounts data</h1>
+
+<!--<form action="" class="search-form">
+  <div class="form-group">
+    <input type="text" name='q' placeholder="What are you looking for?">
+    <button type="submit" class="submit" value="Submit"><i class="icon-search"></i></button>
+  </div>
+</form>-->
+
+<table>
+    <tr>
+        <th>Acct ID</th>
+        <th>Type</th>
+        <th>Username</th>
+    </tr>
+
+{% for account in object_list %}
+    <tr>
+        <td>{{account.acct_id}}</td>
+        <td>{{account.acct_type}}</td>
+        <td>{{account.username}}</td>
+        <td><a href="{{account.acct_id}}">View</a></td>
+        <td><a href="account_update/{{account.acct_id}}">Update</a></td>
+        {% if account.acct_type != "Administrator" %}
+            <td><a href="account_confirm_delete/{{account.acct_id}}">Delete</a></td>
+        {% endif %}
+    </tr>
+{% empty %}
+    <li>No accounts yet.</li>
+{% endfor %}
+</table>
+<a href="/">Back</a>
+{% endblock %}
+
+

@@ -14,3 +14,46 @@ class EmployeeForm(forms.ModelForm):
         lName = cleaned_data.get("lname")
         if not (fName and lName):
             raise forms.ValidationError("You must enter First Name and Last Name.")
+
+class AccountForm(forms.ModelForm):
+    #required_css_class = 'required'
+    class Meta:
+        model = Account
+        fields = '__all__'
+        #exclude = ['emp',]
+        #'manager_emp'
+
+    #def clean(self):
+    #    cleaned_data = super().clean()
+    #    fName = cleaned_data.get("fname")
+    #    lName = cleaned_data.get("lname")
+    #    if not (fName and lName):
+    #        raise forms.ValidationError("You must enter First Name and Last Name.")
+
+class CustomerForm(forms.ModelForm):
+    #required_css_class = 'required'
+    class Meta:
+        model = Customer
+        fields = '__all__'
+        #'manager_emp'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fName = cleaned_data.get("fname")
+        lName = cleaned_data.get("lname")
+        if not (fName and lName):
+            raise forms.ValidationError("You must enter First Name and Last Name.")
+
+class InventoryForm(forms.ModelForm):
+    #required_css_class = 'required'
+    class Meta:
+        model = Inventory
+        fields = '__all__'
+        #'manager_emp'
+
+    #def clean(self):
+    #    cleaned_data = super().clean()
+    #    fName = cleaned_data.get("fname")
+    #    lName = cleaned_data.get("lname")
+    #    if not (fName and lName):
+    #        raise forms.ValidationError("You must enter First Name and Last Name.")

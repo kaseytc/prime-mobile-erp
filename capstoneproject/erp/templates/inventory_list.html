@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Show inventories data{% endblock %}
+
+{% block content %}
+<h1>Show inventories data</h1>
+
+<!--<form action="" class="search-form">
+  <div class="form-group">
+    <input type="text" name='q' placeholder="What are you looking for?">
+    <button type="submit" class="submit" value="Submit"><i class="icon-search"></i></button>
+  </div>
+</form>-->
+
+<table>
+    <tr>
+        <th>Inventory ID</th>
+        <th>Make</th>
+        <th>Model</th>
+    </tr>
+
+{% for inventory in object_list %}
+    <tr>
+        <td>{{inventory.inventory_id}}</td>
+        <td>{{inventory.make}}</td>
+        <td>{{inventory.model}}</td>
+        <td><a href="{{inventory.inventory_id}}">View</a></td>
+        <td><a href="inventory_update/{{inventory.inventory_id}}">Update</a></td>
+        <td><a href="inventory_confirm_delete/{{inventory.inventory_id}}">Delete</a></td>
+    </tr>
+{% empty %}
+    <li>No inventories yet.</li>
+{% endfor %}
+</table>
+<a href="/">Back</a>
+{% endblock %}
+
+
+
+
+
+
+
+

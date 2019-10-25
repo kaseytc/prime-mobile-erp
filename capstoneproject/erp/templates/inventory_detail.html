@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Show inventory detail{% endblock %}
+
+{% block content %}
+
+<h1>Show inventory detail</h1>
+<p><strong>Inventory ID:</strong> {{inventory.inventory_id}}</p>
+<p><strong>Make:</strong> {{inventory.make}}</p>
+<p><strong>Model:</strong> {{inventory.model}}</p>
+<p><strong>SKU:</strong> {{inventory.sku}}</p>
+<p><strong>Description:</strong> {{inventory.inv_desc}}</p>
+<p><strong>Price:</strong> {{inventory.inv_price}}</p>
+<p><strong>Cost:</strong> {{inventory.inv_cost}}</p>
+<p><strong>Quantity:</strong> {{inventory.quantity}}</p>
+<p><strong>Bin Aisle:</strong> {{inventory.bin_aisle}}</p>
+<p><strong>Bin Bay:</strong> {{inventory.bin_bay}}</p>
+
+<a href="./">Back</a>
+
+{% endblock %}

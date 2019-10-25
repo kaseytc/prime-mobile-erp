@@ -61,8 +61,8 @@ class Employee(models.Model):
     manager_emp = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
 
     TITLE_TYPE_CHOICES = [
-        ('M', 'Manager'),
-        ('S', 'Sales'),
+        ('Manager', 'Manager'),
+        ('Sales', 'Sales'),
     ]
 
     title = models.CharField(max_length=100, blank=True, null=True, choices=TITLE_TYPE_CHOICES)
@@ -113,8 +113,8 @@ class Invoice(models.Model):
     invoice_dt = models.DateTimeField()
 
     PAY_TYPE_CHOICES= [
-        ('CA', 'Cash'),
-        ('CR', 'Credit'),
+        ('Cash', 'Cash'),
+        ('Credit', 'Credit'),
     ]
 
     pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
@@ -138,8 +138,8 @@ class Order(models.Model):
     order_dt = models.DateTimeField(blank=True, null=True)
 
     STATUS_CHOICES= [
-        ('C', 'Complete'),
-        ('P', 'Pending'),
+        ('Complete', 'Complete'),
+        ('Pending', 'Pending'),
     ]
 
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)

@@ -67,7 +67,7 @@ class EmployeeDelete(DeleteView):
 
 class EmployeeUpdate(UpdateView):
     model = Employee
-    fields = ['fname', 'lname']
-    #template_name = 'employee_update_form.html'
-    template_name_suffix = '_update_form'
+    fields = '__all__'
+    template_name = 'employee_update_form.html'
+    #template_name_suffix = '_update_form'
 

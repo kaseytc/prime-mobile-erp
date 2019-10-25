@@ -12,5 +12,5 @@ urlpatterns = [
     path('employees/<pk>', views.EmployeeDetailView.as_view(), name='employee-detail'),
     #path('employees/<int:emp_id>', views.employee_detail_view, name='employee-detail'),
     path('employees/employee_confirm_delete/<pk>', views.EmployeeDelete.as_view(), name='employee-delete'),
-    path('employees/employee_update/<pk>', views.EmployeeDelete.as_view(), name='employee-update'),
+    path('employees/employee_update/<pk>', views.EmployeeUpdate.as_view(), name='employee-update'),
 ]

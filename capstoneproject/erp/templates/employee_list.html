@@ -5,6 +5,13 @@
 {% block content %}
 <h1>Show employees data</h1>
 
+<!--<form action="" class="search-form">
+  <div class="form-group">
+    <input type="text" name='q' placeholder="What are you looking for?">
+    <button type="submit" class="submit" value="Submit"><i class="icon-search"></i></button>
+  </div>
+</form>-->
+
 <table>
     <tr>
         <th>Emp ID</th>
@@ -20,9 +27,9 @@
         <td>{{employee.fname}}</td>
         <td>{{employee.lname}}</td>
         <td><a href="{{employee.emp_id}}">View</a></td>
-        <td><a href="#">Update</a></td>
+        <td><a href="employee_update/{{employee.emp_id}}">Update</a></td>
         {% if employee.title != "Owner" and employee.title != "Manager" %}
-             <td><a href="employee_confirm_delete">Delete</a></td>
+             <td><a href="employee_confirm_delete/{{employee.emp_id}}">Delete</a></td>
         {% endif %}
     </tr>
 {% empty %}

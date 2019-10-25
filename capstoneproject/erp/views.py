@@ -4,6 +4,9 @@ from django.http import HttpResponseRedirect
 from django .views import generic
 from .models import Employee
 from .forms import EmployeeForm
+from django.views.generic.edit import DeleteView
+from django.urls import reverse_lazy
+from django.views.generic.edit import UpdateView
 from django.views.generic.edit import CreateView
 from django.shortcuts import get_object_or_404
 # Create your views here.
@@ -28,11 +31,6 @@ def add_employee(request):
         if 'submitted' in request.GET:
             submitted = True
     return render(request, 'add_employee.html', {'form': form, 'submitted': submitted})
-
-#class  EmployeeCreateView(CreateView):
-#    model =  Employee
-#    fields = '__all__'
-#    template_name = 'employee_form.html'
 
 class EmployeeListView(generic.ListView):
     model = Employee
@@ -60,4 +58,16 @@ def employee_detail_view(request, emp_id):
 
 def searchEmployee(request):
     return render(request, 'searchEmployee.html', locals())
+
+
+class EmployeeDelete(DeleteView):
+    model = Employee
+    template_name = 'employee_confirm_delete.html'
+    success_url = reverse_lazy('employee-list')
+
+class EmployeeUpdate(UpdateView):
+    model = Employee
+    fields = ['fname', 'lname']
+    #template_name = 'employee_update_form.html'
+    template_name_suffix = '_update_form'
 

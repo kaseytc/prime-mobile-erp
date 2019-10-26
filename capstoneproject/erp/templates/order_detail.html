@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Show order detail{% endblock %}
+
+{% block content %}
+
+<h1>Show order detail</h1>
+<p><strong>Order ID:</strong> {{order.order_id}}</p>
+<p><strong>Time:</strong> {{order.order_dt}}</p>
+<p><strong>Status:</strong> {{order.status}}</p>
+<p><strong>Customer Name:</strong> {{order.cust.fname}} {{order.cust.lname}}</p>
+<p><strong>Inventory:</strong> {{order.inventory.make}} {{order.inventory.model}}</p>
+<p><strong>Quantity:</strong> {{order.quantity}}</p>
+<p><strong>Invoice ID:</strong> {{order.invoice}}</p>
+
+<a href="./">Back</a>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Show invoices data{% endblock %}
+
+{% block content %}
+<h1>Show invoices data</h1>
+
+<!--<form action="" class="search-form">
+  <div class="form-group">
+    <input type="text" name='q' placeholder="What are you looking for?">
+    <button type="submit" class="submit" value="Submit"><i class="icon-search"></i></button>
+  </div>
+</form>-->
+
+<table>
+    <tr>
+        <th>Invoice ID</th>
+        <th>Invoice Time</th>
+        <th>Payment Type</th>
+        <th>Employee</th>
+        <th>Invoice Number</th>
+    </tr>
+
+{% for invoice in object_list %}
+    <tr>
+        <td>{{invoice.invoice_id}}</td>
+        <td>{{invoice.invoice_dt}}</td>
+        <td>{{invoice.pay_type}}</td>
+        <td>{{invoice.emp.fname}} {{order.emp.lname}}</td>
+        <td>{{invoice.invoice_num}}</td>
+        <td><a href="invoice_update/{{invoice.invoice_id}}">Update</a></td>
+        <td><a href="invoice_confirm_delete/{{invoice.invoice_id}}">Delete</a></td>
+    </tr>
+{% empty %}
+    <li>No orders yet.</li>
+{% endfor %}
+</table>
+<a href="/">Back</a>
+{% endblock %}
+
+
+
+

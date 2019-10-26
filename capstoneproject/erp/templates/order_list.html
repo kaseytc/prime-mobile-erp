@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Show orders data{% endblock %}
+
+{% block content %}
+<h1>Show orders data</h1>
+
+<!--<form action="" class="search-form">
+  <div class="form-group">
+    <input type="text" name='q' placeholder="What are you looking for?">
+    <button type="submit" class="submit" value="Submit"><i class="icon-search"></i></button>
+  </div>
+</form>-->
+
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>Order Time</th>
+        <th>Customer Name</th>
+    </tr>
+
+{% for order in object_list %}
+    <tr>
+        <td>{{order.order_id}}</td>
+        <td>{{order.order_dt}}</td>
+        <td>{{order.cust.fname}} {{order.cust.lname}}</td>
+        <td><a href="{{order.order_id}}">View</a></td>
+        <td><a href="order_update/{{order.order_id}}">Update</a></td>
+    </tr>
+{% empty %}
+    <li>No orders yet.</li>
+{% endfor %}
+</table>
+<a href="/">Back</a>
+{% endblock %}
+
+
+
+
+
+
+
+

@@ -28,4 +28,14 @@ urlpatterns = [
     path('inventories/<pk>', views.InventoryDetailView.as_view(), name='inventory-detail'),
     path('inventories/inventory_confirm_delete/<pk>', views.InventoryDelete.as_view(), name='inventory-delete'),
     path('inventories/inventory_update/<pk>', views.InventoryUpdate.as_view(), name='inventory-update'),
+    path('add_order/', views.add_order, name='add-order'),
+    path('orders/', views.OrderListView.as_view(), name='order-list'),
+    path('orders/<pk>', views.OrderDetailView.as_view(), name='order-detail'),
+    path('orders/order_confirm_delete/<pk>', views.OrderDelete.as_view(), name='order-delete'),
+    path('orders/order_update/<pk>', views.OrderUpdate.as_view(), name='order-update'),
+    path('add_invoice/', views.add_invoice, name='add-invoice'),
+    path('invoices/', views.InvoiceListView.as_view(), name='invoice-list'),
+    path('invoices/<pk>', views.InvoiceDetailView.as_view(), name='invoice-detail'),
+    path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
+    path('invoices/invoice_update/<pk>', views.InvoiceUpdate.as_view(), name='invoice-update')
 ]

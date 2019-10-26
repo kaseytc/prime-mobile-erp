@@ -57,3 +57,17 @@ class InventoryForm(forms.ModelForm):
     #    lName = cleaned_data.get("lname")
     #    if not (fName and lName):
     #        raise forms.ValidationError("You must enter First Name and Last Name.")
+
+
+class OrderForm(forms.ModelForm):
+    #required_css_class = 'required'
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+
+class InvoiceForm(forms.ModelForm):
+    #required_css_class = 'required'
+    class Meta:
+        model = Invoice
+        fields = '__all__'

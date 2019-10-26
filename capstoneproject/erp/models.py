@@ -126,6 +126,9 @@ class Invoice(models.Model):
 
     PAY_TYPE_CHOICES= [
         ('Cash', 'Cash'),
+        ('VISA', 'VISA'),
+        ('MasterCard', 'MasterCard'),
+        ('AmEx', 'AmEx'),
         ('Credit', 'Credit'),
     ]
 

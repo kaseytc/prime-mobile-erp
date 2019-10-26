@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Show invoice detail{% endblock %}
+
+{% block content %}
+
+<h1>Show invoice detail</h1>
+<p><strong>Invoice ID:</strong> {{invoice.invoice_id}}</p>
+<p><strong>Invoice Time:</strong> {{invoice.invoice_dt}}</p>
+<p><strong>Payment Type:</strong> {{invoice.pay_type}}</p>
+<p><strong>Employee:</strong> {{invoice.emp.fname}} {{invoice.emp.lname}}</p>
+<p><strong>Invoice Number:</strong> {{invoice.invoice_num}} </p>
+
+<a href="./">Back</a>
+
+{% endblock %}

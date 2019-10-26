@@ -140,6 +140,9 @@ class Invoice(models.Model):
     def __str__(self):
         return str(self.invoice_id)
 
+    def get_absolute_url(self):
+        return reverse('invoice-detail', kwargs={'pk': self.invoice_id})
+
     #def __str__(self):
     #    return str(self.invoice_id) + ". " + strftime(self.invoice_dt)
 
@@ -167,6 +170,9 @@ class Order(models.Model):
 
     def __unicode__(self):
         return self.order_id
+
+    def get_absolute_url(self):
+        return reverse('order-detail', kwargs={'pk': self.order_id})
 
    # def __unicode__(self):
     #    return self.order_id + " " + self.order_dt

@@ -276,7 +276,7 @@ class InvoiceDetailView(generic.DetailView):
 class InvoiceDelete(DeleteView):
     model = Invoice
     template_name = 'invoice_confirm_delete.html'
-    success_url = reverse_lazy('order-list')
+    success_url = reverse_lazy('invoice-list')
 
 
 class InvoiceUpdate(UpdateView):

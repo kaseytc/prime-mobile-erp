@@ -35,7 +35,7 @@ urlpatterns = [
     path('orders/order_update/<pk>', views.OrderUpdate.as_view(), name='order-update'),
     path('add_invoice/', views.add_invoice, name='add-invoice'),
     path('invoices/', views.InvoiceListView.as_view(), name='invoice-list'),
-    path('invoices/<pk>', views.InvoiceDetailView.as_view(), name='invoice-detail'),
+    #path('invoices/<pk>', views.InvoiceDetailView.as_view(), name='invoice-detail'),
     path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
     path('invoices/invoice_update/<pk>', views.InvoiceUpdate.as_view(), name='invoice-update')
 ]

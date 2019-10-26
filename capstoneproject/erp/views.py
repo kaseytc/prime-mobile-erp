@@ -98,18 +98,13 @@ class CustomerListView(generic.ListView):
     model = Customer
     queryset = Customer.objects.all()
     template_name = 'customer_list.html'
-    #def get_context_data(self, **kwargs):
-    #    context = super().get_context_data(**kwargs)
-    #    return context
+
 
 
 class CustomerDetailView(generic.DetailView):
     model = Customer
     template_name = 'customer_detail.html'
-#    def get_context_data(self, **kwargs):
-#        context = super().get_context_data(**kwargs)
-#        #context['now'] = timezone.now()
-#        return context
+
 
 
 class CustomerDelete(DeleteView):
@@ -121,7 +116,7 @@ class CustomerUpdate(UpdateView):
     model = Customer
     fields = '__all__'
     template_name = 'customer_update_form.html'
-    #template_name_suffix = '_update_form'
+
 
 
 
@@ -144,18 +139,13 @@ class AccountListView(generic.ListView):
     model = Account
     queryset = Account.objects.all()
     template_name = 'account_list.html'
-    #def get_context_data(self, **kwargs):
-    #    context = super().get_context_data(**kwargs)
-    #    return context
+
 
 
 class AccountDetailView(generic.DetailView):
     model = Account
     template_name = 'account_detail.html'
-#    def get_context_data(self, **kwargs):
-#        context = super().get_context_data(**kwargs)
-#        #context['now'] = timezone.now()
-#        return context
+
 
 
 class AccountDelete(DeleteView):
@@ -168,7 +158,7 @@ class AccountUpdate(UpdateView):
     model = Account
     fields = '__all__'
     template_name = 'account_update_form.html'
-    #template_name_suffix = '_update_form'
+
 
 
 
@@ -191,18 +181,13 @@ class InventoryListView(generic.ListView):
     model = Inventory
     queryset = Inventory.objects.all()
     template_name = 'inventory_list.html'
-    #def get_context_data(self, **kwargs):
-    #    context = super().get_context_data(**kwargs)
-    #    return context
+
 
 
 class InventoryDetailView(generic.DetailView):
     model = Inventory
     template_name = 'inventory_detail.html'
-#    def get_context_data(self, **kwargs):
-#        context = super().get_context_data(**kwargs)
-#        #context['now'] = timezone.now()
-#        return context
+
 
 
 class InventoryDelete(DeleteView):
@@ -215,7 +200,7 @@ class InventoryUpdate(UpdateView):
     model = Inventory
     fields = '__all__'
     template_name = 'inventory_update_form.html'
-    #template_name_suffix = '_update_form'
+
 
 
 
@@ -238,18 +223,13 @@ class OrderListView(generic.ListView):
     model = Order
     queryset = Order.objects.all()
     template_name = 'order_list.html'
-    #def get_context_data(self, **kwargs):
-    #    context = super().get_context_data(**kwargs)
-    #    return context
+
 
 
 class OrderDetailView(generic.DetailView):
     model = Order
     template_name = 'order_detail.html'
-#    def get_context_data(self, **kwargs):
-#        context = super().get_context_data(**kwargs)
-#        #context['now'] = timezone.now()
-#        return context
+
 
 
 class OrderDelete(DeleteView):
@@ -284,18 +264,13 @@ class InvoiceListView(generic.ListView):
     model = Invoice
     queryset = Invoice.objects.all()
     template_name = 'invoice_list.html'
-    #def get_context_data(self, **kwargs):
-    #    context = super().get_context_data(**kwargs)
-    #    return context
+
 
 
 class InvoiceDetailView(generic.DetailView):
     model = Order
     template_name = 'invoice_detail.html'
-#    def get_context_data(self, **kwargs):
-#        context = super().get_context_data(**kwargs)
-#        #context['now'] = timezone.now()
-#        return context
+
 
 
 class InvoiceDelete(DeleteView):
@@ -308,4 +283,3 @@ class InvoiceUpdate(UpdateView):
     model = Invoice
     fields = '__all__'
     template_name = 'invoice_update_form.html'
-    #template_name_suffix = '_update_form'

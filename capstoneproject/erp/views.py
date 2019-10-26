@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView
 from django.views.generic.edit import CreateView
 from django.shortcuts import get_object_or_404
+import operator
 # Create your views here.
 
 def index(request):
@@ -33,8 +34,7 @@ def add_employee(request):
     return render(request, 'add_employee.html', {'form': form, 'submitted': submitted})
 
 
-def searchEmployee(request):
-    return render(request, 'searchEmployee.html', locals())
+
 
 
 
@@ -283,3 +283,47 @@ class InvoiceUpdate(UpdateView):
     model = Invoice
     fields = '__all__'
     template_name = 'invoice_update_form.html'
+
+
+
+class ＥmployeeSearchListView(EmployeeListView):
+    """
+    Display a Employee List page filtered by the search query.
+    """
+    #paginate_by = 10
+
+    def get_queryset(self):
+        result = super(ＥmployeeSearchListView, self).get_queryset()
+
+        query = self.request.GET.get('q')
+        if query:
+            query_list = query.split()
+            result = result.filter(
+                reduce(operator.and_,
+                       (Employee(lname__icontains=lname) for lname in query_list)) |
+                reduce(operator.and_,
+                       (Employee(fname__icontains=fname) for fname in query_list)) |
+                reduce(operator.and_,
+                   (Employee(title__icontains=title) for title in query_list))
+            )
+
+        return result
+
+
+def search_employee(request):
+    return render(request, 'search_employee.html', locals())
+
+
+class SearchResultsView(EmployeeListView):
+    model = Employee
+    template_name = 'employee_list.html'
+    #queryset = Employee.objects.filter(title__icontains='Manager')
+
+    def get_queryset(self):  # new
+        query = self.request.GET.get('title')
+        object_list = Employee.objects.filter(title__icontains=query)
+            #Employee(title__icontains=query)
+            #| Employee(state__icontains=query)
+        #)
+        return object_list
+

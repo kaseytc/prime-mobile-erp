@@ -268,7 +268,7 @@ class InvoiceListView(generic.ListView):
 
 
 class InvoiceDetailView(generic.DetailView):
-    model = Order
+    model = Invoice
     template_name = 'invoice_detail.html'
 
 

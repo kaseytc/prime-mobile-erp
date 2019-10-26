@@ -1,10 +1,16 @@
 from django.urls import path
-
+from django.contrib.auth.views import LoginView, LogoutView
 from . import views
+
+from django.urls import include
 
 urlpatterns = [
     #path('', views.index, name='index'),
     path('', views.home, name='home'),
+    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('search_employee_result/employee_update/<pk>', views.EmployeeUpdate.as_view(), name='employee-update'),
+    #path('search_employee_result/<pk>', views.EmployeeDetailView.as_view(), name='employee-detail'),
     #path('add_employee/', views.EmployeeCreateView.as_view(), name='add-employee'),
     path('search_employee/', views.search_employee, name='search-employee-form'),
     path('search_employee_result/', views.SearchResultsView.as_view(), name='search-employee'),
@@ -39,4 +45,9 @@ urlpatterns = [
     #path('invoices/<pk>', views.InvoiceDetailView.as_view(), name='invoice-detail'),
     path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
     path('invoices/invoice_update/<pk>', views.InvoiceUpdate.as_view(), name='invoice-update')
+]
+
+#Add Django site authentication urls (for login, logout, password management)
+urlpatterns += [
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

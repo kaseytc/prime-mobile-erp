@@ -108,8 +108,8 @@ class Inventory(models.Model):
     bin_aisle = models.PositiveIntegerField()
     bin_bay = models.PositiveIntegerField()
 
-    def __str__(self):
-        return self.make + " " + self.model
+    #def __str__(self):
+    #    return self.make + " " + self.model
 
     def get_absolute_url(self):
         return reverse('inventory-detail', kwargs={'pk': self.inventory_id})

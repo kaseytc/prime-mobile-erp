@@ -7,6 +7,7 @@ from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, Order
 from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView
+from django.db.models import Q
 from django.views.generic.edit import CreateView
 from django.shortcuts import get_object_or_404
 import operator
@@ -31,7 +32,7 @@ def add_employee(request):
         form = EmployeeForm()
         if 'submitted' in request.GET:
             submitted = True
-    return render(request, 'add_employee.html', {'form': form, 'submitted': submitted})
+    return render(request, 'employee/add_employee.html', {'form': form, 'submitted': submitted})
 
 
 
@@ -41,7 +42,7 @@ def add_employee(request):
 class EmployeeListView(generic.ListView):
     model = Employee
     queryset = Employee.objects.all()
-    template_name = 'employee_list.html'
+    template_name = 'employee/employee_list.html'
     #def get_context_data(self, **kwargs):
     #    context = super().get_context_data(**kwargs)
     #    return context
@@ -49,7 +50,7 @@ class EmployeeListView(generic.ListView):
 
 class EmployeeDetailView(generic.DetailView):
     model = Employee
-    template_name = 'employee_detail.html'
+    template_name = 'employee/employee_detail.html'
 #    def get_context_data(self, **kwargs):
 #        context = super().get_context_data(**kwargs)
 #        #context['now'] = timezone.now()
@@ -68,14 +69,14 @@ def employee_detail_view(request, emp_id):
 
 class EmployeeDelete(DeleteView):
     model = Employee
-    template_name = 'employee_confirm_delete.html'
+    template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
 
 
 class EmployeeUpdate(UpdateView):
     model = Employee
     fields = '__all__'
-    template_name = 'employee_update_form.html'
+    template_name = 'employee/employee_update_form.html'
     #template_name_suffix = '_update_form'
 
 
@@ -92,30 +93,30 @@ def add_customer(request):
         form = CustomerForm()
         if 'submitted' in request.GET:
             submitted = True
-    return render(request, 'add_customer.html', {'form': form, 'submitted': submitted})
+    return render(request, 'customer/add_customer.html', {'form': form, 'submitted': submitted})
 
 class CustomerListView(generic.ListView):
     model = Customer
     queryset = Customer.objects.all()
-    template_name = 'customer_list.html'
+    template_name = 'customer/customer_list.html'
 
 
 
 class CustomerDetailView(generic.DetailView):
     model = Customer
-    template_name = 'customer_detail.html'
+    template_name = 'customer/customer_detail.html'
 
 
 
 class CustomerDelete(DeleteView):
     model = Customer
-    template_name = 'customer_confirm_delete.html'
+    template_name = 'customer/customer_confirm_delete.html'
     success_url = reverse_lazy('customer-list')
 
 class CustomerUpdate(UpdateView):
     model = Customer
     fields = '__all__'
-    template_name = 'customer_update_form.html'
+    template_name = 'customer/customer_update_form.html'
 
 
 
@@ -132,32 +133,32 @@ def add_account(request):
         form = AccountForm()
         if 'submitted' in request.GET:
             submitted = True
-    return render(request, 'add_account.html', {'form': form, 'submitted': submitted})
+    return render(request, 'account/add_account.html', {'form': form, 'submitted': submitted})
 
 
 class AccountListView(generic.ListView):
     model = Account
     queryset = Account.objects.all()
-    template_name = 'account_list.html'
+    template_name = 'account/account_list.html'
 
 
 
 class AccountDetailView(generic.DetailView):
     model = Account
-    template_name = 'account_detail.html'
+    template_name = 'account/account_detail.html'
 
 
 
 class AccountDelete(DeleteView):
     model = Account
-    template_name = 'account_confirm_delete.html'
+    template_name = 'account/account_confirm_delete.html'
     success_url = reverse_lazy('account-list')
 
 
 class AccountUpdate(UpdateView):
     model = Account
     fields = '__all__'
-    template_name = 'account_update_form.html'
+    template_name = 'account/account_update_form.html'
 
 
 
@@ -174,32 +175,32 @@ def add_inventory(request):
         form = InventoryForm()
         if 'submitted' in request.GET:
             submitted = True
-    return render(request, 'add_inventory.html', {'form': form, 'submitted': submitted})
+    return render(request, 'inventory/add_inventory.html', {'form': form, 'submitted': submitted})
 
 
 class InventoryListView(generic.ListView):
     model = Inventory
     queryset = Inventory.objects.all()
-    template_name = 'inventory_list.html'
+    template_name = 'inventory/inventory_list.html'
 
 
 
 class InventoryDetailView(generic.DetailView):
     model = Inventory
-    template_name = 'inventory_detail.html'
+    template_name = 'inventory/inventory_detail.html'
 
 
 
 class InventoryDelete(DeleteView):
     model = Inventory
-    template_name = 'inventory_confirm_delete.html'
+    template_name = 'inventory/inventory_confirm_delete.html'
     success_url = reverse_lazy('inventory-list')
 
 
 class InventoryUpdate(UpdateView):
     model = Inventory
     fields = '__all__'
-    template_name = 'inventory_update_form.html'
+    template_name = 'inventory/inventory_update_form.html'
 
 
 
@@ -216,32 +217,32 @@ def add_order(request):
         form = OrderForm()
         if 'submitted' in request.GET:
             submitted = True
-    return render(request, 'add_order.html', {'form': form, 'submitted': submitted})
+    return render(request, 'order/add_order.html', {'form': form, 'submitted': submitted})
 
 
 class OrderListView(generic.ListView):
     model = Order
     queryset = Order.objects.all()
-    template_name = 'order_list.html'
+    template_name = 'order/order_list.html'
 
 
 
 class OrderDetailView(generic.DetailView):
     model = Order
-    template_name = 'order_detail.html'
+    template_name = 'order/order_detail.html'
 
 
 
 class OrderDelete(DeleteView):
     model = Order
-    template_name = 'order_confirm_delete.html'
+    template_name = 'order/order_confirm_delete.html'
     success_url = reverse_lazy('order-list')
 
 
 class OrderUpdate(UpdateView):
     model = Order
     fields = '__all__'
-    template_name = 'order_update_form.html'
+    template_name = 'order/order_update_form.html'
     #template_name_suffix = '_update_form'
 
 
@@ -257,35 +258,35 @@ def add_invoice(request):
         form = InvoiceForm()
         if 'submitted' in request.GET:
             submitted = True
-    return render(request, 'add_invoice.html', {'form': form, 'submitted': submitted})
+    return render(request, 'invoice/add_invoice.html', {'form': form, 'submitted': submitted})
 
 
 class InvoiceListView(generic.ListView):
     model = Invoice
     queryset = Invoice.objects.all()
-    template_name = 'invoice_list.html'
+    template_name = 'invoice/invoice_list.html'
 
 
 
 class InvoiceDetailView(generic.DetailView):
     model = Invoice
-    template_name = 'invoice_detail.html'
+    template_name = 'invoice/invoice_detail.html'
 
 
 
 class InvoiceDelete(DeleteView):
     model = Invoice
-    template_name = 'invoice_confirm_delete.html'
+    template_name = 'invoice/invoice_confirm_delete.html'
     success_url = reverse_lazy('invoice-list')
 
 
 class InvoiceUpdate(UpdateView):
     model = Invoice
     fields = '__all__'
-    template_name = 'invoice_update_form.html'
+    template_name = 'invoice/invoice_update_form.html'
 
 
-
+'''
 class ＥmployeeSearchListView(EmployeeListView):
     """
     Display a Employee List page filtered by the search query.
@@ -308,22 +309,42 @@ class ＥmployeeSearchListView(EmployeeListView):
             )
 
         return result
+'''
 
 
 def search_employee(request):
-    return render(request, 'search_employee.html', locals())
+    return render(request, 'employee/search_employee.html', locals())
 
 
 class SearchResultsView(EmployeeListView):
     model = Employee
-    template_name = 'employee_list.html'
+    template_name = 'employee/employee_list.html'
     #queryset = Employee.objects.filter(title__icontains='Manager')
 
     def get_queryset(self):  # new
-        query = self.request.GET.get('title')
-        object_list = Employee.objects.filter(title__icontains=query)
+        #query = self.request.GET.get('title')
+        title = self.request.GET.get('title')
+        fname = self.request.GET.get('fname')
+        lname = self.request.GET.get('lname')
+        #if fname is not None:
+        #    object_list = Employee.objects.filter(fname__icontains=fname)
+
+        #object_list = Employee.objects.filter(title__icontains=title)
             #Employee(title__icontains=query)
             #| Employee(state__icontains=query)
         #)
+        object_list = Employee.objects.filter(
+            Q(title__icontains=title) |
+            Q(fname__icontains=fname) |
+            Q(lname__icontains=lname)
+        )
         return object_list
+
+        #    #Employee(title__icontains=title) |
+        #    Employee(fname__icontains=fname) |
+        #    Employee(lname__icontains=lname)
+
+        #)
+
+
 

@@ -170,8 +170,8 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('order-detail', kwargs={'pk': self.order_id})
 
-   # def __unicode__(self):
-    #    return self.order_id + " " + self.order_dt
+    # def __str__(self):
+    #    return str(self.order_id) + ". " + strftime(self.order_dt)
 
     class Meta:
         managed = False

@@ -3,9 +3,6 @@
 {% block title %}Update customer data{% endblock %}
 
 {% block content %}
-<a href="/">Back home</a>
-<br>
-<a href="/erp/customers/">Back to list</a>
 <h1>Update customer data</h1>
 <form method="post">{% csrf_token %}
     {{ form.as_p }}

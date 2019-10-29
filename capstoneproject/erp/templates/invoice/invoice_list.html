@@ -3,6 +3,7 @@
 {% block title %}Show invoices data{% endblock %}
 
 {% block content %}
+<a href="/">Back</a>
 <h1>Show invoices data</h1>
 
 <!--<form action="" class="search-form">
@@ -28,6 +29,7 @@
         <td>{{invoice.pay_type}}</td>
         <td>{{invoice.emp.fname}} {{invoice.emp.lname}}</td>
         <td>{{invoice.invoice_num}}</td>
+        <td><a href="{{invoice.invoice_id}}">View</a></td>
         <td><a href="invoice_update/{{invoice.invoice_id}}">Update</a></td>
         <td><a href="invoice_confirm_delete/{{invoice.invoice_id}}">Delete</a></td>
     </tr>
@@ -35,7 +37,6 @@
     <li>No orders yet.</li>
 {% endfor %}
 </table>
-<a href="/">Back</a>
 {% endblock %}
 
 

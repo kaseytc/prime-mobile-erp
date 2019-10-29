@@ -1,24 +1,23 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django .views import generic
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+import operator
 from .models import Account, Customer, Employee, Inventory, Invoice, Order
 from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm
-from django.views.generic.edit import DeleteView
-from django.urls import reverse_lazy
-from django.views.generic.edit import UpdateView
-from django.db.models import Q
-from django.views.generic.edit import CreateView
-from django.shortcuts import get_object_or_404
-import operator
+
+
 # Create your views here.
 
+
 def index(request):
-    return HttpResponse("Hello, world. You're at the ERP index.")
+    return render(request, 'index.html', locals())
 
 
-def home(request):
-    return render(request, 'home.html', locals())
+def index_sales(request):
+    return render(request, 'index_sales.html', locals())
 
 
 def add_employee(request):
@@ -35,8 +34,11 @@ def add_employee(request):
     return render(request, 'employee/add_employee.html', {'form': form, 'submitted': submitted})
 
 
-
-
+class EmployeeCreate(CreateView):
+    model = Employee
+    fields = '__all__'
+    template_name = 'employee/employee_form.html'
+    success_url = reverse_lazy('employee-list')
 
 
 class EmployeeListView(generic.ListView):
@@ -62,9 +64,6 @@ def employee_detail_view(request, emp_id):
     employee = get_object_or_404(Employee, pk=emp_id)
     return render(request, 'employee_detail.html', context={'employee': employee})
 '''
-
-
-
 
 
 class EmployeeDelete(DeleteView):
@@ -95,11 +94,11 @@ def add_customer(request):
             submitted = True
     return render(request, 'customer/add_customer.html', {'form': form, 'submitted': submitted})
 
+
 class CustomerListView(generic.ListView):
     model = Customer
     queryset = Customer.objects.all()
     template_name = 'customer/customer_list.html'
-
 
 
 class CustomerDetailView(generic.DetailView):
@@ -107,11 +106,11 @@ class CustomerDetailView(generic.DetailView):
     template_name = 'customer/customer_detail.html'
 
 
-
 class CustomerDelete(DeleteView):
     model = Customer
     template_name = 'customer/customer_confirm_delete.html'
     success_url = reverse_lazy('customer-list')
+
 
 class CustomerUpdate(UpdateView):
     model = Customer
@@ -142,11 +141,9 @@ class AccountListView(generic.ListView):
     template_name = 'account/account_list.html'
 
 
-
 class AccountDetailView(generic.DetailView):
     model = Account
     template_name = 'account/account_detail.html'
-
 
 
 class AccountDelete(DeleteView):
@@ -184,11 +181,9 @@ class InventoryListView(generic.ListView):
     template_name = 'inventory/inventory_list.html'
 
 
-
 class InventoryDetailView(generic.DetailView):
     model = Inventory
     template_name = 'inventory/inventory_detail.html'
-
 
 
 class InventoryDelete(DeleteView):
@@ -226,11 +221,9 @@ class OrderListView(generic.ListView):
     template_name = 'order/order_list.html'
 
 
-
 class OrderDetailView(generic.DetailView):
     model = Order
     template_name = 'order/order_detail.html'
-
 
 
 class OrderDelete(DeleteView):
@@ -267,11 +260,9 @@ class InvoiceListView(generic.ListView):
     template_name = 'invoice/invoice_list.html'
 
 
-
 class InvoiceDetailView(generic.DetailView):
     model = Invoice
     template_name = 'invoice/invoice_detail.html'
-
 
 
 class InvoiceDelete(DeleteView):
@@ -326,25 +317,41 @@ class SearchResultsView(EmployeeListView):
         title = self.request.GET.get('title')
         fname = self.request.GET.get('fname')
         lname = self.request.GET.get('lname')
+
         #if fname is not None:
         #    object_list = Employee.objects.filter(fname__icontains=fname)
 
-        #object_list = Employee.objects.filter(title__icontains=title)
-            #Employee(title__icontains=query)
-            #| Employee(state__icontains=query)
-        #)
         object_list = Employee.objects.filter(
             Q(title__icontains=title) |
             Q(fname__icontains=fname) |
             Q(lname__icontains=lname)
         )
+        #or_lookup = (
+        #    Q(title__icontains=title) |
+        #    Q(fname__icontains=fname) |
+        #    Q(lname__icontains=lname)
+        #)
+        #object_list =
         return object_list
 
-        #    #Employee(title__icontains=title) |
-        #    Employee(fname__icontains=fname) |
-        #    Employee(lname__icontains=lname)
-
-        #)
 
 
-
+'''
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+'''

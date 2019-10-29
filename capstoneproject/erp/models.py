@@ -7,7 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.urls import reverse
-#from datetime import datetime
+
 
 class Account(models.Model):
     acct_id = models.AutoField(primary_key=True)
@@ -94,8 +94,6 @@ class Employee(models.Model):
         ordering = ['title', 'emp_id',]
 
 
-
-
 class Inventory(models.Model):
     inventory_id = models.AutoField(primary_key=True)
     sku = models.CharField(max_length=12)
@@ -129,7 +127,6 @@ class Invoice(models.Model):
         ('VISA', 'VISA'),
         ('MasterCard', 'MasterCard'),
         ('AmEx', 'AmEx'),
-        #('Credit', 'Credit'),
     ]
 
     pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
@@ -166,7 +163,6 @@ class Order(models.Model):
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
     invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
-    #emp = models.ForeignKey(Employee, models.DO_NOTHING)
 
     def __unicode__(self):
         return self.order_id
@@ -174,8 +170,8 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('order-detail', kwargs={'pk': self.order_id})
 
-   # def __unicode__(self):
-    #    return self.order_id + " " + self.order_dt
+    # def __str__(self):
+    #    return str(self.order_id) + ". " + strftime(self.order_dt)
 
     class Meta:
         managed = False

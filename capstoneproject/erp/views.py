@@ -13,12 +13,16 @@ from django.shortcuts import get_object_or_404
 import operator
 # Create your views here.
 
+#def index(request):
+#    return HttpResponse("Hello, world. You're at the ERP index.")
+
+
 def index(request):
-    return HttpResponse("Hello, world. You're at the ERP index.")
+    return render(request, 'index.html', locals())
 
 
-def home(request):
-    return render(request, 'home.html', locals())
+def index_sales(request):
+    return render(request, 'index_sales.html', locals())
 
 
 def add_employee(request):
@@ -34,6 +38,12 @@ def add_employee(request):
             submitted = True
     return render(request, 'employee/add_employee.html', {'form': form, 'submitted': submitted})
 
+
+
+class EmployeeCreate(CreateView):
+    model = Employee
+    fields = '__all__'
+    template_name = 'employee/employee_form.html'
 
 
 
@@ -326,25 +336,23 @@ class SearchResultsView(EmployeeListView):
         title = self.request.GET.get('title')
         fname = self.request.GET.get('fname')
         lname = self.request.GET.get('lname')
+
         #if fname is not None:
         #    object_list = Employee.objects.filter(fname__icontains=fname)
 
-        #object_list = Employee.objects.filter(title__icontains=title)
-            #Employee(title__icontains=query)
-            #| Employee(state__icontains=query)
-        #)
         object_list = Employee.objects.filter(
             Q(title__icontains=title) |
             Q(fname__icontains=fname) |
             Q(lname__icontains=lname)
         )
+        #or_lookup = (
+        #    Q(title__icontains=title) |
+        #    Q(fname__icontains=fname) |
+        #    Q(lname__icontains=lname)
+        #)
+        #object_list =
         return object_list
 
-        #    #Employee(title__icontains=title) |
-        #    Employee(fname__icontains=fname) |
-        #    Employee(lname__icontains=lname)
-
-        #)
 
 
 

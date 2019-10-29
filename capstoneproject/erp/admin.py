@@ -1,5 +1,5 @@
 from django.contrib import admin
-from erp.models import Account, Customer, Employee, Inventory, Invoice, Order
+from .models import Account, Customer, Employee, Inventory, Invoice, Order
 
 # Register your models here.
 

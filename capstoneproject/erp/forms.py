@@ -13,8 +13,9 @@ class EmployeeForm(forms.ModelForm):
         cleaned_data = super().clean()
         fname = cleaned_data.get("fname")
         lname = cleaned_data.get("lname")
-        if not (fname and lname):
-            raise forms.ValidationError("You must enter First Name and Last Name.")
+        title = cleaned_data.get("title")
+        if not (fname and lname and title):
+            raise forms.ValidationError("You must enter First Name, Last Name and Title.")
 
 
 class AccountForm(forms.ModelForm):

@@ -38,6 +38,7 @@ class EmployeeCreate(CreateView):
     model = Employee
     fields = '__all__'
     template_name = 'employee/employee_form.html'
+    success_url = reverse_lazy('employee-list')
 
 
 class EmployeeListView(generic.ListView):

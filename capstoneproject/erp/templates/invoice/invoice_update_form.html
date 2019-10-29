@@ -8,8 +8,8 @@
 <a href="/erp/invoices/">Back to list</a>
 <form method="post">{% csrf_token %}
     {{ form.as_p }}
+    <input type="button" value="Cancel" onclick="history.back()">
     <input type="submit" value="Update">
-    <a href="javascript:window.history.back()">Cancel</a>
 </form>
 
 {% endblock %}

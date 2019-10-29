@@ -6,5 +6,6 @@
 <form action="" method="post">{% csrf_token %}
     <p>Are you sure you want to delete "{{ object }}"?</p>
     <input type="submit" value="Confirm" />
+    <a href="javascript:window.history.back()">Cancel</a>
 </form>
 {% endblock %}

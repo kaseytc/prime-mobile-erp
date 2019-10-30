@@ -4,7 +4,7 @@
 
 {% block content %}
 <form action="" method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <p>Are you sure you want to delete order "{{ object }}"?</p>
     <input type="button" value="Cancel" onclick="history.back()">
     <input type="submit" value="Confirm" />
 </form>

@@ -24,15 +24,16 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('search_employee/', views.search_employee, name='search-employee-form'),
-    path('search_employee_result/', views.SearchResultsView.as_view(), name='search-employee'),
     path('employees/', views.EmployeeListView.as_view(), name='employee-list'),
     path('employee_form/', views.EmployeeCreate.as_view(), name='employee-form'),
     path('add_employee/', views.add_employee, name='add-employee'),
     path('employees/<pk>', views.EmployeeDetailView.as_view(), name='employee-detail'),
-    path('search_employee_result/employee_update/<pk>', views.EmployeeUpdate.as_view(), name='employee-update'),
     path('employees/employee_confirm_delete/<pk>', views.EmployeeDelete.as_view(), name='employee-delete'),
     path('employees/employee_update/<pk>', views.EmployeeUpdate.as_view(), name='employee-update'),
+    # Search
+    path('search_employee/', views.search_employee, name='search-employee-form'),
+    path('search_employee_result/', views.SearchResultsView.as_view(), name='search-employee'),
+    path('search_employee_result/employee_update/<pk>', views.EmployeeUpdate.as_view(), name='employee-update'),
 ]
 
 urlpatterns += [

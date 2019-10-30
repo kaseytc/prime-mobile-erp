@@ -7,20 +7,20 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.urls import reverse
+from django import forms
 
 
 class Account(models.Model):
     acct_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=50, blank=True, null=True)
-    pwd = models.CharField(max_length=100, blank=True, null=True)
+    username = models.CharField(max_length=50, blank=False, null=False)
+    pwd = models.CharField(max_length=100, blank=False, null=False)
 
     ACCT_TYPE_CHOICES = [
         ('Administrator', 'Administrator'),
         ('Standard', 'Standard'),
     ]
 
-    acct_type = models.CharField(max_length=20, blank=True, null=True, choices=ACCT_TYPE_CHOICES)
-    #acct_type = models.CharField(max_length=20, blank=True, null=True,)
+    acct_type = models.CharField(max_length=20, blank=False, null=False, choices=ACCT_TYPE_CHOICES)
     emp = models.ForeignKey('Employee', models.DO_NOTHING)
 
     def __str__(self):
@@ -37,10 +37,10 @@ class Account(models.Model):
 
 class Customer(models.Model):
     cust_id = models.AutoField(primary_key=True)
-    fname = models.CharField(max_length=50, blank=True, null=True)
-    lname = models.CharField(max_length=50, blank=True, null=True)
+    fname = models.CharField(max_length=50, blank=False, null=False)
+    lname = models.CharField(max_length=50, blank=False, null=False)
     phone = models.CharField(max_length=12, blank=True, null=True)
-    email = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(max_length=100, blank=True, null=True)
     addr1 = models.CharField(max_length=100, blank=True, null=True)
     addr2 = models.CharField(max_length=50, blank=True, null=True)
     city = models.CharField(max_length=50, blank=True, null=True)
@@ -62,10 +62,10 @@ class Customer(models.Model):
 
 class Employee(models.Model):
     emp_id = models.AutoField(primary_key=True)
-    fname = models.CharField(max_length=50, blank=True, null=True)
-    lname = models.CharField(max_length=50, blank=True, null=True)
+    fname = models.CharField(max_length=50, blank=False, null=False)
+    lname = models.CharField(max_length=50, blank=False, null=False)
     phone = models.CharField(max_length=12, blank=True, null=True)
-    email = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(max_length=100, blank=True, null=True)
     manager_emp = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
 
     TITLE_TYPE_CHOICES = [
@@ -73,14 +73,13 @@ class Employee(models.Model):
         ('Sales', 'Sales'),
     ]
 
-    title = models.CharField(max_length=100, blank=True, null=True, choices=TITLE_TYPE_CHOICES)
-    #title = models.CharField(max_length=100, blank=True, null=True)
+    title = models.CharField(max_length=100, blank=False, null=False, choices=TITLE_TYPE_CHOICES)
     addr1 = models.CharField(max_length=100, blank=True, null=True)
     addr2 = models.CharField(max_length=50, blank=True, null=True)
     city = models.CharField(max_length=50, blank=True, null=True)
     state = models.CharField(max_length=2, blank=True, null=True)
     zip = models.CharField(max_length=5, blank=True, null=True)
-    dob = models.DateField(blank=True, null=True)
+    dob = models.DateField(blank=True, null=True,)
 
     def __str__(self):
         return self.fname + " " + self.lname
@@ -97,12 +96,12 @@ class Employee(models.Model):
 class Inventory(models.Model):
     inventory_id = models.AutoField(primary_key=True)
     sku = models.CharField(max_length=12)
-    make = models.CharField(max_length=50, blank=True, null=True)
-    model = models.CharField(max_length=50, blank=True, null=True)
+    make = models.CharField(max_length=50, blank=False, null=False)
+    model = models.CharField(max_length=50, blank=False, null=False)
     inv_desc = models.TextField(blank=True, null=True)
-    inv_price = models.DecimalField(max_digits=10, decimal_places=2)
-    inv_cost = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField(blank=True, null=True)
+    inv_price = models.DecimalField(max_digits=10, decimal_places=2,)
+    inv_cost = models.DecimalField(max_digits=10, decimal_places=2,)
+    quantity = models.PositiveIntegerField()
     bin_aisle = models.PositiveIntegerField()
     bin_bay = models.PositiveIntegerField()
 
@@ -120,7 +119,7 @@ class Inventory(models.Model):
 
 class Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True)
-    invoice_dt = models.DateTimeField()
+    invoice_dt = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     PAY_TYPE_CHOICES= [
         ('Cash', 'Cash'),
@@ -130,7 +129,6 @@ class Invoice(models.Model):
     ]
 
     pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
-    #pay_type = models.CharField(max_length=10, blank=True, null=True,)
     emp = models.ForeignKey(Employee, models.DO_NOTHING)
     invoice_num = models.IntegerField()
 
@@ -140,9 +138,6 @@ class Invoice(models.Model):
     def get_absolute_url(self):
         return reverse('invoice-detail', kwargs={'pk': self.invoice_id})
 
-    #def __str__(self):
-    #    return str(self.invoice_id) + ". " + strftime(self.invoice_dt)
-
     class Meta:
         managed = False
         db_table = 'Invoice'
@@ -150,7 +145,7 @@ class Invoice(models.Model):
 
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
-    order_dt = models.DateTimeField(blank=True, null=True)
+    order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
 
     STATUS_CHOICES= [
         ('Complete', 'Complete'),
@@ -158,7 +153,6 @@ class Order(models.Model):
     ]
 
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
-    #status = models.CharField(max_length=20, blank=True, null=True)
     cust = models.ForeignKey(Customer, models.DO_NOTHING)
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
@@ -169,9 +163,6 @@ class Order(models.Model):
 
     def get_absolute_url(self):
         return reverse('order-detail', kwargs={'pk': self.order_id})
-
-    # def __str__(self):
-    #    return str(self.order_id) + ". " + strftime(self.order_dt)
 
     class Meta:
         managed = False

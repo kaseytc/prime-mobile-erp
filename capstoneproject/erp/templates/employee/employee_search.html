@@ -3,11 +3,13 @@
 {% block title %}Search Employee{% endblock %}
 
 {% block content %}
+<button onclick="history.back()">Back</button>
+
 <h1>Search Employee Data</h1>
     <!--{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}-->
 
-    <form action="{% url 'search-employee' %}" method="get" id="employee_search_form">
-        <p>Title:
+    <form action="{% url 'search-employee-result' %}" method="get" id="employee_search_form">
+        <!--<p>Title:
             <select name="title">
                 <option value="" disabled selected>Search by title</option>
                 <option value="Sales">Sales</option>
@@ -16,7 +18,8 @@
             </select>
         </p>
         <p>First Name: <input type="text" name="fname"></p>
-        <p>Last Name: <input type="text" name="lname"></p>
+        <p>Last Name: <input type="text" name="lname"></p>-->
+        <p>Search: <input type="text" name="query" placeholder="Search... Title or Name"></p>
         <p><input type="submit" value="Search"></p>
     </form>
  {% endblock %}

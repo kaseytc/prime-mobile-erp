@@ -3,6 +3,7 @@
 {% block title %}Show inventory detail{% endblock %}
 
 {% block content %}
+<button onclick="history.back()">Back</button>
 
 <h1>Show inventory detail</h1>
 <p><strong>Inventory ID:</strong> {{inventory.inventory_id}}</p>
@@ -15,7 +16,5 @@
 <p><strong>Quantity:</strong> {{inventory.quantity}}</p>
 <p><strong>Bin Aisle:</strong> {{inventory.bin_aisle}}</p>
 <p><strong>Bin Bay:</strong> {{inventory.bin_bay}}</p>
-
-<a href="./">Back</a>
 
 {% endblock %}

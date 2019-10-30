@@ -19,13 +19,46 @@ def index(request):
 def index_sales(request):
     return render(request, 'index_sales.html', locals())
 
-
+'''
 def add_employee(request):
     submitted = False
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
         if form.is_valid():
             form.save()
+            return HttpResponseRedirect('./?submitted=True')
+    else:
+        form = EmployeeForm()
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'employee/add_employee.html', {'form': form, 'submitted': submitted})
+'''
+
+
+def add_employee(request):
+    submitted = False
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            fname = form.cleaned_data.get('first_name')
+            lname = form.cleaned_data.get('last_name')
+            phone = form.cleaned_data.get('phone')
+            email = form.cleaned_data.get('email')
+            manager_emp = form.cleaned_data.get('manager_employee_id')
+            title = form.cleaned_data.get('title')
+            addr1 = form.cleaned_data.get('address_line_1')
+            addr2 = form.cleaned_data.get('address_line_2')
+            city = form.cleaned_data.get('city')
+            state = form.cleaned_data.get('state')
+            zip = form.cleaned_data.get('zip')
+            dob = form.cleaned_data.get('date_of_birth')
+            p = Employee(
+                fname=fname, lname=lname, phone=phone, email=email,
+                manager_emp=manager_emp, title=title, addr1=addr1, addr2=addr2 ,
+                city=city, state=state, zip=zip, dob=dob,
+            )
+            p.save()
+            #form.save()
             return HttpResponseRedirect('./?submitted=True')
     else:
         form = EmployeeForm()
@@ -45,25 +78,11 @@ class EmployeeListView(generic.ListView):
     model = Employee
     queryset = Employee.objects.all()
     template_name = 'employee/employee_list.html'
-    #def get_context_data(self, **kwargs):
-    #    context = super().get_context_data(**kwargs)
-    #    return context
 
 
 class EmployeeDetailView(generic.DetailView):
     model = Employee
     template_name = 'employee/employee_detail.html'
-#    def get_context_data(self, **kwargs):
-#        context = super().get_context_data(**kwargs)
-#        #context['now'] = timezone.now()
-#        return context
-
-
-'''
-def employee_detail_view(request, emp_id):
-    employee = get_object_or_404(Employee, pk=emp_id)
-    return render(request, 'employee_detail.html', context={'employee': employee})
-'''
 
 
 class EmployeeDelete(DeleteView):
@@ -76,9 +95,38 @@ class EmployeeUpdate(UpdateView):
     model = Employee
     fields = '__all__'
     template_name = 'employee/employee_update_form.html'
-    #template_name_suffix = '_update_form'
 
 
+def search_employee(request):
+    return render(request, 'employee/employee_search.html', locals())
+
+
+#class SearchResultsView(EmployeeListView):
+class EmployeeSearchResultsView(generic.ListView):
+    # model = Employee
+    template_name = 'employee/employee_search_result.html'
+    # paginate_by = 10
+
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+
+        if query is not None:
+            query_list = query.split()
+            object_list = Employee.objects.filter(
+                Q(title__in=query_list) |
+                Q(fname__in=query_list) |
+                Q(lname__in=query_list)
+            )
+        '''
+        if query is not None:
+            object_list = Employee.objects.filter(
+                Q(title__icontains=query_list) |
+                Q(fname__icontains=query_list) |
+                Q(lname__icontains=query_list)
+            )
+        '''
+
+        return object_list
 
 
 def add_customer(request):
@@ -118,7 +166,25 @@ class CustomerUpdate(UpdateView):
     template_name = 'customer/customer_update_form.html'
 
 
+def search_customer(request):
+    return render(request, 'customer/customer_search.html', locals())
 
+
+class CustomerSearchResultsView(generic.ListView):
+    # model = Customer
+    template_name = 'customer/customer_search_result.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+
+        if query is not None:
+            query_list = query.split()
+            object_list = Customer.objects.filter(
+                Q(fname__in=query_list) |
+                Q(lname__in=query_list)
+            )
+
+        return object_list
 
 
 def add_account(request):
@@ -158,9 +224,6 @@ class AccountUpdate(UpdateView):
     template_name = 'account/account_update_form.html'
 
 
-
-
-
 def add_inventory(request):
     submitted = False
     if request.method == 'POST':
@@ -198,7 +261,25 @@ class InventoryUpdate(UpdateView):
     template_name = 'inventory/inventory_update_form.html'
 
 
+def search_inventory(request):
+    return render(request, 'inventory/inventory_search.html', locals())
 
+
+class InventorySearchResultsView(generic.ListView):
+    model = Inventory
+    template_name = 'inventory/inventory_search_result.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+
+        if query is not None:
+            query_list = query.split()
+            object_list = Inventory.objects.filter(
+                Q(make__in=query_list) |
+                Q(model__in=query_list)
+            )
+
+        return object_list
 
 
 def add_order(request):
@@ -236,8 +317,6 @@ class OrderUpdate(UpdateView):
     model = Order
     fields = '__all__'
     template_name = 'order/order_update_form.html'
-    #template_name_suffix = '_update_form'
-
 
 
 def add_invoice(request):
@@ -303,36 +382,7 @@ class ＥmployeeSearchListView(EmployeeListView):
 '''
 
 
-def search_employee(request):
-    return render(request, 'employee/search_employee.html', locals())
 
-
-class SearchResultsView(EmployeeListView):
-    model = Employee
-    template_name = 'employee/employee_list.html'
-    #queryset = Employee.objects.filter(title__icontains='Manager')
-
-    def get_queryset(self):  # new
-        #query = self.request.GET.get('title')
-        title = self.request.GET.get('title')
-        fname = self.request.GET.get('fname')
-        lname = self.request.GET.get('lname')
-
-        #if fname is not None:
-        #    object_list = Employee.objects.filter(fname__icontains=fname)
-
-        object_list = Employee.objects.filter(
-            Q(title__icontains=title) |
-            Q(fname__icontains=fname) |
-            Q(lname__icontains=lname)
-        )
-        #or_lookup = (
-        #    Q(title__icontains=title) |
-        #    Q(fname__icontains=fname) |
-        #    Q(lname__icontains=lname)
-        #)
-        #object_list =
-        return object_list
 
 
 

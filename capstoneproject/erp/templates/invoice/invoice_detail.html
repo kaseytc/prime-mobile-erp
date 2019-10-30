@@ -3,6 +3,7 @@
 {% block title %}Show invoice detail{% endblock %}
 
 {% block content %}
+<button onclick="history.back()">Back</button>
 
 <h1>Show invoice detail</h1>
 <p><strong>Invoice ID:</strong> {{invoice.invoice_id}}</p>
@@ -10,7 +11,5 @@
 <p><strong>Payment Type:</strong> {{invoice.pay_type}}</p>
 <p><strong>Employee:</strong> {{invoice.emp.fname}} {{invoice.emp.lname}}</p>
 <p><strong>Invoice Number:</strong> {{invoice.invoice_num}} </p>
-
-<a href="./">Back</a>
 
 {% endblock %}

@@ -3,6 +3,8 @@
 {% block title %}Add Inventory{% endblock %}
 
 {% block content %}
+<button onclick="history.back()">Back</button>
+
 <h1>Add new inventory</h1>
 
 {% if submitted %}
@@ -22,6 +24,6 @@
             </tr>
         </table>
     </form>
-<p><a href="/">Go back home</a></p>
- {% endif %}
- {% endblock %}
+
+{% endif %}
+{% endblock %}

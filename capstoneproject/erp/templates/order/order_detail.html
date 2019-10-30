@@ -3,6 +3,7 @@
 {% block title %}Show order detail{% endblock %}
 
 {% block content %}
+<button onclick="history.back()">Back</button>
 
 <h1>Show order detail</h1>
 <p><strong>Order ID:</strong> {{order.order_id}}</p>
@@ -12,7 +13,5 @@
 <p><strong>Inventory:</strong> {{order.inventory.make}} {{order.inventory.model}}</p>
 <p><strong>Quantity:</strong> {{order.quantity}}</p>
 <p><strong>Invoice ID:</strong> {{order.invoice}}</p>
-
-<a href="./">Back</a>
 
 {% endblock %}

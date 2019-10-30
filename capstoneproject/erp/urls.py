@@ -14,6 +14,7 @@ urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
+# Account
 urlpatterns += [
     path('accounts/', views.AccountListView.as_view(), name='account-list'),
     path('add_account/', views.add_account, name='add-account'),
@@ -23,6 +24,7 @@ urlpatterns += [
 
 ]
 
+# Employee
 urlpatterns += [
     path('employees/', views.EmployeeListView.as_view(), name='employee-list'),
     #path('employee_form/', views.EmployeeCreate.as_view(), name='employee-form'),
@@ -36,6 +38,7 @@ urlpatterns += [
     #path('search_employee_result/employee_update/<pk>', views.EmployeeUpdate.as_view(), name='employee-update'),
 ]
 
+# Customer
 urlpatterns += [
     path('customers/', views.CustomerListView.as_view(), name='customer-list'),
     path('add_customer/', views.add_customer, name='add-customer'),
@@ -47,6 +50,7 @@ urlpatterns += [
     path('search_customer_result/', views.CustomerSearchResultsView.as_view(), name='search-customer-result'),
 ]
 
+# Inventory
 urlpatterns += [
     path('inventories/', views.InventoryListView.as_view(), name='inventory-list'),
     path('add_inventory/', views.add_inventory, name='add-inventory'),
@@ -58,6 +62,7 @@ urlpatterns += [
     path('search_inventory_result/', views.InventorySearchResultsView.as_view(), name='search-inventory-result'),
 ]
 
+# Order
 urlpatterns += [
     path('add_order/', views.add_order, name='add-order'),
     path('orders/', views.OrderListView.as_view(), name='order-list'),
@@ -66,6 +71,7 @@ urlpatterns += [
     path('orders/order_update/<pk>', views.OrderUpdate.as_view(), name='order-update'),
 ]
 
+# Invoice
 urlpatterns += [
     path('add_invoice/', views.add_invoice, name='add-invoice'),
     path('invoices/', views.InvoiceListView.as_view(), name='invoice-list'),

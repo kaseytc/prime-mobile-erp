@@ -1,12 +1,37 @@
 from django import forms
 from .models import Account, Customer, Employee, Inventory, Invoice, Order
+import datetime
 
-
+'''
 class EmployeeForm(forms.ModelForm):
     # required_css_class = 'required'
     class Meta:
         model = Employee
         fields = '__all__'
+'''
+
+
+class EmployeeForm(forms.Form):
+    #required_css_class = 'required'
+    TITLE_TYPE_CHOICES = [
+        ('Manager', 'Manager'),
+        ('Sales', 'Sales'),
+    ]
+    YEARS = [x for x in range(1940, 2021)]
+
+    first_name = forms.CharField(max_length=50, required=True)
+    last_name = forms.CharField(max_length=50, required=True)
+    title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True, )
+    manager_employee_id = forms.ModelChoiceField(queryset=Employee.objects.filter(title="Manager"))
+    phone = forms.CharField(max_length=12, required=False)
+    email = forms.EmailField(max_length=100, required=False)
+    address_line_1 = forms.CharField(max_length=100, required=False)
+    address_line_2 = forms.CharField(max_length=50, required=False)
+    city = forms.CharField(max_length=50, required=False)
+    state = forms.CharField(max_length=2, required=False)
+    zip = forms.CharField(max_length=5, required=False)
+    date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
+                                    required=False, initial=datetime.date.today)
 
 
 class AccountForm(forms.ModelForm):

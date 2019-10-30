@@ -97,6 +97,38 @@ class EmployeeUpdate(UpdateView):
     template_name = 'employee/employee_update_form.html'
 
 
+def search_employee(request):
+    return render(request, 'employee/employee_search.html', locals())
+
+
+#class SearchResultsView(EmployeeListView):
+class EmployeeSearchResultsView(generic.ListView):
+    # model = Employee
+    template_name = 'employee/employee_search_result.html'
+    # paginate_by = 10
+
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+
+        if query is not None:
+            query_list = query.split()
+            object_list = Employee.objects.filter(
+                Q(title__in=query_list) |
+                Q(fname__in=query_list) |
+                Q(lname__in=query_list)
+            )
+        '''
+        if query is not None:
+            object_list = Employee.objects.filter(
+                Q(title__icontains=query_list) |
+                Q(fname__icontains=query_list) |
+                Q(lname__icontains=query_list)
+            )
+        '''
+
+        return object_list
+
+
 def add_customer(request):
     submitted = False
     if request.method == 'POST':
@@ -132,6 +164,27 @@ class CustomerUpdate(UpdateView):
     model = Customer
     fields = '__all__'
     template_name = 'customer/customer_update_form.html'
+
+
+def search_customer(request):
+    return render(request, 'customer/customer_search.html', locals())
+
+
+class CustomerSearchResultsView(generic.ListView):
+    # model = Customer
+    template_name = 'customer/customer_search_result.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+
+        if query is not None:
+            query_list = query.split()
+            object_list = Customer.objects.filter(
+                Q(fname__in=query_list) |
+                Q(lname__in=query_list)
+            )
+
+        return object_list
 
 
 def add_account(request):
@@ -206,6 +259,27 @@ class InventoryUpdate(UpdateView):
     model = Inventory
     fields = '__all__'
     template_name = 'inventory/inventory_update_form.html'
+
+
+def search_inventory(request):
+    return render(request, 'inventory/inventory_search.html', locals())
+
+
+class InventorySearchResultsView(generic.ListView):
+    model = Inventory
+    template_name = 'inventory/inventory_search_result.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+
+        if query is not None:
+            query_list = query.split()
+            object_list = Inventory.objects.filter(
+                Q(make__in=query_list) |
+                Q(model__in=query_list)
+            )
+
+        return object_list
 
 
 def add_order(request):
@@ -308,36 +382,7 @@ class ＥmployeeSearchListView(EmployeeListView):
 '''
 
 
-def search_employee(request):
-    return render(request, 'employee/search_employee.html', locals())
 
-
-class SearchResultsView(EmployeeListView):
-    model = Employee
-    template_name = 'employee/employee_list.html'
-    #queryset = Employee.objects.filter(title__icontains='Manager')
-
-    def get_queryset(self):  # new
-        #query = self.request.GET.get('title')
-        title = self.request.GET.get('title')
-        fname = self.request.GET.get('fname')
-        lname = self.request.GET.get('lname')
-
-        #if fname is not None:
-        #    object_list = Employee.objects.filter(fname__icontains=fname)
-
-        object_list = Employee.objects.filter(
-            Q(title__icontains=title) |
-            Q(fname__icontains=fname) |
-            Q(lname__icontains=lname)
-        )
-        #or_lookup = (
-        #    Q(title__icontains=title) |
-        #    Q(fname__icontains=fname) |
-        #    Q(lname__icontains=lname)
-        #)
-        #object_list =
-        return object_list
 
 
 

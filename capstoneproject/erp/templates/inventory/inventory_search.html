@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Search Inventory{% endblock %}
+
+{% block content %}
+<button onclick="history.back()">Back</button>
+
+<h1>Search Inventory Data</h1>
+    <!--{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}-->
+
+    <form action="{% url 'search-inventory-result' %}" method="get" id="inventory_search_form">
+        <p>Search: <input type="text" name="query" placeholder="Search... Make or Model"></p>
+        <p><input type="submit" value="Search"></p>
+    </form>
+ {% endblock %}
+
+

@@ -3,6 +3,7 @@
 {% block title %}Show employees detail{% endblock %}
 
 {% block content %}
+<button onclick="history.back()">Back</button>
 
 <h1>Show employees detail</h1>
 <p><strong>Employee ID:</strong> {{employee.emp_id}}</p>
@@ -17,7 +18,5 @@
 <p><strong>City:</strong> {{employee.city}}</p>
 <p><strong>State:</strong> {{employee.state}}</p>
 <p><strong>Zip:</strong> {{employee.zip}}</p>
-
-<a href="./">Back</a>
 
 {% endblock %}

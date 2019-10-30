@@ -4,7 +4,8 @@ import datetime
 
 '''
 class EmployeeForm(forms.ModelForm):
-    # required_css_class = 'required'
+    required_css_class = 'required'
+    
     class Meta:
         model = Employee
         fields = '__all__'
@@ -12,17 +13,17 @@ class EmployeeForm(forms.ModelForm):
 
 
 class EmployeeForm(forms.Form):
-    #required_css_class = 'required'
     TITLE_TYPE_CHOICES = [
         ('Manager', 'Manager'),
         ('Sales', 'Sales'),
     ]
-    YEARS = [x for x in range(1940, 2021)]
+    YEARS = [x for x in range(1950, 2010)]
 
+    #required_css_class = 'required'
     first_name = forms.CharField(max_length=50, required=True)
     last_name = forms.CharField(max_length=50, required=True)
-    title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True, )
-    manager_employee_id = forms.ModelChoiceField(queryset=Employee.objects.filter(title="Manager"))
+    title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True,)
+    manager = forms.ModelChoiceField(queryset=Employee.objects.filter(title__in=["Manager", "Owner"]), required=False)
     phone = forms.CharField(max_length=12, required=False)
     email = forms.EmailField(max_length=100, required=False)
     address_line_1 = forms.CharField(max_length=100, required=False)
@@ -35,35 +36,40 @@ class EmployeeForm(forms.Form):
 
 
 class AccountForm(forms.ModelForm):
-    # required_css_class = 'required'
+    #required_css_class = 'required'
+
     class Meta:
         model = Account
         fields = '__all__'
 
 
 class CustomerForm(forms.ModelForm):
-    # required_css_class = 'required'
+    #required_css_class = 'required'
+
     class Meta:
         model = Customer
         fields = '__all__'
 
 
 class InventoryForm(forms.ModelForm):
-    # required_css_class = 'required'
+    #required_css_class = 'required'
+
     class Meta:
         model = Inventory
         fields = '__all__'
 
 
 class OrderForm(forms.ModelForm):
-    # required_css_class = 'required'
+    #required_css_class = 'required'
+
     class Meta:
         model = Order
         fields = '__all__'
 
 
 class InvoiceForm(forms.ModelForm):
-    # required_css_class = 'required'
+    #required_css_class = 'required'
+
     class Meta:
         model = Invoice
         fields = '__all__'

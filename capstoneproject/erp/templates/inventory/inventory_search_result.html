@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory search result{% endblock %}
+
+{% block content %}
+<button onclick="history.back()">Back</button>
+
+<h1>Inventory search result</h1>
+
+<table>
+    <tr>
+        <th>Inventory ID</th>
+        <th>Make</th>
+        <th>Model</th>
+    </tr>
+
+{% for inventory in object_list %}
+    <tr>
+        <td>{{inventory.inventory_id}}</td>
+        <td>{{inventory.make}}</td>
+        <td>{{inventory.model}}</td>
+        <td><a href="../inventories/{{inventory.inventory_id}}">View</a></td>
+        <td><a href="../inventories/inventory_update/{{inventory.inventory_id}}">Update</a></td>
+        <td><a href="../inventories/inventory_confirm_delete/{{inventory.inventory_id}}">Delete</a></td>
+    </tr>
+{% empty %}
+    <li>No search result.</li>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+

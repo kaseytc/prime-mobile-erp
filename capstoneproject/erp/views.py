@@ -7,7 +7,8 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from .models import Account, Customer, Employee, Inventory, Invoice, Order
 from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm
-
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 # Create your views here.
 
@@ -34,7 +35,7 @@ def add_employee(request):
     return render(request, 'employee/add_employee.html', {'form': form, 'submitted': submitted})
 '''
 
-
+@permission_required('can add employee')
 def add_employee(request):
     submitted = False
     if request.method == 'POST':
@@ -85,13 +86,13 @@ class EmployeeDetailView(generic.DetailView):
     template_name = 'employee/employee_detail.html'
 
 
-class EmployeeDelete(DeleteView):
+class EmployeeDelete(PermissionRequiredMixin, DeleteView):
     model = Employee
     template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
 
 
-class EmployeeUpdate(UpdateView):
+class EmployeeUpdate(PermissionRequiredMixin, UpdateView):
     model = Employee
     fields = '__all__'
     template_name = 'employee/employee_update_form.html'
@@ -180,7 +181,7 @@ class CustomerSearchResultsView(generic.ListView):
 
         return object_list
 
-
+@permission_required('can add account')
 def add_account(request):
     submitted = False
     if request.method == 'POST':
@@ -206,13 +207,13 @@ class AccountDetailView(generic.DetailView):
     template_name = 'account/account_detail.html'
 
 
-class AccountDelete(DeleteView):
+class AccountDelete(PermissionRequiredMixin, DeleteView):
     model = Account
     template_name = 'account/account_confirm_delete.html'
     success_url = reverse_lazy('account-list')
 
 
-class AccountUpdate(UpdateView):
+class AccountUpdate(PermissionRequiredMixin, UpdateView):
     model = Account
     fields = '__all__'
     template_name = 'account/account_update_form.html'

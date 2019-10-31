@@ -119,7 +119,7 @@ class Inventory(models.Model):
 
 class Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True)
-    invoice_dt = models.DateTimeField(auto_now=False, auto_now_add=True)
+    invoice_dt = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     PAY_TYPE_CHOICES= [
         ('Cash', 'Cash'),
@@ -209,6 +209,7 @@ class AuthUser(models.Model):
     is_staff = models.BooleanField()
     is_active = models.BooleanField()
     date_joined = models.DateTimeField()
+    #emp = models.ForeignKey('Employee', models.DO_NOTHING)
 
     class Meta:
         managed = False

@@ -4,13 +4,14 @@
 
 {% block content %}
 <button onclick="history.back()">Back</button>
+<button onclick="location.href='/'">Back Home</button>
 
 <h1>Show customer detail</h1>
 
 <p><strong>Customer ID:</strong> {{customer.cust_id}}</p>
 <p><strong>First Name:</strong> {{customer.fname}}</p>
 <p><strong>Last Name:</strong> {{customer.lname}}</p>
-<p><strong>Birthday:</strong> {{customer.dob}}</p>
+<p><strong>Date of Birth:</strong> {{customer.dob}}</p>
 <p><strong>Email:</strong> {{customer.email}}</p>
 <p><strong>Phone:</strong> {{customer.phone}}</p>
 <p><strong>Address:</strong> {{customer.addr1}} {{customer.addr2}}</p>

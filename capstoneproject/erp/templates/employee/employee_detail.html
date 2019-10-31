@@ -4,13 +4,14 @@
 
 {% block content %}
 <button onclick="history.back()">Back</button>
+<button onclick="location.href='/'">Back Home</button>
 
 <h1>Show employees detail</h1>
 <p><strong>Employee ID:</strong> {{employee.emp_id}}</p>
 <p><strong>Title:</strong> {{employee.title}}</p>
 <p><strong>First Name:</strong> {{employee.fname}}</p>
 <p><strong>Last Name:</strong> {{employee.lname}}</p>
-<p><strong>Birthday:</strong> {{employee.dob}}</p>
+<p><strong>Date of Birth:</strong> {{employee.dob}}</p>
 <p><strong>Manager:</strong> {{employee.manager_emp}}</p>
 <p><strong>Email:</strong> {{employee.email}}</p>
 <p><strong>Phone:</strong> {{employee.phone}}</p>

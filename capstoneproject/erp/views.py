@@ -109,23 +109,15 @@ class EmployeeSearchResultsView(generic.ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('query')
-
+        object_list = list()
         if query is not None:
             query_list = query.split()
-            object_list = Employee.objects.filter(
-                Q(title__in=query_list) |
-                Q(fname__in=query_list) |
-                Q(lname__in=query_list)
-            )
-        '''
-        if query is not None:
-            object_list = Employee.objects.filter(
-                Q(title__icontains=query_list) |
-                Q(fname__icontains=query_list) |
-                Q(lname__icontains=query_list)
-            )
-        '''
-
+            for q in query_list:
+                object_list += Employee.objects.filter(
+                    Q(title__icontains=q) |
+                    Q(fname__icontains=q) |
+                    Q(lname__icontains=q)
+                )
         return object_list
 
 
@@ -176,13 +168,15 @@ class CustomerSearchResultsView(generic.ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('query')
+        object_list = list()
 
         if query is not None:
             query_list = query.split()
-            object_list = Customer.objects.filter(
-                Q(fname__in=query_list) |
-                Q(lname__in=query_list)
-            )
+            for q in query_list:
+                object_list += Customer.objects.filter(
+                    Q(fname__icontains=q) |
+                    Q(lname__icontains=q)
+                )
 
         return object_list
 
@@ -271,14 +265,14 @@ class InventorySearchResultsView(generic.ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('query')
-
+        object_list = list()
         if query is not None:
             query_list = query.split()
-            object_list = Inventory.objects.filter(
-                Q(make__in=query_list) |
-                Q(model__in=query_list)
-            )
-
+            for q in query_list:
+                object_list = Inventory.objects.filter(
+                    Q(make__icontains=q) |
+                    Q(model__icontains=q)
+                )
         return object_list
 
 

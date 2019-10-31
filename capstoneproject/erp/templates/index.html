@@ -57,9 +57,14 @@
 
     <div class="col-sm-9">
       <div class="well">
-        <h4>Hi Username</h4>
+        {% if user.is_authenticated %}
+        <h4>Hi {{ user.username }}!</h4>
+        {% else %}
+        <h4>Dashboard</h4>
+        {% endif %}
         <p></p>
       </div>
+       {% if user.is_superuser %}
       <div class="row">
         <div class="col-sm-4">
           <div class="well">
@@ -122,7 +127,33 @@
           </div>
         </div>
       </div>
+      {% endif %}
+
+      {% if user.is_staff %}
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="well">
+            <h4>Customers</h4>
+            <p><a href="add_customer/">Create</a></p>
+            <p><a href="customers/">View</a></p>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="well">
+            <h4>Orders</h4>
+            <p><a href="add_order/">Create</a></p>
+            <p><a href="orders/">View</a></p>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="well">
+            <h4>Invoices</h4>
+            <p><a href="add_invoice/">Create</a></p>
+            <p><a href="invoices/">View</a></p>
+          </div>
+        </div>
     </div>
+      {% endif %}
   </div>
 </div>
 

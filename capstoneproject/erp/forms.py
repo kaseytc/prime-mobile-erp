@@ -24,6 +24,8 @@ class EmployeeForm(forms.Form):
     last_name = forms.CharField(max_length=50, required=True)
     title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True,)
     manager = forms.ModelChoiceField(queryset=Employee.objects.filter(title__in=["Manager", "Owner"]), required=False)
+    date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
+                                    required=False, initial=datetime.date.today)
     phone = forms.CharField(max_length=12, required=False)
     email = forms.EmailField(max_length=100, required=False)
     address_line_1 = forms.CharField(max_length=100, required=False)
@@ -31,8 +33,6 @@ class EmployeeForm(forms.Form):
     city = forms.CharField(max_length=50, required=False)
     state = forms.CharField(max_length=2, required=False)
     zip = forms.CharField(max_length=5, required=False)
-    date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
-                                    required=False, initial=datetime.date.today)
 
 
 class AccountForm(forms.ModelForm):

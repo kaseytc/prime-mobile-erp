@@ -35,6 +35,7 @@ def add_employee(request):
     return render(request, 'employee/add_employee.html', {'form': form, 'submitted': submitted})
 '''
 
+
 #@permission_required('can add employee')
 def add_employee(request):
     submitted = False
@@ -75,10 +76,12 @@ class EmployeeCreate(CreateView):
     success_url = reverse_lazy('employee-list')
 '''
 
+
 class EmployeeListView(generic.ListView):
     model = Employee
     queryset = Employee.objects.all()
     template_name = 'employee/employee_list.html'
+    paginate_by = 25
 
 
 class EmployeeDetailView(generic.DetailView):
@@ -90,6 +93,21 @@ class EmployeeDelete(DeleteView):
     model = Employee
     template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
+
+'''
+class EmployeeUpdate(UpdateView):
+    #model = Employee
+    #fields = '__all__'
+    form_class = EmployeeForm
+    template_name = 'employee/employee_update_form.html'
+
+    def form_valid(self, form):
+
+        lname = form.cleaned_data['last_name']
+
+
+    #def get_queryset(self):
+'''
 
 
 class EmployeeUpdate(UpdateView):
@@ -106,7 +124,6 @@ def search_employee(request):
 class EmployeeSearchResultsView(generic.ListView):
     # model = Employee
     template_name = 'employee/employee_search_result.html'
-    # paginate_by = 10
 
     def get_queryset(self):
         query = self.request.GET.get('query')
@@ -127,7 +144,22 @@ def add_customer(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
-            form.save()
+            fname = form.cleaned_data.get('first_name')
+            lname = form.cleaned_data.get('last_name')
+            phone = form.cleaned_data.get('phone')
+            email = form.cleaned_data.get('email')
+            addr1 = form.cleaned_data.get('address_line_1')
+            addr2 = form.cleaned_data.get('address_line_2')
+            city = form.cleaned_data.get('city')
+            state = form.cleaned_data.get('state')
+            zip = form.cleaned_data.get('zip')
+            dob = form.cleaned_data.get('date_of_birth')
+            p = Customer(
+                fname=fname, lname=lname, phone=phone, email=email, addr1=addr1,
+                addr2=addr2, city=city, state=state, zip=zip, dob=dob,
+            )
+            p.save()
+            # form.save()
             return HttpResponseRedirect('./?submitted=True')
     else:
         form = CustomerForm()
@@ -140,6 +172,7 @@ class CustomerListView(generic.ListView):
     model = Customer
     queryset = Customer.objects.all()
     template_name = 'customer/customer_list.html'
+    paginate_by = 25
 
 
 class CustomerDetailView(generic.DetailView):
@@ -201,6 +234,7 @@ class AccountListView(generic.ListView):
     model = Account
     queryset = Account.objects.all()
     template_name = 'account/account_list.html'
+    paginate_by = 25
 
 
 class AccountDetailView(generic.DetailView):
@@ -225,7 +259,21 @@ def add_inventory(request):
     if request.method == 'POST':
         form = InventoryForm(request.POST)
         if form.is_valid():
-            form.save()
+            sku = form.cleaned_data.get('sku')
+            make = form.cleaned_data.get('make')
+            model = form.cleaned_data.get('model')
+            inv_desc = form.cleaned_data.get('description')
+            inv_price = form.cleaned_data.get('price')
+            inv_cost = form.cleaned_data.get('cost')
+            quantity = form.cleaned_data.get('quantity')
+            bin_aisle = form.cleaned_data.get('bin_aisle')
+            bin_bay = form.cleaned_data.get('bin_bay')
+            p = Inventory(
+                sku=sku, make=make, model=model, inv_desc=inv_desc, inv_price=inv_price,
+                inv_cost=inv_cost, quantity=quantity, bin_aisle=bin_aisle, bin_bay=bin_bay,
+            )
+            p.save()
+            # form.save()
             return HttpResponseRedirect('./?submitted=True')
     else:
         form = InventoryForm()
@@ -238,6 +286,7 @@ class InventoryListView(generic.ListView):
     model = Inventory
     queryset = Inventory.objects.all()
     template_name = 'inventory/inventory_list.html'
+    paginate_by = 25
 
 
 class InventoryDetailView(generic.DetailView):
@@ -296,6 +345,7 @@ class OrderListView(generic.ListView):
     model = Order
     queryset = Order.objects.all()
     template_name = 'order/order_list.html'
+    paginate_by = 25
 
 
 class OrderDetailView(generic.DetailView):
@@ -333,6 +383,7 @@ class InvoiceListView(generic.ListView):
     model = Invoice
     queryset = Invoice.objects.all()
     template_name = 'invoice/invoice_list.html'
+    paginate_by = 25
 
 
 class InvoiceDetailView(generic.DetailView):

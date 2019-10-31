@@ -4,6 +4,7 @@
 
 {% block content %}
 <button onclick="history.back()">Back</button>
+<button onclick="location.href='/'">Back Home</button>
 
 <h1>Add new employee</h1>
 <hr class="mt-0 mb-4">
@@ -11,7 +12,7 @@
     <p class="success">
          New employee was submitted successfully. Thank you.
     </p>
-    <p><a href="/">Go back home</a></p>
+    <!--<p><a href="{% url 'index' %}">Back Home</a></p>-->
 
 {% else %}
     <form action="" method="post" novalidate>

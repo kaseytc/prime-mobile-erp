@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Logout{% endblock %}
+{% block content %}
+<div>
+    <p class="success">
+         You have successfully logged out.
+    </p>
+    <a href="{% url 'erp-login' %}">Return to Login Page</a>
+</div>
+{% endblock %}

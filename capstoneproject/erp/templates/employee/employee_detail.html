@@ -5,19 +5,32 @@
 {% block content %}
 <button onclick="history.back()">Back</button>
 <button onclick="location.href='/'">Back Home</button>
+<button onclick="location.href='.'">Back Employee List</button>
+<!--<a href="{% url 'employee-list' %}">Back Employee List</a>-->
 
 <h1>Show employees detail</h1>
-<p><strong>Employee ID:</strong> {{employee.emp_id}}</p>
-<p><strong>Title:</strong> {{employee.title}}</p>
-<p><strong>First Name:</strong> {{employee.fname}}</p>
-<p><strong>Last Name:</strong> {{employee.lname}}</p>
-<p><strong>Date of Birth:</strong> {{employee.dob}}</p>
-<p><strong>Manager:</strong> {{employee.manager_emp}}</p>
-<p><strong>Email:</strong> {{employee.email}}</p>
-<p><strong>Phone:</strong> {{employee.phone}}</p>
-<p><strong>Address:</strong> {{employee.addr1}} {{employee.addr2}}</p>
-<p><strong>City:</strong> {{employee.city}}</p>
-<p><strong>State:</strong> {{employee.state}}</p>
-<p><strong>Zip:</strong> {{employee.zip}}</p>
+
+<table>
+    <td>
+        <tr><td><strong>Employee ID:</strong></td><td>{{employee.emp_id}}</td></tr>
+        <tr><td><strong>First Name:</strong></td><td>{{employee.fname}}</td></tr>
+        <tr><td><strong>Last Name:</strong></td><td>{{employee.lname}}</td></tr>
+        <tr><td><strong>Title:</strong></td><td>{{employee.title}}</td></tr>
+        {% if employee.title != "Owner" %}
+        <tr><td><strong>Manager:</strong></td><td>{{employee.manager_emp}}</td></tr>
+        {% endif %}
+        <tr><td><strong>Date of Birth:</strong></td><td>{{employee.dob}}</td></tr>
+        <tr><td><strong>Phone:</strong></td><td>{{employee.phone}}</td></tr>
+        <tr><td><strong>Email:</strong></td><td>{{employee.email}}</td></tr>
+        {% if employee.addr2 is None %}
+        <tr><td><strong>Address:</strong></td><td>{{employee.addr1}}</td></tr>
+        {% else %}
+        <tr><td><strong>Address:</strong></td><td>{{employee.addr1}} {{employee.addr2}}</td></tr>
+        {% endif %}
+        <tr><td><strong>City:</strong></td><td>{{employee.city}}</td></tr>
+        <tr><td><strong>State:</strong></td><td>{{employee.state}}</td></tr>
+        <tr><td><strong>ZIP Code:</strong></td><td>{{employee.zip}}</td></tr>
+    </td>
+</table>
 
 {% endblock %}

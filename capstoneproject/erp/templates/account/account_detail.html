@@ -5,12 +5,19 @@
 {% block content %}
 <button onclick="history.back()">Back</button>
 <button onclick="location.href='/'">Back Home</button>
+<button onclick="location.href='.'">Back Account List</button>
+<!--<a href="{% url 'account-list' %}">Back Account List</a>-->
 
 <h1>Show account detail</h1>
-<p><strong>Account ID:</strong> {{account.acct_id}}</p>
-<p><strong>Account Type:</strong> {{account.acct_type}}</p>
-<p><strong>Username:</strong> {{account.username}}</p>
-<p><strong>Employee ID:</strong> {{account.emp.emp_id}}</p>
-<p><strong>Employee Name:</strong> {{account.emp}}</p>
+
+<table>
+    <td>
+        <tr><td><strong>Account ID:</strong></td><td>{{account.acct_id}}</td></tr>
+        <tr><td><strong>Account Type:</strong></td><td>{{account.acct_type}}</td></tr>
+        <tr><td><strong>Username:</strong></td><td>{{account.username}}</td></tr>
+        <tr><td><strong>Employee ID:</strong></td><td>{{account.emp.emp_id}}</td></tr>
+        <tr><td><strong>Employee Name:</strong></td><td>{{account.emp}}</td></tr>
+    </td>
+</table>
 
 {% endblock %}

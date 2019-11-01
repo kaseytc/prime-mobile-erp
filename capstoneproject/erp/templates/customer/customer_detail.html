@@ -5,21 +5,33 @@
 {% block content %}
 <button onclick="history.back()">Back</button>
 <button onclick="location.href='/'">Back Home</button>
+<button onclick="location.href='.'">Back Customer List</button>
+<!--<a href="{% url 'customer-list' %}">Back Customer List</a>-->
 <!--<a href="{% url 'index' %}">Home</a>-->
 
 <h1>Show customer detail</h1>
 
-<p><strong>Customer ID:</strong> {{customer.cust_id}}</p>
-<p><strong>First Name:</strong> {{customer.fname}}</p>
-<p><strong>Last Name:</strong> {{customer.lname}}</p>
-<p><strong>Date of Birth:</strong> {{customer.dob}}</p>
-<p><strong>Email:</strong> {{customer.email}}</p>
-<p><strong>Phone:</strong> {{customer.phone}}</p>
-<p><strong>Address:</strong> {{customer.addr1}} {{customer.addr2}}</p>
-<p><strong>City:</strong> {{customer.city}}</p>
-<p><strong>State:</strong> {{customer.state}}</p>
-<p><strong>Zip:</strong> {{customer.zip}}</p>
+<table>
+    <td>
+        <tr><td><strong>Customer ID:</strong></td><td>{{customer.cust_id}}</td></tr>
+        <tr><td><strong>First Name:</strong></td><td>{{customer.fname}}</td></tr>
+        <tr><td><strong>Last Name:</strong></td><td>{{customer.lname}}</td></tr>
+        <tr><td><strong>Date of Birth:</strong></td><td>{{customer.dob}}</td></tr>
+        <tr><td><strong>Phone:</strong></td><td>{{customer.phone}}</td></tr>
+        <tr><td><strong>Email:</strong></td><td>{{customer.email}}</td></tr>
+        {% if customer.addr2 is None %}
+        <tr><td><strong>Address:</strong></td><td>{{customer.addr1}}</td></tr>
+        {% else %}
+        <tr><td><strong>Address:</strong></td><td>{{customer.addr1}} {{customer.addr2}}</td></tr>
+        {% endif %}
+        <tr><td><strong>City:</strong></td><td>{{customer.city}}</td></tr>
+        <tr><td><strong>State:</strong></td><td>{{customer.state}}</td></tr>
+        <tr><td><strong>ZIP Code:</strong></td><td>{{customer.zip}}</td></tr>
+    </td>
+</table>
 
 {% endblock %}
+
+
 
 

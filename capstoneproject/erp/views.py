@@ -10,7 +10,8 @@ from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from .models import Account, Customer, Employee, Inventory, Invoice, Order
-from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm
+from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm, \
+    EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm
 
 
 # Create your views here.
@@ -76,36 +77,16 @@ class EmployeeDetailView(generic.DetailView):
     template_name = 'employee/employee_detail.html'
 
 
-class EmployeeDelete(PermissionRequiredMixin, DeleteView):
+class EmployeeDelete(DeleteView):
     model = Employee
     template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
 
 
-class EmployeeUpdate(PermissionRequiredMixin, UpdateView):
-    model = Employee
-    fields = '__all__'
-    template_name = 'employee/employee_update_form.html'
-
-
-
-'''
 class EmployeeUpdate(UpdateView):
-    #model = Employee
-    #fields = '__all__'
-    form_class = EmployeeForm
+    model = Employee
+    form_class = EmployeeUpdateForm
     template_name = 'employee/employee_update_form.html'
-
-    def form_valid(self, form):
-
-        lname = form.cleaned_data['last_name']
-
-
-    #def get_queryset(self):
-'''
-
-
-
 
 
 def search_employee(request):
@@ -114,7 +95,6 @@ def search_employee(request):
 
 # class SearchResultsView(EmployeeListView):
 class EmployeeSearchResultsView(generic.ListView):
-    # model = Employee
     template_name = 'employee/employee_search_result.html'
 
     def get_queryset(self):
@@ -185,7 +165,7 @@ class CustomerDelete(DeleteView):
 
 class CustomerUpdate(UpdateView):
     model = Customer
-    fields = '__all__'
+    form_class = CustomerUpdateForm
     template_name = 'customer/customer_update_form.html'
 
 
@@ -194,7 +174,6 @@ def search_customer(request):
 
 
 class CustomerSearchResultsView(generic.ListView):
-    # model = Customer
     template_name = 'customer/customer_search_result.html'
 
     def get_queryset(self):
@@ -209,6 +188,83 @@ class CustomerSearchResultsView(generic.ListView):
                     Q(lname__icontains=q)
                 )
 
+        return object_list
+
+
+def add_inventory(request):
+    submitted = False
+    inserted = False
+    if request.method == 'POST':
+        form = InventoryForm(request.POST)
+        if form.is_valid():
+            sku = form.cleaned_data.get('sku')
+            make = form.cleaned_data.get('make')
+            model = form.cleaned_data.get('model')
+            inv_desc = form.cleaned_data.get('description')
+            inv_price = form.cleaned_data.get('price')
+            inv_cost = form.cleaned_data.get('cost')
+            quantity = form.cleaned_data.get('quantity')
+            bin_aisle = form.cleaned_data.get('bin_aisle')
+            bin_bay = form.cleaned_data.get('bin_bay')
+            p = Inventory(
+                sku=sku, make=make, model=model, inv_desc=inv_desc, inv_price=inv_price,
+                inv_cost=inv_cost, quantity=quantity, bin_aisle=bin_aisle, bin_bay=bin_bay,
+            )
+            while inserted is False:
+                try:
+                    p.save()
+                    inserted = True
+                except IntegrityError:
+                    pass
+            return HttpResponseRedirect('./?submitted=True')
+    else:
+        form = InventoryForm()
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'inventory/add_inventory.html', {'form': form, 'submitted': submitted})
+
+
+class InventoryListView(generic.ListView):
+    model = Inventory
+    queryset = Inventory.objects.all()
+    template_name = 'inventory/inventory_list.html'
+    paginate_by = 25
+
+
+class InventoryDetailView(generic.DetailView):
+    model = Inventory
+    template_name = 'inventory/inventory_detail.html'
+
+
+class InventoryDelete(DeleteView):
+    model = Inventory
+    template_name = 'inventory/inventory_confirm_delete.html'
+    success_url = reverse_lazy('inventory-list')
+
+
+class InventoryUpdate(UpdateView):
+    model = Inventory
+    form_class = InventoryUpdateForm
+    template_name = 'inventory/inventory_update_form.html'
+
+
+def search_inventory(request):
+    return render(request, 'inventory/inventory_search.html', locals())
+
+
+class InventorySearchResultsView(generic.ListView):
+    template_name = 'inventory/inventory_search_result.html'
+
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+        object_list = list()
+        if query is not None:
+            query_list = query.split()
+            for q in query_list:
+                object_list = Inventory.objects.filter(
+                    Q(make__icontains=q) |
+                    Q(model__icontains=q)
+                )
         return object_list
 
 
@@ -244,7 +300,7 @@ class AccountDetailView(generic.DetailView):
     model = Account
     template_name = 'account/account_detail.html'
 
-
+'''
 class AccountDelete(PermissionRequiredMixin, DeleteView):
     model = Account
     template_name = 'account/account_confirm_delete.html'
@@ -255,85 +311,19 @@ class AccountUpdate(PermissionRequiredMixin, UpdateView):
     model = Account
     fields = '__all__'
     template_name = 'account/account_update_form.html'
+'''
 
 
-def add_inventory(request):
-    submitted = False
-    inserted = False
-    if request.method == 'POST':
-        form = InventoryForm(request.POST)
-        if form.is_valid():
-            sku = form.cleaned_data.get('sku')
-            make = form.cleaned_data.get('make')
-            model = form.cleaned_data.get('model')
-            inv_desc = form.cleaned_data.get('description')
-            inv_price = form.cleaned_data.get('price')
-            inv_cost = form.cleaned_data.get('cost')
-            quantity = form.cleaned_data.get('quantity')
-            bin_aisle = form.cleaned_data.get('bin_aisle')
-            bin_bay = form.cleaned_data.get('bin_bay')
-            p = Inventory(
-                sku=sku, make=make, model=model, inv_desc=inv_desc, inv_price=inv_price,
-                inv_cost=inv_cost, quantity=quantity, bin_aisle=bin_aisle, bin_bay=bin_bay,
-            )
-            while inserted is False:
-                try:
-                    p.save()
-                    inserted = True
-                except IntegrityError:
-                    pass
-            # form.save()
-            return HttpResponseRedirect('./?submitted=True')
-    else:
-        form = InventoryForm()
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'inventory/add_inventory.html', {'form': form, 'submitted': submitted})
+class AccountDelete(DeleteView):
+    model = Account
+    template_name = 'account/account_confirm_delete.html'
+    success_url = reverse_lazy('account-list')
 
 
-class InventoryListView(generic.ListView):
-    model = Inventory
-    queryset = Inventory.objects.all()
-    template_name = 'inventory/inventory_list.html'
-    paginate_by = 25
-
-
-class InventoryDetailView(generic.DetailView):
-    model = Inventory
-    template_name = 'inventory/inventory_detail.html'
-
-
-class InventoryDelete(DeleteView):
-    model = Inventory
-    template_name = 'inventory/inventory_confirm_delete.html'
-    success_url = reverse_lazy('inventory-list')
-
-
-class InventoryUpdate(UpdateView):
-    model = Inventory
+class AccountUpdate(UpdateView):
+    model = Account
     fields = '__all__'
-    template_name = 'inventory/inventory_update_form.html'
-
-
-def search_inventory(request):
-    return render(request, 'inventory/inventory_search.html', locals())
-
-
-class InventorySearchResultsView(generic.ListView):
-    #model = Inventory
-    template_name = 'inventory/inventory_search_result.html'
-
-    def get_queryset(self):
-        query = self.request.GET.get('query')
-        object_list = list()
-        if query is not None:
-            query_list = query.split()
-            for q in query_list:
-                object_list = Inventory.objects.filter(
-                    Q(make__icontains=q) |
-                    Q(model__icontains=q)
-                )
-        return object_list
+    template_name = 'account/account_update_form.html'
 
 
 def add_order(request):

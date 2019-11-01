@@ -2,29 +2,8 @@ from django import forms
 from .models import Account, Customer, Employee, Inventory, Invoice, Order
 import datetime
 from django.core.validators import RegexValidator
-
-'''
-class CustomerForm(forms.ModelForm):
-    #required_css_class = 'required'
-
-    class Meta:
-        model = Customer
-        fields = '__all__'
-        
-class EmployeeForm(forms.ModelForm):
-    required_css_class = 'required'
-    
-    class Meta:
-        model = Employee
-        fields = '__all__'
-        
-class InventoryForm(forms.ModelForm):
-    #required_css_class = 'required'
-
-    class Meta:
-        model = Inventory
-        fields = '__all__'
-'''
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.utils.translation import ugettext_lazy as _
 
 
 class EmployeeForm(forms.Form):
@@ -40,15 +19,39 @@ class EmployeeForm(forms.Form):
     title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True,)
     manager = forms.ModelChoiceField(queryset=Employee.objects.filter(title__in=["Manager", "Owner"]), required=False)
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
-                                    required=False, initial=datetime.date.today)
+                                    required=False, initial=datetime.date.today, label='Date of Birth')
     phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}))
     email = forms.EmailField(max_length=100, required=False)
-    address_line_1 = forms.CharField(max_length=100, required=False)
-    address_line_2 = forms.CharField(max_length=50, required=False)
+    address_line_1 = forms.CharField(max_length=100, required=False, label='Address Line 1')
+    address_line_2 = forms.CharField(max_length=50, required=False, label='Address Line 2')
     city = forms.CharField(max_length=50, required=False)
     state = forms.CharField(max_length=2, required=False)
-    zip = forms.CharField(max_length=5, required=False)
+    zip = forms.CharField(max_length=5, required=False, label='ZIP Code')
+
+
+class EmployeeUpdateForm(forms.ModelForm):
+    TITLE_TYPE_CHOICES = [
+        ('Manager', 'Manager'),
+        ('Sales', 'Sales'),
+    ]
+    #YEARS = [x for x in range(1950, 2010)]
+    phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
+    title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True, )
+    manager_emp = forms.ModelChoiceField(queryset=Employee.objects.filter(title__in=["Manager", "Owner"]),
+                                         required=False, label='Manager')
+    phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
+                            widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}))
+    email = forms.EmailField(max_length=100, required=False)
+    #dob = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
+    #                     required=False, label='Date of Birth')
+
+    class Meta:
+        model = Employee
+        fields = '__all__'
+        labels = dict(fname=_('First Name'), lname=_('Last Name'), dob=_('Date of Birth'),
+                      addr1=_('Address Line 1'), addr2=_('Address Line 2'), zip=_('ZIP Code'))
+        exclude = ['dob', ]
 
 
 class CustomerForm(forms.Form):
@@ -58,15 +61,32 @@ class CustomerForm(forms.Form):
     first_name = forms.CharField(max_length=50, required=True)
     last_name = forms.CharField(max_length=50, required=True)
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
-                                    required=False, initial=datetime.date.today)
+                                    required=False, initial=datetime.date.today, label='Date of Birth')
     phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}),)
     email = forms.EmailField(max_length=100, required=False)
-    address_line_1 = forms.CharField(max_length=100, required=False)
-    address_line_2 = forms.CharField(max_length=50, required=False)
+    address_line_1 = forms.CharField(max_length=100, required=False, label='Address Line 1')
+    address_line_2 = forms.CharField(max_length=50, required=False, label='Address Line 2')
     city = forms.CharField(max_length=50, required=False)
     state = forms.CharField(max_length=2, required=False)
-    zip = forms.CharField(max_length=5, required=False)
+    zip = forms.CharField(max_length=5, required=False, label='ZIP Code')
+
+
+class CustomerUpdateForm(forms.ModelForm):
+    #YEARS = [x for x in range(1950, 2010)]
+    phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
+    phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
+                            widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}))
+    email = forms.EmailField(max_length=100, required=False)
+    #dob = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
+    #                     required=False, label='Date of Birth')
+
+    class Meta:
+        model = Customer
+        fields = '__all__'
+        labels = dict(fname=_('First Name'), lname=_('Last Name'), dob=_('Date of Birth'), addr1=_('Address Line 1'),
+                      addr2=_('Address Line 2'), zip=_('ZIP Code'))
+        exclude = ['dob', ]
 
 
 class InventoryForm(forms.Form):
@@ -74,20 +94,20 @@ class InventoryForm(forms.Form):
     sku = forms.CharField(max_length=12, required=True, label='SKU')
     make = forms.CharField(max_length=50, required=True)
     model = forms.CharField(max_length=50, required=True)
-    bin_aisle = forms.IntegerField(min_value=1, required=True)
-    bin_bay = forms.IntegerField(min_value=1, required=True)
+    bin_aisle = forms.IntegerField(min_value=1, required=True, label='Bin Aisle')
+    bin_bay = forms.IntegerField(min_value=1, required=True, label='Bin Bay')
     quantity = forms.IntegerField(min_value=0, required=True)
     cost = forms.DecimalField(max_digits=10, decimal_places=2, required=True)
     price = forms.DecimalField(max_digits=10, decimal_places=2, required=True)
     description = forms.CharField(widget=forms.Textarea, required=False)
 
 
-class AccountForm(forms.ModelForm):
-    #required_css_class = 'required'
-
+class InventoryUpdateForm(forms.ModelForm):
     class Meta:
-        model = Account
+        model = Inventory
         fields = '__all__'
+        labels = dict(sku=_('SKU'), bin_aisle=_('Bin Aisle'), bin_bay=_('Bin Bay'), inv_cost=_('Cost'),
+                      inv_price=_('Price'), inv_desc=_('Description'))
 
 
 class OrderForm(forms.ModelForm):
@@ -104,3 +124,13 @@ class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
         fields = '__all__'
+
+
+class AccountForm(forms.ModelForm):
+    #required_css_class = 'required'
+
+    class Meta:
+        model = Account
+        fields = '__all__'
+
+

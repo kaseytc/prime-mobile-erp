@@ -1,9 +1,10 @@
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -20,6 +21,8 @@ def index(request):
 
 
 def logout_view(request):
+    logout(request)
+    # Redirect to a success page.
     return render(request, 'logout.html', locals())
 
 

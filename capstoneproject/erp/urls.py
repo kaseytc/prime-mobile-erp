@@ -1,14 +1,15 @@
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
 from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('login/', LoginView.as_view(template_name='registration/login.html'), name='erp-login'),
+    #path('logout/', views.logout_view, name='erp-logout'),
 ]
 
-# Add Django site authentication urls (for login, logout, password management)
+# Django authentication urls (login, logout, password management)
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
 ]

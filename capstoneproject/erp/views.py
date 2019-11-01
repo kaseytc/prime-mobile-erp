@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
@@ -8,18 +10,13 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from .models import Account, Customer, Employee, Inventory, Invoice, Order
 from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm
-from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth import logout
 
 # Create your views here.
 
 
 def index(request):
     return render(request, 'index.html', locals())
-
-
-def index_sales(request):
-    return render(request, 'index_sales.html', locals())
 
 
 #@permission_required('can add employee')

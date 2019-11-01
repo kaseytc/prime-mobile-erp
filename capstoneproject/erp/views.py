@@ -1,3 +1,6 @@
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -7,8 +10,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from .models import Account, Customer, Employee, Inventory, Invoice, Order
 from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm
-from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth import logout
 
 # Create your views here.
 
@@ -17,28 +19,10 @@ def index(request):
     return render(request, 'index.html', locals())
 
 
-def index_sales(request):
-    return render(request, 'index_sales.html', locals())
-
-'''
-def add_employee(request):
-    submitted = False
-    if request.method == 'POST':
-        form = EmployeeForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('./?submitted=True')
-    else:
-        form = EmployeeForm()
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'employee/add_employee.html', {'form': form, 'submitted': submitted})
-'''
-
-
 #@permission_required('can add employee')
 def add_employee(request):
     submitted = False
+    inserted = False
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
         if form.is_valid():
@@ -59,7 +43,12 @@ def add_employee(request):
                 manager_emp=manager_emp, title=title, addr1=addr1, addr2=addr2 ,
                 city=city, state=state, zip=zip, dob=dob,
             )
-            p.save()
+            while inserted is False:
+                try:
+                    p.save()
+                    inserted = True
+                except IntegrityError:
+                    pass
             #form.save()
             return HttpResponseRedirect('./?submitted=True')
     else:
@@ -67,14 +56,6 @@ def add_employee(request):
         if 'submitted' in request.GET:
             submitted = True
     return render(request, 'employee/add_employee.html', {'form': form, 'submitted': submitted})
-
-'''
-class EmployeeCreate(CreateView):
-    model = Employee
-    fields = '__all__'
-    template_name = 'employee/employee_form.html'
-    success_url = reverse_lazy('employee-list')
-'''
 
 
 class EmployeeListView(generic.ListView):
@@ -89,10 +70,18 @@ class EmployeeDetailView(generic.DetailView):
     template_name = 'employee/employee_detail.html'
 
 
-class EmployeeDelete(DeleteView):
+class EmployeeDelete(PermissionRequiredMixin, DeleteView):
     model = Employee
     template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
+
+
+class EmployeeUpdate(PermissionRequiredMixin, UpdateView):
+    model = Employee
+    fields = '__all__'
+    template_name = 'employee/employee_update_form.html'
+
+
 
 '''
 class EmployeeUpdate(UpdateView):
@@ -110,10 +99,7 @@ class EmployeeUpdate(UpdateView):
 '''
 
 
-class EmployeeUpdate(UpdateView):
-    model = Employee
-    fields = '__all__'
-    template_name = 'employee/employee_update_form.html'
+
 
 
 def search_employee(request):
@@ -141,6 +127,7 @@ class EmployeeSearchResultsView(generic.ListView):
 
 def add_customer(request):
     submitted = False
+    inserted = False
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
@@ -158,7 +145,12 @@ def add_customer(request):
                 fname=fname, lname=lname, phone=phone, email=email, addr1=addr1,
                 addr2=addr2, city=city, state=state, zip=zip, dob=dob,
             )
-            p.save()
+            while inserted is False:
+                try:
+                    p.save()
+                    inserted = True
+                except IntegrityError:
+                    pass
             # form.save()
             return HttpResponseRedirect('./?submitted=True')
     else:
@@ -218,10 +210,16 @@ class CustomerSearchResultsView(generic.ListView):
 #@permission_required('can add account')
 def add_account(request):
     submitted = False
+    inserted = False
     if request.method == 'POST':
         form = AccountForm(request.POST)
         if form.is_valid():
-            form.save()
+            while inserted is False:
+                try:
+                    form.save()
+                    inserted = True
+                except IntegrityError:
+                    pass
             return HttpResponseRedirect('./?submitted=True')
     else:
         form = AccountForm()
@@ -242,13 +240,13 @@ class AccountDetailView(generic.DetailView):
     template_name = 'account/account_detail.html'
 
 
-class AccountDelete(DeleteView):
+class AccountDelete(PermissionRequiredMixin, DeleteView):
     model = Account
     template_name = 'account/account_confirm_delete.html'
     success_url = reverse_lazy('account-list')
 
 
-class AccountUpdate(UpdateView):
+class AccountUpdate(PermissionRequiredMixin, UpdateView):
     model = Account
     fields = '__all__'
     template_name = 'account/account_update_form.html'
@@ -256,6 +254,7 @@ class AccountUpdate(UpdateView):
 
 def add_inventory(request):
     submitted = False
+    inserted = False
     if request.method == 'POST':
         form = InventoryForm(request.POST)
         if form.is_valid():
@@ -272,7 +271,12 @@ def add_inventory(request):
                 sku=sku, make=make, model=model, inv_desc=inv_desc, inv_price=inv_price,
                 inv_cost=inv_cost, quantity=quantity, bin_aisle=bin_aisle, bin_bay=bin_bay,
             )
-            p.save()
+            while inserted is False:
+                try:
+                    p.save()
+                    inserted = True
+                except IntegrityError:
+                    pass
             # form.save()
             return HttpResponseRedirect('./?submitted=True')
     else:
@@ -311,7 +315,7 @@ def search_inventory(request):
 
 
 class InventorySearchResultsView(generic.ListView):
-    model = Inventory
+    #model = Inventory
     template_name = 'inventory/inventory_search_result.html'
 
     def get_queryset(self):
@@ -329,10 +333,16 @@ class InventorySearchResultsView(generic.ListView):
 
 def add_order(request):
     submitted = False
+    inserted = False
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            form.save()
+            while inserted is False:
+                try:
+                    form.save()
+                    inserted = True
+                except IntegrityError:
+                    pass
             return HttpResponseRedirect('./?submitted=True')
     else:
         form = OrderForm()
@@ -367,10 +377,16 @@ class OrderUpdate(UpdateView):
 
 def add_invoice(request):
     submitted = False
+    inserted = False
     if request.method == 'POST':
         form = InvoiceForm(request.POST)
         if form.is_valid():
-            form.save()
+            while inserted is False:
+                try:
+                    form.save()
+                    inserted = True
+                except IntegrityError:
+                    pass
             return HttpResponseRedirect('./?submitted=True')
     else:
         form = InvoiceForm()

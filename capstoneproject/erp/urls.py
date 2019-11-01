@@ -1,14 +1,15 @@
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
 from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('login/', LoginView.as_view(template_name='registration/login.html'), name='erp-login'),
+    #path('logout/', views.logout_view, name='erp-logout'),
 ]
 
-# Add Django site authentication urls (for login, logout, password management)
+# Django authentication urls (login, logout, password management)
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
@@ -26,15 +27,12 @@ urlpatterns += [
 # Employee
 urlpatterns += [
     path('employees/', views.EmployeeListView.as_view(), name='employee-list'),
-    #path('employee_form/', views.EmployeeCreate.as_view(), name='employee-form'),
     path('add_employee/', views.add_employee, name='add-employee'),
     path('employees/<pk>', views.EmployeeDetailView.as_view(), name='employee-detail'),
     path('employees/employee_confirm_delete/<pk>', views.EmployeeDelete.as_view(), name='employee-delete'),
     path('employees/employee_update/<pk>', views.EmployeeUpdate.as_view(), name='employee-update'),
-    # Search
     path('search_employee/', views.search_employee, name='search-employee-form'),
     path('search_employee_result/', views.EmployeeSearchResultsView.as_view(), name='search-employee-result'),
-    #path('search_employee_result/employee_update/<pk>', views.EmployeeUpdate.as_view(), name='employee-update'),
 ]
 
 # Customer
@@ -44,7 +42,6 @@ urlpatterns += [
     path('customers/<pk>', views.CustomerDetailView.as_view(), name='customer-detail'),
     path('customers/customer_confirm_delete/<pk>', views.CustomerDelete.as_view(), name='customer-delete'),
     path('customers/customer_update/<pk>', views.CustomerUpdate.as_view(), name='customer-update'),
-    # Search
     path('search_customer/', views.search_customer, name='search-customer-form'),
     path('search_customer_result/', views.CustomerSearchResultsView.as_view(), name='search-customer-result'),
 ]
@@ -56,7 +53,6 @@ urlpatterns += [
     path('inventories/<pk>', views.InventoryDetailView.as_view(), name='inventory-detail'),
     path('inventories/inventory_confirm_delete/<pk>', views.InventoryDelete.as_view(), name='inventory-delete'),
     path('inventories/inventory_update/<pk>', views.InventoryUpdate.as_view(), name='inventory-update'),
-    # Search
     path('search_inventory/', views.search_inventory, name='search-inventory-form'),
     path('search_inventory_result/', views.InventorySearchResultsView.as_view(), name='search-inventory-result'),
 ]

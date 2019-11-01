@@ -10,7 +10,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from .models import Account, Customer, Employee, Inventory, Invoice, Order
 from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm
-from django.contrib.auth import logout
+
 
 # Create your views here.
 
@@ -22,7 +22,8 @@ def index(request):
 def logout_view(request):
     return render(request, 'logout.html', locals())
 
-#@permission_required('can add employee')
+
+# @permission_required('can add employee')
 def add_employee(request):
     submitted = False
     inserted = False
@@ -52,7 +53,6 @@ def add_employee(request):
                     inserted = True
                 except IntegrityError:
                     pass
-            #form.save()
             return HttpResponseRedirect('./?submitted=True')
     else:
         form = EmployeeForm()
@@ -109,7 +109,7 @@ def search_employee(request):
     return render(request, 'employee/employee_search.html', locals())
 
 
-#class SearchResultsView(EmployeeListView):
+# class SearchResultsView(EmployeeListView):
 class EmployeeSearchResultsView(generic.ListView):
     # model = Employee
     template_name = 'employee/employee_search_result.html'
@@ -154,7 +154,6 @@ def add_customer(request):
                     inserted = True
                 except IntegrityError:
                     pass
-            # form.save()
             return HttpResponseRedirect('./?submitted=True')
     else:
         form = CustomerForm()
@@ -210,7 +209,7 @@ class CustomerSearchResultsView(generic.ListView):
         return object_list
 
 
-#@permission_required('can add account')
+# @permission_required('can add account')
 def add_account(request):
     submitted = False
     inserted = False

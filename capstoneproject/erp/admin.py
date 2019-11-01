@@ -27,6 +27,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     ordering = ('emp_id',)
     list_filter = ('title',)
 
+
 class InventoryAdmin(admin.ModelAdmin):
     list_display = ('make', 'model', 'bin_bay', 'bin_aisle', 'inv_price', 'quantity')
     search_fields = ('make',)

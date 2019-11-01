@@ -57,7 +57,7 @@ class Customer(models.Model):
     class Meta:
         managed = False
         db_table = 'Customer'
-        #ordering = ['lname', ]
+        ordering = ['lname', 'fname', 'cust_id',]
 
 
 class Employee(models.Model):
@@ -90,7 +90,7 @@ class Employee(models.Model):
     class Meta:
         managed = False
         db_table = 'Employee'
-        ordering = ['title', 'emp_id',]
+        ordering = ['title', 'lname', 'fname', 'emp_id', ]
 
 
 class Inventory(models.Model):
@@ -114,7 +114,7 @@ class Inventory(models.Model):
     class Meta:
         managed = False
         db_table = 'Inventory'
-        ordering = ['make', ]
+        ordering = ['make', 'model',]
 
 
 class Invoice(models.Model):

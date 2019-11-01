@@ -19,6 +19,9 @@ def index(request):
     return render(request, 'index.html', locals())
 
 
+def logout_view(request):
+    return render(request, 'logout.html', locals())
+
 #@permission_required('can add employee')
 def add_employee(request):
     submitted = False

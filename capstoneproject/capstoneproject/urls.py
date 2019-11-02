@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('erp/', include('erp.urls')),
+    # Django authentication urls (login, logout, password management)
     path('users/', include('django.contrib.auth.urls')),
     path('', RedirectView.as_view(url='/erp/', permanent=True)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

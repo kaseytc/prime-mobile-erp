@@ -3,7 +3,11 @@
 {% block title %}Update account data{% endblock %}
 
 {% block content %}
+<button onclick="history.back()">Back</button>
+<button onclick="location.href='/'">Back Home</button>
+
 <h1>Update account data</h1>
+
 <form method="post">{% csrf_token %}
     <table>
         {{ form.as_table }}

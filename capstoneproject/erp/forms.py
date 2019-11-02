@@ -13,6 +13,7 @@ class EmployeeForm(forms.Form):
     ]
     YEARS = [x for x in range(1950, 2010)]
     phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
+    zip_regex = RegexValidator(regex='^\d{5}$', message="Enter a valid ZIP code")
     #required_css_class = 'required'
     first_name = forms.CharField(max_length=50, required=True)
     last_name = forms.CharField(max_length=50, required=True)
@@ -27,7 +28,7 @@ class EmployeeForm(forms.Form):
     address_line_2 = forms.CharField(max_length=50, required=False, label='Address Line 2')
     city = forms.CharField(max_length=50, required=False)
     state = forms.CharField(max_length=2, required=False)
-    zip = forms.CharField(max_length=5, required=False, label='ZIP Code')
+    zip = forms.CharField(max_length=5, required=False, validators=[zip_regex], label='ZIP Code')
 
 
 class EmployeeUpdateForm(forms.ModelForm):
@@ -37,12 +38,14 @@ class EmployeeUpdateForm(forms.ModelForm):
     ]
     #YEARS = [x for x in range(1950, 2010)]
     phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
+    zip_regex = RegexValidator(regex='^\d{5}$', message="Enter a valid ZIP code")
     title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True, )
     manager_emp = forms.ModelChoiceField(queryset=Employee.objects.filter(title__in=["Manager", "Owner"]),
                                          required=False, label='Manager')
     phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}))
     email = forms.EmailField(max_length=100, required=False)
+    zip = forms.CharField(max_length=5, required=False, validators=[zip_regex])
     #dob = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
     #                     required=False, label='Date of Birth')
 
@@ -57,6 +60,7 @@ class EmployeeUpdateForm(forms.ModelForm):
 class CustomerForm(forms.Form):
     YEARS = [x for x in range(1910, 2020)]
     phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
+    zip_regex = RegexValidator(regex='^\d{5}$', message="Enter a valid ZIP code")
     #required_css_class = 'required'
     first_name = forms.CharField(max_length=50, required=True)
     last_name = forms.CharField(max_length=50, required=True)
@@ -69,15 +73,17 @@ class CustomerForm(forms.Form):
     address_line_2 = forms.CharField(max_length=50, required=False, label='Address Line 2')
     city = forms.CharField(max_length=50, required=False)
     state = forms.CharField(max_length=2, required=False)
-    zip = forms.CharField(max_length=5, required=False, label='ZIP Code')
+    zip = forms.CharField(max_length=5, required=False, validators=[zip_regex], label='ZIP Code')
 
 
 class CustomerUpdateForm(forms.ModelForm):
     #YEARS = [x for x in range(1950, 2010)]
     phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
+    zip_regex = RegexValidator(regex='^\d{5}$', message="Enter a valid ZIP code")
     phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}))
     email = forms.EmailField(max_length=100, required=False)
+    zip = forms.CharField(max_length=5, required=False, validators=[zip_regex])
     #dob = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
     #                     required=False, label='Date of Birth')
 

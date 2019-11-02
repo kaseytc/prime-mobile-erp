@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
 from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
-from .forms import ErpUserCreationForm, ErpUserChangeForm
+#from .forms import ErpUserCreationForm, ErpUserChangeForm
 from .models import ErpUser
 
 # Register your models here.
@@ -71,14 +71,15 @@ class OrderAdmin(admin.ModelAdmin):
 class ErpUserInline(admin.StackedInline):
     model = ErpUser
     can_delete = False
-    verbose_name_plural = 'user'
+    verbose_name_plural = 'erpuser'
 
 
 # Define a new User admin
 class UserAdmin(BaseUserAdmin):
     inlines = (ErpUserInline,)
-    add_form = ErpUserCreationForm
-    form = ErpUserChangeForm
+    list_display = ('username', 'first_name', 'last_name',  'is_superuser',  'is_staff', 'last_login',)
+    #add_form = ErpUserCreationForm
+    #form = ErpUserChangeForm
 
 
 # Re-register UserAdmin

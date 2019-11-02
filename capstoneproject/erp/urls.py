@@ -11,6 +11,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='erp-logout'),
 ]
 
+'''
 # User
 urlpatterns += [
     path('users/', views.UserListView.as_view(), name='user-list'),
@@ -20,6 +21,7 @@ urlpatterns += [
     path('users/user_update/<pk>', views.UserUpdate.as_view(), name='user-update'),
 
 ]
+'''
 
 # Account
 urlpatterns += [

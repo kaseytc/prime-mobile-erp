@@ -39,7 +39,7 @@
         <td>{{user.emp.lname}}</td>-->
         <td><a href="{{user.id}}">View</a></td>
         <td><a href="account_update/{{user.id}}">Update</a></td>
-        {% if user.is_superuser is True %}
+        {% if user.emp.title != "Owner" %}
             <td><a href="account_confirm_delete/{{user.id}}">Delete</a></td>
         {% endif %}
     </tr>

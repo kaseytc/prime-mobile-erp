@@ -150,13 +150,14 @@ class UserForm(forms.ModelForm):
         fields = '__all__'
 
 
+'''
 class ErpUserCreationForm(UserCreationForm):
     emp = forms.ModelChoiceField(queryset=Employee.objects.all(), label='Employee')
 
     class Meta:
         model = User
         #fields = '__all__'
-        fields = ['username', 'emp', 'groups']
+        fields = ['username', 'emp', 'groups', 'is_staff']
         #exclude = ['password', 'last_login', 'is_active', 'date_joined',
         # 'user_permissions', 'is_staff', 'is_superuser',]
 
@@ -165,5 +166,5 @@ class ErpUserChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = '__all__'
-
+'''
 

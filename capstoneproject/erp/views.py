@@ -15,7 +15,7 @@ import operator
 from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
 from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm, \
     EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm
-from .forms import ErpUserCreationForm
+#from .forms import ErpUserCreationForm
 
 # Create your views here.
 
@@ -434,12 +434,12 @@ class UserDetailView(generic.DetailView):
 
 
 
-
+'''
 class UserCreateView(CreateView):
     form_class = ErpUserCreationForm
     success_url = reverse_lazy('user-list')
     template_name = 'user/add_user.html'
-
+'''
 
 class UserUpdate(UpdateView):
     model = User

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Show user detail{% endblock %}
+
+{% block content %}
+<button onclick="history.back()">Back</button>
+<button onclick="location.href='/'">Back Home</button>
+<button onclick="location.href='.'">Back User List</button>
+<!--<a href="{% url 'account-list' %}">Back Account List</a>-->
+
+<h1>Show user detail</h1>
+
+<table>
+    <td>
+        <tr><td><strong>Employee ID:</strong></td><td>{{erpuser.emp.emp_id}}</td></tr>
+        <tr><td><strong>Username:</strong></td><td>{{erpuser.account.username}}</td></tr>
+        <tr><td><strong>First Name:</strong></td><td>{{erpuser.account.first_name}}</td></tr>
+        <tr><td><strong>Last Name:</strong></td><td>{{erpuser.account.account.last_name}}</td></tr>
+        <tr><td><strong>Email:</strong></td><td>{{erpuser.account.email}}</td></tr>
+        <!--<tr><td><strong>Employee Name:</strong></td><td>{{erpuser.emp}}</td></tr>-->
+        <!-- <tr><td><strong>Account ID:</strong></td><td>{{erpaccount.password}}</td> -->
+        <tr><td><strong>Groups:</strong></td><td>{{erpuser.account.groups}}</td></tr>
+        <!--<tr><td><strong>Account ID:</strong></td><td>{{erpuser.account.user_permissions}}</td>-->
+        <tr><td><strong>Is Superuser:</strong></td><td>{{erpuser.account.is_superuser}}</td></tr>
+        <tr><td><strong>Is Staff:</strong></td><td>{{erpuser.account.is_staff}}</td></tr>
+        <tr><td><strong>Is Active:</strong></td><td>{{erpuser.account.is_active}}</td></tr>
+        <tr><td><strong>Date Joined:</strong></td><td>{{erpuser.account.date_joined}}</td></tr>
+        <tr><td><strong>Last Login:</strong></td><td>{{erpuser.account.last_login}}</td></tr>
+    </td>
+</table>
+
+{% endblock %}

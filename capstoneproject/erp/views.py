@@ -1,18 +1,21 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
+from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
-from .models import Account, Customer, Employee, Inventory, Invoice, Order
+
+from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
 from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm, \
     EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm
-
+#from .forms import ErpUserCreationForm
 
 # Create your views here.
 
@@ -300,6 +303,21 @@ class AccountDetailView(generic.DetailView):
     model = Account
     template_name = 'account/account_detail.html'
 
+
+class AccountDelete(DeleteView):
+    model = Account
+    template_name = 'account/account_confirm_delete.html'
+    success_url = reverse_lazy('account-list')
+
+
+class AccountUpdate(UpdateView):
+    model = Account
+    fields = '__all__'
+    template_name = 'account/account_update_form.html'
+
+
+
+
 '''
 class AccountDelete(PermissionRequiredMixin, DeleteView):
     model = Account
@@ -312,18 +330,6 @@ class AccountUpdate(PermissionRequiredMixin, UpdateView):
     fields = '__all__'
     template_name = 'account/account_update_form.html'
 '''
-
-
-class AccountDelete(DeleteView):
-    model = Account
-    template_name = 'account/account_confirm_delete.html'
-    success_url = reverse_lazy('account-list')
-
-
-class AccountUpdate(UpdateView):
-    model = Account
-    fields = '__all__'
-    template_name = 'account/account_update_form.html'
 
 
 def add_order(request):
@@ -412,4 +418,38 @@ class InvoiceUpdate(UpdateView):
     model = Invoice
     fields = '__all__'
     template_name = 'invoice/invoice_update_form.html'
+
+
+class UserListView(generic.ListView):
+    model = ErpUser
+    queryset = ErpUser.objects.all()
+    template_name = 'user/user_list.html'
+    paginate_by = 25
+
+
+class UserDetailView(generic.DetailView):
+    model = ErpUser
+    template_name = 'user/user_detail.html'
+
+
+
+
+'''
+class UserCreateView(CreateView):
+    form_class = ErpUserCreationForm
+    success_url = reverse_lazy('user-list')
+    template_name = 'user/add_user.html'
+'''
+
+class UserUpdate(UpdateView):
+    model = User
+    fields = '__all__'
+    template_name = 'user/user_update_form.html'
+
+
+class UserDelete(DeleteView):
+    model = User
+    template_name = 'user/user_confirm_delete.html'
+    success_url = reverse_lazy('user-list')
+
 

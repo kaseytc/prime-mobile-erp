@@ -1,6 +1,8 @@
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
+#from .views import UserCreateView
+
 from . import views
 
 urlpatterns = [
@@ -9,10 +11,17 @@ urlpatterns = [
     path('logout/', views.logout_view, name='erp-logout'),
 ]
 
-# Django authentication urls (login, logout, password management)
+'''
+# User
 urlpatterns += [
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('users/', views.UserListView.as_view(), name='user-list'),
+    path('add_user/', views.UserCreateView.as_view(), name='add-user'),
+    path('users/<pk>', views.UserDetailView.as_view(), name='user-detail'),
+    path('users/user_confirm_delete/<pk>', views.UserDelete.as_view(), name='user-delete'),
+    path('users/user_update/<pk>', views.UserUpdate.as_view(), name='user-update'),
+
 ]
+'''
 
 # Account
 urlpatterns += [

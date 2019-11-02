@@ -58,19 +58,24 @@
 
     <div class="col-sm-9">
       <div class="well">
+        {% if user.first_name != "" %}
+        <h4>Hi {{ user.first_name }}!</h4>
+        {% else %}
         <h4>Hi {{ user.username }}!</h4>
+        {% endif %}
         <p></p>
       </div>
-       {% if user.is_superuser %}
+       {% if user.is_staff %}
       <div class="row">
-        <div class="col-sm-4">
+        <!--<div class="col-sm-4">
           <div class="well">
             <h4>Accounts</h4>
             <p><a href="add_account/">Create</a></p>
             <p><a href="accounts/">View</a></p>
-            <!--<p><a href="#">Search</a></p>-->
+            <p><a href="#">Search</a></p>
           </div>
-        </div>
+        </div>-->
+
         <div class="col-sm-4">
           <div class="well">
             <h4>Employees</h4>
@@ -88,9 +93,6 @@
             <p><a href="search_customer/">Search</a></p>
           </div>
         </div>
-
-      </div>
-      <div class="row">
         <div class="col-sm-4">
           <div class="well">
             <h4>Inventories</h4>
@@ -99,6 +101,8 @@
             <p><a href="search_inventory/">Search</a></p>
           </div>
         </div>
+      </div>
+      <div class="row">
         <div class="col-sm-4">
           <div class="well">
             <h4>Orders</h4>
@@ -113,6 +117,15 @@
             <p><a href="add_invoice/">Create</a></p>
             <p><a href="invoices/">View</a></p>
            <!-- <p><a href="#">Search</a></p>-->
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="well">
+            <h4>User Admin</h4>
+            <p><a href="../admin/auth/user/">To Admin Site</a></p>
+            <!--<p><a href="add_user/">Create</a></p>
+            <p><a href="users/">View</a></p>-->
+            <!--<p><a href="#">Search</a></p>-->
           </div>
         </div>
       </div>

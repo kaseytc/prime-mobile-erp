@@ -33,10 +33,10 @@
         <!--<td>{{user.account.last_login}}</td>
         <td>{{user.account.date_joined}}</td>-->
         <td>{{user.emp_id}}</td>
-        <td><a href="{{account.acct_id}}">View</a></td>
-        <td><a href="account_update/{{account.acct_id}}">Update</a></td>
+        <td><a href="{{user.account.account_id}}">View</a></td>
+        <td><a href="account_update/{{user.account.account_id}}">Update</a></td>
         {% if account.acct_type != "Administrator" %}
-            <td><a href="account_confirm_delete/{{account.acct_id}}">Delete</a></td>
+            <td><a href="account_confirm_delete/{{user.account.account_id}}">Delete</a></td>
         {% endif %}
     </tr>
 {% empty %}

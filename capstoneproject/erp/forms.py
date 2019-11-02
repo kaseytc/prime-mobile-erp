@@ -1,10 +1,10 @@
 from django import forms
-from .models import Account, Customer, Employee, Inventory, Invoice, Order
-import datetime
-from django.core.validators import RegexValidator
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
+import datetime
 
+from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
 
 
 class EmployeeForm(forms.Form):
@@ -138,6 +138,14 @@ class AccountForm(forms.ModelForm):
 
     class Meta:
         model = Account
+        fields = '__all__'
+
+
+class UserForm(forms.ModelForm):
+    #required_css_class = 'required'
+
+    class Meta:
+        model = ErpUser
         fields = '__all__'
 
 

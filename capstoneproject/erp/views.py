@@ -11,6 +11,7 @@ from django.views import generic
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
+
 from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
 from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm, \
     EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm

@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 import datetime
 
 from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
+from django.contrib.auth.models import User
 
 
 class EmployeeForm(forms.Form):
@@ -145,7 +146,24 @@ class UserForm(forms.ModelForm):
     #required_css_class = 'required'
 
     class Meta:
-        model = ErpUser
+        model = User
+        fields = '__all__'
+
+
+class ErpUserCreationForm(UserCreationForm):
+    emp = forms.ModelChoiceField(queryset=Employee.objects.all(), label='Employee')
+
+    class Meta:
+        model = User
+        #fields = '__all__'
+        fields = ['username', 'emp', 'groups']
+        #exclude = ['password', 'last_login', 'is_active', 'date_joined',
+        # 'user_permissions', 'is_staff', 'is_superuser',]
+
+
+class ErpUserChangeForm(UserChangeForm):
+    class Meta:
+        model = User
         fields = '__all__'
 
 

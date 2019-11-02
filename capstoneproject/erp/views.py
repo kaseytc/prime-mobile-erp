@@ -15,6 +15,7 @@ import operator
 from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
 from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm, \
     EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm
+from .forms import ErpUserCreationForm
 
 # Create your views here.
 
@@ -419,26 +420,6 @@ class InvoiceUpdate(UpdateView):
     template_name = 'invoice/invoice_update_form.html'
 
 
-def add_user(request):
-    submitted = False
-    inserted = False
-    if request.method == 'POST':
-        form = AccountForm(request.POST)
-        if form.is_valid():
-            while inserted is False:
-                try:
-                    form.save()
-                    inserted = True
-                except IntegrityError:
-                    pass
-            return HttpResponseRedirect('./?submitted=True')
-    else:
-        form = AccountForm()
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'account/add_user.html', {'form': form, 'submitted': submitted})
-
-
 class UserListView(generic.ListView):
     model = ErpUser
     queryset = ErpUser.objects.all()
@@ -451,17 +432,24 @@ class UserDetailView(generic.DetailView):
     template_name = 'user/user_detail.html'
 
 
-class UserDelete(DeleteView):
-    model = ErpUser
-    template_name = 'user/user_confirm_delete.html'
+
+
+
+class UserCreateView(CreateView):
+    form_class = ErpUserCreationForm
     success_url = reverse_lazy('user-list')
+    template_name = 'user/add_user.html'
 
 
 class UserUpdate(UpdateView):
-    model = ErpUser
+    model = User
     fields = '__all__'
     template_name = 'user/user_update_form.html'
 
 
+class UserDelete(DeleteView):
+    model = User
+    template_name = 'user/user_confirm_delete.html'
+    success_url = reverse_lazy('user-list')
 
 

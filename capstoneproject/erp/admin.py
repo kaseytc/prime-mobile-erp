@@ -5,7 +5,8 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
 from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
-
+from .forms import ErpUserCreationForm, ErpUserChangeForm
+from .models import ErpUser
 
 # Register your models here.
 
@@ -76,11 +77,23 @@ class ErpUserInline(admin.StackedInline):
 # Define a new User admin
 class UserAdmin(BaseUserAdmin):
     inlines = (ErpUserInline,)
+    add_form = ErpUserCreationForm
+    form = ErpUserChangeForm
 
 
 # Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+
+#class ErpUserAdmin(UserAdmin):
+#    add_form = ErpUserCreationForm
+#    form = ErpUserChangeForm
+#    model = ErpUser
+    #list_display = ['email', 'username',]
+
+
+#admin.site.register(ErpUser, ErpUserAdmin)
 
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Customer, CustomerAdmin)

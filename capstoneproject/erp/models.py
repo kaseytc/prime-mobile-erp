@@ -10,6 +10,18 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth import get_user_model
+#User = get_user_model()
+
+
+
+
+class ErpUser(models.Model):
+    account = models.OneToOneField(User, on_delete=models.CASCADE)
+    emp = models.ForeignKey('Employee', models.DO_NOTHING)
+    class Meta:
+        #managed = False
+        db_table = 'ErpUser'
 
 
 class Account(models.Model):
@@ -33,6 +45,7 @@ class Account(models.Model):
         managed = False
         db_table = 'Account'
         ordering = ['acct_type', ]
+
 
 
 class Customer(models.Model):
@@ -273,3 +286,6 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+
+

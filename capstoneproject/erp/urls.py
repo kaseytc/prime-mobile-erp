@@ -24,6 +24,16 @@ urlpatterns += [
 
 ]
 
+# User
+urlpatterns += [
+    path('users/', views.UserListView.as_view(), name='user-list'),
+    path('add_user/', views.add_user, name='add-user'),
+    path('users/<pk>', views.UserDetailView.as_view(), name='user-detail'),
+    path('users/user_confirm_delete/<pk>', views.UserDelete.as_view(), name='user-delete'),
+    path('users/user_update/<pk>', views.UserUpdate.as_view(), name='user-update'),
+
+]
+
 # Employee
 urlpatterns += [
     path('employees/', views.EmployeeListView.as_view(), name='employee-list'),

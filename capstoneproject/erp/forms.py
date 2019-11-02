@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.utils.translation import ugettext_lazy as _
 
 
+
 class EmployeeForm(forms.Form):
     TITLE_TYPE_CHOICES = [
         ('Manager', 'Manager'),

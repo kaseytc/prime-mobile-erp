@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Account, Customer, Employee, Inventory, Invoice, Order
+from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
+from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
+
 
 # Register your models here.
 
@@ -58,6 +63,23 @@ class OrderAdmin(admin.ModelAdmin):
         return obj.invoice.invoice_id
     get_invoice.short_description = 'Invoice ID'
 
+
+# Define an inline admin descriptor for Employee model
+# which acts a bit like a singleton
+class ErpUserInline(admin.StackedInline):
+    model = ErpUser
+    can_delete = False
+    verbose_name_plural = 'user'
+
+
+# Define a new User admin
+class UserAdmin(BaseUserAdmin):
+    inlines = (ErpUserInline,)
+
+
+# Re-register UserAdmin
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Customer, CustomerAdmin)

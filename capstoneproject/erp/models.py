@@ -17,7 +17,7 @@ from django.contrib.auth import get_user_model
 
 class ErpUser(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE)
-    emp = models.ForeignKey('Employee', models.DO_NOTHING)
+    employee = models.ForeignKey('Employee', models.DO_NOTHING)
 
     class Meta:
         managed = False

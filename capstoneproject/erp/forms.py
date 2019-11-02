@@ -142,6 +142,7 @@ class AccountForm(forms.ModelForm):
         fields = '__all__'
 
 
+'''
 class UserForm(forms.ModelForm):
     #required_css_class = 'required'
 
@@ -150,7 +151,7 @@ class UserForm(forms.ModelForm):
         fields = '__all__'
 
 
-'''
+
 class ErpUserCreationForm(UserCreationForm):
     emp = forms.ModelChoiceField(queryset=Employee.objects.all(), label='Employee')
 

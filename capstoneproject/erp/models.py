@@ -6,24 +6,29 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth import get_user_model
+from django.utils.translation import ugettext_lazy as _
 
 # User = get_user_model()
 
 
 class ErpUser(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE)
-    employee = models.ForeignKey('Employee', models.DO_NOTHING)
+    emp = models.ForeignKey('Employee', models.DO_NOTHING)
+
+    def __str__(self):
+        return self.emp.fname + " " + self.emp.lname
 
     class Meta:
         managed = False
         db_table = 'ErpUser'
 
 
+'''
 class Account(models.Model):
     ACCT_TYPE_CHOICES = [
         ('Administrator', 'Administrator'),
@@ -45,6 +50,7 @@ class Account(models.Model):
         managed = False
         db_table = 'Account'
         ordering = ['acct_type', ]
+'''
 
 
 class Customer(models.Model):
@@ -216,7 +222,6 @@ class AuthUser(models.Model):
     is_staff = models.BooleanField()
     is_active = models.BooleanField()
     date_joined = models.DateTimeField()
-    #emp = models.ForeignKey('Employee', models.DO_NOTHING)
 
     class Meta:
         managed = False

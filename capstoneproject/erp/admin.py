@@ -4,13 +4,31 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
-#from .forms import ErpUserCreationForm, ErpUserChangeForm
+from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser
+# from .forms import ErpUserCreationForm, ErpUserChangeForm
 from .models import ErpUser
 
 # Register your models here.
 
+# Define an inline admin descriptor for ErpUser model
+# which acts a bit like a singleton
 
+
+class ErpUserInline(admin.StackedInline):
+    model = ErpUser
+    can_delete = False
+    verbose_name_plural = 'erpuser'
+
+
+# Define a new User admin
+class UserAdmin(BaseUserAdmin):
+    inlines = (ErpUserInline,)
+    list_display = ('username', 'first_name', 'last_name',  'is_superuser',  'is_staff', 'last_login',)
+    # add_form = ErpUserCreationForm
+    # form = ErpUserChangeForm
+
+
+'''
 class AccountAdmin(admin.ModelAdmin):
     list_display = ('username', 'acct_type', 'get_name')
     search_fields = ('acct_type',)
@@ -20,6 +38,7 @@ class AccountAdmin(admin.ModelAdmin):
     def get_name(self, obj):
         return obj.emp.fname + ' ' + obj.emp.lname
     get_name.short_description = 'Employee Name'
+'''
 
 
 class CustomerAdmin(admin.ModelAdmin):
@@ -66,41 +85,23 @@ class OrderAdmin(admin.ModelAdmin):
     get_invoice.short_description = 'Invoice ID'
 
 
-# Define an inline admin descriptor for Employee model
-# which acts a bit like a singleton
-class ErpUserInline(admin.StackedInline):
-    model = ErpUser
-    can_delete = False
-    verbose_name_plural = 'erpuser'
-
-
-# Define a new User admin
-class UserAdmin(BaseUserAdmin):
-    inlines = (ErpUserInline,)
-    list_display = ('username', 'first_name', 'last_name',  'is_superuser',  'is_staff', 'last_login',)
-    #add_form = ErpUserCreationForm
-    #form = ErpUserChangeForm
-
-
-# Re-register UserAdmin
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
-
-
-#class ErpUserAdmin(UserAdmin):
+# class ErpUserAdmin(UserAdmin):
 #    add_form = ErpUserCreationForm
 #    form = ErpUserChangeForm
 #    model = ErpUser
-    #list_display = ['email', 'username',]
+    # list_display = ['email', 'username',]
+
+# admin.site.register(ErpUser, ErpUserAdmin)
 
 
-#admin.site.register(ErpUser, ErpUserAdmin)
-
-admin.site.register(Account, AccountAdmin)
+# admin.site.register(Account, AccountAdmin)
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Inventory, InventoryAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
 admin.site.register(Order, OrderAdmin)
 
+# Re-register UserAdmin
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 

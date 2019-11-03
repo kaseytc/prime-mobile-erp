@@ -12,10 +12,10 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 
-from .models import Account, Customer, Employee, Inventory, Invoice, Order, ErpUser
-from .forms import AccountForm, CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm, \
+from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser
+from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm, \
     EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm
-#from .forms import ErpUserCreationForm
+# from .forms import ErpUserCreationForm
 
 # Create your views here.
 
@@ -270,7 +270,7 @@ class InventorySearchResultsView(generic.ListView):
                 )
         return object_list
 
-
+'''
 # @permission_required('can add account')
 def add_account(request):
     submitted = False
@@ -314,7 +314,7 @@ class AccountUpdate(UpdateView):
     model = Account
     fields = '__all__'
     template_name = 'account/account_update_form.html'
-
+'''
 
 
 
@@ -350,6 +350,31 @@ def add_order(request):
         if 'submitted' in request.GET:
             submitted = True
     return render(request, 'order/add_order.html', {'form': form, 'submitted': submitted})
+
+
+'''
+if form.is_valid():
+    sku = form.cleaned_data.get('sku')
+    make = form.cleaned_data.get('make')
+    model = form.cleaned_data.get('model')
+    inv_desc = form.cleaned_data.get('description')
+    inv_price = form.cleaned_data.get('price')
+    inv_cost = form.cleaned_data.get('cost')
+    quantity = form.cleaned_data.get('quantity')
+    bin_aisle = form.cleaned_data.get('bin_aisle')
+    bin_bay = form.cleaned_data.get('bin_bay')
+    p = Inventory(
+        sku=sku, make=make, model=model, inv_desc=inv_desc, inv_price=inv_price,
+        inv_cost=inv_cost, quantity=quantity, bin_aisle=bin_aisle, bin_bay=bin_bay,
+    )
+    while inserted is False:
+        try:
+            p.save()
+            inserted = True
+        except IntegrityError:
+            pass
+    return HttpResponseRedirect('./?submitted=True')
+'''
 
 
 class OrderListView(generic.ListView):
@@ -420,6 +445,7 @@ class InvoiceUpdate(UpdateView):
     template_name = 'invoice/invoice_update_form.html'
 
 
+'''
 class UserListView(generic.ListView):
     model = ErpUser
     queryset = ErpUser.objects.all()
@@ -430,7 +456,7 @@ class UserListView(generic.ListView):
 class UserDetailView(generic.DetailView):
     model = ErpUser
     template_name = 'user/user_detail.html'
-
+'''
 
 
 
@@ -440,7 +466,7 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy('user-list')
     template_name = 'user/add_user.html'
 '''
-
+'''
 class UserUpdate(UpdateView):
     model = User
     fields = '__all__'
@@ -451,5 +477,5 @@ class UserDelete(DeleteView):
     model = User
     template_name = 'user/user_confirm_delete.html'
     success_url = reverse_lazy('user-list')
-
+'''
 

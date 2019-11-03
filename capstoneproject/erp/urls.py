@@ -1,7 +1,7 @@
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
-#from .views import UserCreateView
+# from .views import UserCreateView
 
 from . import views
 
@@ -23,6 +23,7 @@ urlpatterns += [
 ]
 '''
 
+'''
 # Account
 urlpatterns += [
     path('accounts/', views.AccountListView.as_view(), name='account-list'),
@@ -32,6 +33,7 @@ urlpatterns += [
     path('accounts/account_update/<pk>', views.AccountUpdate.as_view(), name='account-update'),
 
 ]
+'''
 
 # Employee
 urlpatterns += [

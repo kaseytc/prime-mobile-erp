@@ -80,12 +80,14 @@ class EmployeeDetailView(generic.DetailView):
     template_name = 'employee/employee_detail.html'
 
 
+# @permission_required('Can delete employee')
 class EmployeeDelete(DeleteView):
     model = Employee
     template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
 
 
+# @permission_required('Can change employee')
 class EmployeeUpdate(UpdateView):
     model = Employee
     form_class = EmployeeUpdateForm

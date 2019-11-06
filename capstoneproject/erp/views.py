@@ -88,49 +88,36 @@ class EmployeeDetailView(generic.DetailView):
     template_name = 'employee/employee_detail.html'
 
 
+'''
 # @permission_required('Can delete employee')
-class EmployeeDelete(DeleteView): # TODO: delete employee and erpuser and django user together
+class EmployeeDelete(DeleteView):
+    model = Employee
+    template_name = 'employee/employee_confirm_delete.html'
+    success_url = reverse_lazy('employee-list')
+'''
+
+
+# @permission_required('Can delete employee')
+class EmployeeDelete(DeleteView):
     model = Employee
     template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
 
-'''
-
-user_account = ErpUser.objects.filter(emp_id__pk = pk).account_id
-ErpUser.objects.filter(emp_id__pk = pk).delete()
-User.object.filter(pk=user_account).delete()
-
-def get_queryset(self):
-        owner = self.request.user
-        return self.model.objects.filter(owner=owner)
-        
-        
-def get_object(self, queryset=None):
-        if queryset is None:
-            queryset = self.get_queryset()
-
-        client = self.kwargs['pk']
-        report = self.kwargs['rpk']
-
-        queryset = ReportSchedule.objects.filter(client_id=client, id=report)
-
-        if not queryset:
-            raise Http404
-
-        context = {'client_id':client, 'report_id':report}
-        return context
-
-    # Override the delete function to delete report Y from client X
-    # Finally redirect back to the client X page with the list of reports
     def delete(self, request, *args, **kwargs):
-        client = self.kwargs['pk']
-        report = self.kwargs['rpk']
-
-        clientReport = ReportSchedule.objects.filter(client_id=client, id=report)
-        clientReport.delete()
-
-        return HttpResponseRedirect(reverse('report-list', kwargs={'pk': client}))
-'''
+        self.object = self.get_object(*args)
+        user_account_id = ErpUser.objects.get(emp=self.object.emp_id).account_id
+        # delete ErpUser data
+        try:
+            ErpUser.objects.get(emp=self.object.emp_id).delete()
+        except ErpUser.DoesNotExist:
+            print("ErpUser does not exist")
+        # delete user account
+        try:
+            User.objects.get(pk=user_account_id).delete()
+        except User.DoesNotExist:
+            print("User does not exist")
+        self.object.delete()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 # @permission_required('Can change employee')

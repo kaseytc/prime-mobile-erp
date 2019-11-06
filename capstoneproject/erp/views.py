@@ -11,13 +11,16 @@ from django.views import generic
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
+from django.http import Http404
 
 from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser
-from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, InvoiceForm, \
-    EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm
+from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
+    EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm, InvoiceForm, OrderUpdateForm
 # from .forms import ErpUserCreationForm
 
 # Create your views here.
+
+invoice_num = 1
 
 
 def index(request):
@@ -25,8 +28,13 @@ def index(request):
 
 
 def logout_view(request):
-    logout(request)
     # Redirect to a success page.
+    current_user = request.user
+    if current_user.first_name != "":
+        name = current_user.first_name
+    else:
+        name = current_user.username
+    logout(request)
     return render(request, 'logout.html', locals())
 
 
@@ -81,10 +89,48 @@ class EmployeeDetailView(generic.DetailView):
 
 
 # @permission_required('Can delete employee')
-class EmployeeDelete(DeleteView):
+class EmployeeDelete(DeleteView): # TODO: delete employee and erpuser and django user together
     model = Employee
     template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
+
+'''
+
+user_account = ErpUser.objects.filter(emp_id__pk = pk).account_id
+ErpUser.objects.filter(emp_id__pk = pk).delete()
+User.object.filter(pk=user_account).delete()
+
+def get_queryset(self):
+        owner = self.request.user
+        return self.model.objects.filter(owner=owner)
+        
+        
+def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        client = self.kwargs['pk']
+        report = self.kwargs['rpk']
+
+        queryset = ReportSchedule.objects.filter(client_id=client, id=report)
+
+        if not queryset:
+            raise Http404
+
+        context = {'client_id':client, 'report_id':report}
+        return context
+
+    # Override the delete function to delete report Y from client X
+    # Finally redirect back to the client X page with the list of reports
+    def delete(self, request, *args, **kwargs):
+        client = self.kwargs['pk']
+        report = self.kwargs['rpk']
+
+        clientReport = ReportSchedule.objects.filter(client_id=client, id=report)
+        clientReport.delete()
+
+        return HttpResponseRedirect(reverse('report-list', kwargs={'pk': client}))
+'''
 
 
 # @permission_required('Can change employee')
@@ -334,16 +380,41 @@ class AccountUpdate(PermissionRequiredMixin, UpdateView):
 '''
 
 
+# TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
+#  remove and store invoices for customers. assign and remove employees on an order.
 def add_order(request):
+    global invoice_num
     submitted = False
-    inserted = False
+    inserted_o = False
+    inserted_i = False
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            while inserted is False:
+            status = form.cleaned_data.get('status')
+            cust = form.cleaned_data.get('cust')
+            inventory = form.cleaned_data.get('inventory')
+            quantity = form.cleaned_data.get('quantity')
+            #invoice = form.cleaned_data.get('invoice')
+            pay_type = form.cleaned_data.get('pay_type')
+            #price = form.cleaned_data.get('price')
+
+            new_invoice = Invoice(pay_type=pay_type, invoice_num=invoice_num,
+                                  emp=ErpUser.objects.get(pk=request.user.id).emp)
+            while inserted_i is False:
                 try:
-                    form.save()
-                    inserted = True
+                    new_invoice.save()
+                    inserted_i = True
+                except IntegrityError:
+                    pass
+            invoice_num += 1
+            latest_invoice_num = Invoice.objects.last()
+
+            new_order = Order(status=status, cust=cust, inventory=inventory, quantity=quantity,
+                              invoice=latest_invoice_num)
+            while inserted_o is False:
+                try:
+                    new_order.save()
+                    inserted_o = True
                 except IntegrityError:
                     pass
             return HttpResponseRedirect('./?submitted=True')
@@ -376,6 +447,15 @@ if form.is_valid():
         except IntegrityError:
             pass
     return HttpResponseRedirect('./?submitted=True')
+    
+    
+    order_id = models.AutoField(primary_key=True)
+    order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
+    cust = models.ForeignKey(Customer, models.DO_NOTHING)
+    inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
+    quantity = models.PositiveIntegerField()
+    invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
 '''
 
 
@@ -399,7 +479,7 @@ class OrderDelete(DeleteView):
 
 class OrderUpdate(UpdateView):
     model = Order
-    fields = '__all__'
+    form_class = OrderUpdateForm
     template_name = 'order/order_update_form.html'
 
 

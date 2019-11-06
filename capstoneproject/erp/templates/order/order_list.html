@@ -12,6 +12,7 @@
     <tr>
         <th>Order ID</th>
         <th>Order Time</th>
+        <th>Status</th>
         <th>Customer Name</th>
     </tr>
 
@@ -19,6 +20,7 @@
     <tr>
         <td>{{order.order_id}}</td>
         <td>{{order.order_dt}}</td>
+        <td>{{order.status}}</td>
         <td>{{order.cust}}</td>
         <td><a href="{{order.order_id}}">View</a></td>
         <td><a href="order_update/{{order.order_id}}">Update</a></td>

@@ -17,7 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class ErpUser(models.Model):
-    account = models.OneToOneField(User, on_delete=models.CASCADE)
+    account = models.OneToOneField(User, on_delete=models.CASCADE,  primary_key=True)
     emp = models.ForeignKey('Employee', models.DO_NOTHING)
 
     def __str__(self):
@@ -103,6 +103,9 @@ class Employee(models.Model):
     def get_absolute_url(self):
         return reverse('employee-detail', kwargs={'pk': self.emp_id})
 
+    #def delete(self, using=None, keep_parents=False):
+       # self.
+
     class Meta:
         managed = False
         db_table = 'Employee'
@@ -180,6 +183,7 @@ class Order(models.Model):
     class Meta:
         managed = False
         db_table = 'Order'
+        ordering=['status', 'order_id',]
 
 
 class AuthGroup(models.Model):

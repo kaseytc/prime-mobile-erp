@@ -117,13 +117,87 @@ class InventoryUpdateForm(forms.ModelForm):
         labels = dict(sku=_('SKU'), bin_aisle=_('Bin Aisle'), bin_bay=_('Bin Bay'), inv_cost=_('Cost'),
                       inv_price=_('Price'), inv_desc=_('Description'))
 
-
+'''
 class OrderForm(forms.ModelForm):
     #required_css_class = 'required'
 
     class Meta:
         model = Order
         fields = '__all__'
+'''
+
+
+class OrderForm(forms.ModelForm):
+    #required_css_class = 'required'
+    STATUS_CHOICES = [
+        ('Complete', 'Complete'),
+        ('Pending', 'Pending'),
+    ]
+    PAY_TYPE_CHOICES = [
+        ('Unpaid', 'Unpaid'),
+        ('Cash', 'Cash'),
+        ('VISA', 'VISA'),
+        ('MasterCard', 'MasterCard'),
+        ('AmEx', 'AmEx'),
+    ]
+
+    #cust = forms.ModelChoiceField(queryset=Customer.objects.all(), required=True)
+    #inventory = forms.ModelChoiceField(queryset=Inventory.objects.all(), required=True)
+    #quantity = forms.IntegerField(min_value=0, required=True)
+    #price = forms.DecimalField(max_digits=10, decimal_places=2, required=True)
+
+    status = forms.ChoiceField(widget=forms.RadioSelect, choices=STATUS_CHOICES, label='Order Status')
+    pay_type = forms.ChoiceField(choices=PAY_TYPE_CHOICES, label='Payment Type')
+    invoice = forms.ModelChoiceField(queryset=Invoice.objects.all())
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+        exclude = ['invoice', ]
+        labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
+
+
+class OrderUpdateForm(forms.ModelForm):
+    #employee = Invoice.objects.last()
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+        exclude = ['invoice', ]
+        labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
+
+
+'''
+    STATUS_CHOICES = [
+        ('Complete', 'Complete'),
+        ('Pending', 'Pending'),
+    ]
+    order_id = models.AutoField(primary_key=True)
+    order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
+    cust = models.ForeignKey(Customer, models.DO_NOTHING)
+    inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
+    quantity = models.PositiveIntegerField()
+    invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
+    
+    PAY_TYPE_CHOICES = [
+        ('Unpaid', 'Unpaid'),
+        ('Cash', 'Cash'),
+        ('VISA', 'VISA'),
+        ('MasterCard', 'MasterCard'),
+        ('AmEx', 'AmEx'),
+    ]
+    invoice_id = models.AutoField(primary_key=True)
+    invoice_dt = models.DateTimeField(auto_now=True, auto_now_add=False)
+    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
+    emp = models.ForeignKey(Employee, models.DO_NOTHING)
+    invoice_num = models.IntegerField()
+
+
+
+'''
+
+
 
 
 class InvoiceForm(forms.ModelForm):

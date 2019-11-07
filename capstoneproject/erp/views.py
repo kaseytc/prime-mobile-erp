@@ -412,30 +412,11 @@ def add_order(request):
     return render(request, 'order/add_order.html', {'form': form, 'submitted': submitted})
 
 
-'''
-if form.is_valid():
-    sku = form.cleaned_data.get('sku')
-    make = form.cleaned_data.get('make')
-    model = form.cleaned_data.get('model')
-    inv_desc = form.cleaned_data.get('description')
-    inv_price = form.cleaned_data.get('price')
-    inv_cost = form.cleaned_data.get('cost')
-    quantity = form.cleaned_data.get('quantity')
-    bin_aisle = form.cleaned_data.get('bin_aisle')
-    bin_bay = form.cleaned_data.get('bin_bay')
-    p = Inventory(
-        sku=sku, make=make, model=model, inv_desc=inv_desc, inv_price=inv_price,
-        inv_cost=inv_cost, quantity=quantity, bin_aisle=bin_aisle, bin_bay=bin_bay,
-    )
-    while inserted is False:
-        try:
-            p.save()
-            inserted = True
-        except IntegrityError:
-            pass
-    return HttpResponseRedirect('./?submitted=True')
-    
-    
+''' 
+     STATUS_CHOICES = [
+        ('Complete', 'Complete'),
+        ('Pending', 'Pending'),
+    ]
     order_id = models.AutoField(primary_key=True)
     order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
@@ -443,6 +424,19 @@ if form.is_valid():
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
     invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
+    
+    PAY_TYPE_CHOICES = [
+        ('Unpaid', 'Unpaid'),
+        ('Cash', 'Cash'),
+        ('VISA', 'VISA'),
+        ('MasterCard', 'MasterCard'),
+        ('AmEx', 'AmEx'),
+    ]
+    invoice_id = models.AutoField(primary_key=True)
+    invoice_dt = models.DateTimeField(auto_now=True, auto_now_add=False)
+    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
+    emp = models.ForeignKey(Employee, models.DO_NOTHING)
+    invoice_num = models.IntegerField()
 '''
 
 
@@ -482,7 +476,7 @@ def add_invoice(request):
                     inserted = True
                 except IntegrityError:
                     pass
-            return HttpResponseRedirect('./?submitted=True')
+            return HttpResponseRedirect('./?submitted=""True')gti
     else:
         form = InvoiceForm()
         if 'submitted' in request.GET:

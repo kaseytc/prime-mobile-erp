@@ -476,7 +476,7 @@ def add_invoice(request):
                     inserted = True
                 except IntegrityError:
                     pass
-            return HttpResponseRedirect('./?submitted=""True')gti
+            return HttpResponseRedirect('./?submitted=""True')
     else:
         form = InvoiceForm()
         if 'submitted' in request.GET:

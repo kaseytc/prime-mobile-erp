@@ -5,45 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Prime Mobile Inc.</title>
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <style>
-    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-    .row.content {height: 550px}
-
-    /* Set gray background color and 100% height */
-    .sidenav {
-      background-color: #f1f1f1;
-      height: 100%;
-    }
-
-    /* On small screens, set height to 'auto' for the grid */
-    @media screen and (max-width: 767px) {
-      .row.content {height: auto;}
-    }
-
-    .notlogin {
-      width: 80%;
-	  text-align: left;
-	  margin: auto auto;
-	  padding: 2% 5%;
-	  font-size: 1.8em;
-    }
-
-    footer {
-	  font-size: 90%;
-	  padding: 2% 5%;
-	  #background: #f1f1f1;
-	  #border-top: .3em solid #999;
-    }
-    footer p {
-	  margin: .8em .8em;
-    }
-    #.bigcontainer {
-    #  background-color: #f1f1f1;
-    #}
-    </style>
 </head>
 <body>
 {% if user.is_authenticated %}
@@ -69,7 +34,7 @@
   <div class="row content">
     <div class="col-sm-3 sidenav hidden-xs">
       <br>
-      <img src="{% static 'images/PrimeMobileLogo.png' %}" alt="Logo" style="width:150px;height:150px;>
+      <img src="{% static 'images/PrimeMobileLogo.png' %}" alt="Logo" style="width:150px;height:150px;">
         <br>
       <ul class="nav nav-pills nav-stacked">
            <br>
@@ -213,7 +178,8 @@
   </footer>-->
 </div>
 {% else %}
-  <div class="notlogin">
+  <div id="notlogin">
+    <img src="{% static 'images/PrimeMobileLogo.png' %}" alt="Logo" style="width:150px;height:150px;" class="center">
     <p>You are not logged in. Please log in and try again.</p>
     <a href="{% url 'erp-login' %}">Login</a>
   </div>

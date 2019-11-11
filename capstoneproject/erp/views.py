@@ -29,11 +29,14 @@ def index(request):
 
 def logout_view(request):
     # Redirect to a success page.
-    current_user = request.user
-    if current_user.first_name != "":
-        name = current_user.first_name
-    else:
-        name = current_user.username
+    try:
+        current_user = request.user
+        if current_user.first_name != "":
+            name = current_user.first_name
+        else:
+            name = current_user.username
+    except AttributeError:
+        name = ""
     logout(request)
     return render(request, 'logout.html', locals())
 

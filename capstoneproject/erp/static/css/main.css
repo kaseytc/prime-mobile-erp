@@ -8,14 +8,14 @@
 	margin: auto auto;
 }
 header h1 {
-	font: bold small-caps 2.5em Arial, Tahoma, sans-serif;
+	font: bold small-caps 2em Tahoma, Arial, sans-serif;
 }
 body {
     padding: 2% 2% 0 20%;
 }
 body p { font:1.1em/1.6em Arial, Tahoma, sans-serif; }
 body a {
-	font-weight: bold;
+	#font-weight: bold;
 	text-decoration: none;
 }
 
@@ -28,4 +28,18 @@ body a {
 
 body a:hover, body a:focus {
 	text-decoration: underline;
+}
+.logout {
+      text-align: center;
+	  #margin: auto auto;
+	  padding: 5% 5%;
+	  font-size: 1.2em;
+	  display: block;
+      width: 50%;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }

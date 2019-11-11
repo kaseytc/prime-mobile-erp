@@ -22,10 +22,32 @@
     @media screen and (max-width: 767px) {
       .row.content {height: auto;}
     }
+
+    .notlogin {
+      width: 80%;
+	  #background: lightyellow;
+	  text-align: left;
+	  margin: auto auto;
+	  #font-size: 0.8em;
+    }
+
+    footer {
+	  font-size: 90%;
+	  padding: 2% 5%;
+	  #background: #f1f1f1;
+	  #border-top: .3em solid #999;
+    }
+    footer p {
+	  margin: .8em .8em;
+    }
+    #.bigcontainer {
+    #  background-color: #f1f1f1;
+    #}
     </style>
 </head>
 <body>
 {% if user.is_authenticated %}
+<div class="bigcontainer">
 <nav class="navbar navbar-inverse visible-xs">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -34,7 +56,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Logo</a>
+      <a class="navbar-brand" href="#">Prime Mobile ERP</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
@@ -184,16 +206,21 @@
     </div>
       {% endif %}
   </div>
+  </div>
+  <br><br>
+  <!--<footer>
+        <p><small>Copyright © 2019. All rights reserved.</small></p>
+  </footer>-->
 </div>
 {% else %}
+  <div class="notlogin">
   <p>You are not logged in</p>
   <a href="{% url 'erp-login' %}">Login</a>
+</div>
 {% endif %}
 </body>
 
-<!--<footer>
-        <p><small>Copyright © 2019. All rights reserved.</small></p>
-</footer>-->
+
 
 </html>
 

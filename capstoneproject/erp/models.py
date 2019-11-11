@@ -198,7 +198,7 @@ class OrderDetail(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'Order_Detail'
+        db_table = 'OrderDetail'
         verbose_name = 'Order Detail'
         verbose_name_plural = 'Order Details'
 

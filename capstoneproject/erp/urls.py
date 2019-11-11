@@ -6,8 +6,8 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [
-    path('index/', views.index, name='index'),
-    path('', LoginView.as_view(template_name='login.html'), name='erp-login'),
+    path('', views.index, name='index'),
+    path('login', LoginView.as_view(template_name='login.html'), name='erp-login'),
     path('logout/', views.logout_view, name='erp-logout'),
 ]
 

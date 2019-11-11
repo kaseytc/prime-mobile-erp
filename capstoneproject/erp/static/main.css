@@ -1,3 +1,31 @@
 .required label:after {
     content: "*";
 }
+
+.container {
+	width: 80%;
+	text-align: left;
+	margin: auto auto;
+}
+header h1 {
+	font: bold small-caps 2.5em Arial, Tahoma, sans-serif;
+}
+body {
+    padding: 2% 2% 0 20%;
+}
+body p { font:1.1em/1.6em Arial, Tahoma, sans-serif; }
+body a {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#body a:link {
+#	color: darkblue;
+#}
+#body a:visited {
+#	color: #70ad9a;
+#}
+
+body a:hover, body a:focus {
+	text-decoration: underline;
+}

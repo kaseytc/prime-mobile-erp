@@ -15,6 +15,24 @@ from django.utils.translation import ugettext_lazy as _
 
 # User = get_user_model()
 
+TITLE_TYPE_CHOICES = [
+    ('Manager', 'Manager'),
+    ('Sales', 'Sales'),
+]
+
+STATUS_CHOICES = [
+    ('Complete', 'Complete'),
+    ('Pending', 'Pending'),
+]
+
+PAY_TYPE_CHOICES = [
+    ('Unpaid', 'Unpaid'),
+    ('Cash', 'Cash'),
+    ('VISA', 'VISA'),
+    ('MasterCard', 'MasterCard'),
+    ('AmEx', 'AmEx'),
+]
+
 
 class ErpUser(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE,  primary_key=True)
@@ -28,31 +46,6 @@ class ErpUser(models.Model):
         db_table = 'ErpUser'
         verbose_name = 'ERP User'
         verbose_name_plural = 'ERP Users'
-
-
-'''
-class Account(models.Model):
-    ACCT_TYPE_CHOICES = [
-        ('Administrator', 'Administrator'),
-        ('Standard', 'Standard'),
-    ]
-    acct_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=50, blank=False, null=False)
-    pwd = models.CharField(max_length=100, blank=False, null=False)
-    acct_type = models.CharField(max_length=20, blank=False, null=False, choices=ACCT_TYPE_CHOICES)
-    emp = models.ForeignKey('Employee', models.DO_NOTHING)
-
-    def __str__(self):
-        return self.username
-
-    def get_absolute_url(self):
-        return reverse('account-detail', kwargs={'pk': self.acct_id})
-
-    class Meta:
-        managed = False
-        db_table = 'Account'
-        ordering = ['acct_type', ]
-'''
 
 
 class Customer(models.Model):
@@ -83,10 +76,6 @@ class Customer(models.Model):
 
 
 class Employee(models.Model):
-    TITLE_TYPE_CHOICES = [
-        ('Manager', 'Manager'),
-        ('Sales', 'Sales'),
-    ]
     emp_id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, blank=False, null=False)
     lname = models.CharField(max_length=50, blank=False, null=False)
@@ -145,26 +134,15 @@ class Inventory(models.Model):
 
 
 class Invoice(models.Model):
-    PAY_TYPE_CHOICES = [
-        ('Unpaid', 'Unpaid'),
-        ('Cash', 'Cash'),
-        ('VISA', 'VISA'),
-        ('MasterCard', 'MasterCard'),
-        ('AmEx', 'AmEx'),
-    ]
-    STATUS_CHOICES = [
-        ('Complete', 'Complete'),
-        ('Pending', 'Pending'),
-    ]
     invoice_id = models.AutoField(primary_key=True)
     invoice_dt = models.DateTimeField(auto_now=True, auto_now_add=False)
     pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
     emp = models.ForeignKey(Employee, models.DO_NOTHING)
     invoice_num = models.IntegerField()
-    total_price = models.DecimalField(max_digits=10, decimal_places=2,)  # This field type is a guess.
+    total_price = models.DecimalField(max_digits=10, decimal_places=2,)
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
-    grand_total = models.DecimalField(max_digits=10, decimal_places=2,)  # This field type is a guess.
-    tax = models.DecimalField(max_digits=10, decimal_places=2,)   # This field type is a guess.
+    grand_total = models.DecimalField(max_digits=10, decimal_places=2,)
+    tax = models.DecimalField(max_digits=10, decimal_places=2,)
     cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
 
     def __str__(self):
@@ -199,17 +177,6 @@ class Invoice(models.Model):
 
 
 class Order(models.Model):
-    STATUS_CHOICES = [
-        ('Complete', 'Complete'),
-        ('Pending', 'Pending'),
-    ]
-    PAY_TYPE_CHOICES = [
-        ('Unpaid', 'Unpaid'),
-        ('Cash', 'Cash'),
-        ('VISA', 'VISA'),
-        ('MasterCard', 'MasterCard'),
-        ('AmEx', 'AmEx'),
-    ]
     order_id = models.AutoField(primary_key=True)
     order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
@@ -218,9 +185,9 @@ class Order(models.Model):
     quantity = models.PositiveIntegerField()
     invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
     emp_id = models.ForeignKey(Employee, models.DO_NOTHING)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2,)  # This field type is a guess.
-    tax = models.DecimalField(max_digits=10, decimal_places=2,)  # This field type is a guess.
-    grand_total = models.DecimalField(max_digits=10, decimal_places=2,)  # This field type is a guess.
+    total_price = models.DecimalField(max_digits=10, decimal_places=2,)
+    tax = models.DecimalField(max_digits=10, decimal_places=2,)
+    grand_total = models.DecimalField(max_digits=10, decimal_places=2,)
     pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
 
     def __unicode__(self):

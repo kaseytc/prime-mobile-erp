@@ -24,21 +24,6 @@ class ErpUserInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
     inlines = (ErpUserInline,)
     list_display = ('username', 'first_name', 'last_name',  'is_superuser',  'is_staff', 'last_login',)
-    # add_form = ErpUserCreationForm
-    # form = ErpUserChangeForm
-
-
-'''
-class AccountAdmin(admin.ModelAdmin):
-    list_display = ('username', 'acct_type', 'get_name')
-    search_fields = ('acct_type',)
-    ordering = ('acct_id',)
-    list_filter = ('acct_type',)
-
-    def get_name(self, obj):
-        return obj.emp.fname + ' ' + obj.emp.lname
-    get_name.short_description = 'Employee Name'
-'''
 
 
 class CustomerAdmin(admin.ModelAdmin):
@@ -87,30 +72,8 @@ class OrderAdmin(admin.ModelAdmin):
 
 class OrderDetailAdmin(admin.ModelAdmin):
     ordering = ('order_id',)
-    #list_display = ('order_id', 'order_dt', 'status', 'quantity', 'get_inventory', 'get_invoice')
-    #search_fields = ('order_id', 'order_dt')
-    #ordering = ('order_id',)
-    #list_filter = ('status',)
-
-    #def get_inventory(self, obj):
-    #    return obj.inventory.make + ' ' + obj.inventory.model
-    #get_inventory.short_description = 'Make & Model'
-
-    #def get_invoice(self, obj):
-    #    return obj.invoice.invoice_id
-    #get_invoice.short_description = 'Invoice ID'
 
 
-# class ErpUserAdmin(UserAdmin):
-#    add_form = ErpUserCreationForm
-#    form = ErpUserChangeForm
-#    model = ErpUser
-    # list_display = ['email', 'username',]
-
-# admin.site.register(ErpUser, ErpUserAdmin)
-
-
-# admin.site.register(Account, AccountAdmin)
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Inventory, InventoryAdmin)

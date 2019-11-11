@@ -88,15 +88,6 @@ class EmployeeDetailView(generic.DetailView):
     template_name = 'employee/employee_detail.html'
 
 
-'''
-# @permission_required('Can delete employee')
-class EmployeeDelete(DeleteView):
-    model = Employee
-    template_name = 'employee/employee_confirm_delete.html'
-    success_url = reverse_lazy('employee-list')
-'''
-
-
 # @permission_required('Can delete employee')
 class EmployeeDelete(DeleteView):
     model = Employee
@@ -305,67 +296,6 @@ class InventorySearchResultsView(generic.ListView):
                 )
         return object_list
 
-'''
-# @permission_required('can add account')
-def add_account(request):
-    submitted = False
-    inserted = False
-    if request.method == 'POST':
-        form = AccountForm(request.POST)
-        if form.is_valid():
-            while inserted is False:
-                try:
-                    form.save()
-                    inserted = True
-                except IntegrityError:
-                    pass
-            return HttpResponseRedirect('./?submitted=True')
-    else:
-        form = AccountForm()
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'account/add_account.html', {'form': form, 'submitted': submitted})
-
-
-class AccountListView(generic.ListView):
-    model = Account
-    queryset = Account.objects.all()
-    template_name = 'account/account_list.html'
-    paginate_by = 25
-
-
-class AccountDetailView(generic.DetailView):
-    model = Account
-    template_name = 'account/account_detail.html'
-
-
-class AccountDelete(DeleteView):
-    model = Account
-    template_name = 'account/account_confirm_delete.html'
-    success_url = reverse_lazy('account-list')
-
-
-class AccountUpdate(UpdateView):
-    model = Account
-    fields = '__all__'
-    template_name = 'account/account_update_form.html'
-'''
-
-
-
-'''
-class AccountDelete(PermissionRequiredMixin, DeleteView):
-    model = Account
-    template_name = 'account/account_confirm_delete.html'
-    success_url = reverse_lazy('account-list')
-
-
-class AccountUpdate(PermissionRequiredMixin, UpdateView):
-    model = Account
-    fields = '__all__'
-    template_name = 'account/account_update_form.html'
-'''
-
 
 # TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
 #  remove and store invoices for customers. assign and remove employees on an order.
@@ -508,37 +438,4 @@ class InvoiceUpdate(UpdateView):
     template_name = 'invoice/invoice_update_form.html'
 
 
-'''
-class UserListView(generic.ListView):
-    model = ErpUser
-    queryset = ErpUser.objects.all()
-    template_name = 'user/user_list.html'
-    paginate_by = 25
-
-
-class UserDetailView(generic.DetailView):
-    model = ErpUser
-    template_name = 'user/user_detail.html'
-'''
-
-
-
-'''
-class UserCreateView(CreateView):
-    form_class = ErpUserCreationForm
-    success_url = reverse_lazy('user-list')
-    template_name = 'user/add_user.html'
-'''
-'''
-class UserUpdate(UpdateView):
-    model = User
-    fields = '__all__'
-    template_name = 'user/user_update_form.html'
-
-
-class UserDelete(DeleteView):
-    model = User
-    template_name = 'user/user_confirm_delete.html'
-    success_url = reverse_lazy('user-list')
-'''
 

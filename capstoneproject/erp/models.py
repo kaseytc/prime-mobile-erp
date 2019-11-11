@@ -33,6 +33,8 @@ PAY_TYPE_CHOICES = [
     ('AmEx', 'AmEx'),
 ]
 
+SALES_TAX_RATE = 0.089
+
 
 class ErpUser(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE,  primary_key=True)
@@ -181,7 +183,8 @@ class Order(models.Model):
     order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
     cust = models.ForeignKey(Customer, models.DO_NOTHING)
-    inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
+    #inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
+    inventory = models.ManyToManyField(Inventory)
     quantity = models.PositiveIntegerField()
     invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
     emp_id = models.ForeignKey(Employee, models.DO_NOTHING)
@@ -196,12 +199,29 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('order-detail', kwargs={'pk': self.order_id})
 
+    def get_total_price(self):
+        return self.quantity * self.inventory.price
+
+    def get_tax(self):
+        return self.get_total_price() * SALES_TAX_RATE
+
+    def get_grand_total(self):
+        return self.total_price + self.get_tax()
+
+    @property
+    def get_order_total(self):
+        total = 0
+        for self in self.inventory.all():
+            total += self.get_grand_total()
+        return total
+
     class Meta:
         managed = False
         db_table = 'Order'
         ordering=['status', 'order_id',]
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
+
 
 '''class Order(models.Model):
     order_id = models.IntegerField(primary_key=True)

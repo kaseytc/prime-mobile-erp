@@ -178,16 +178,38 @@ class Invoice(models.Model):
         '''
 
 
+class OrderDetail(models.Model):
+    detail_id = models.AutoField(primary_key=True)
+    #order = models.ForeignKey(Order, models.DO_NOTHING)
+    inventory = models.ForeignKey(Inventory, models.DO_NOTHING, blank=True, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def get_total_inventory_price(self):
+        return self.quantity * self.inventory.price
+
+    def get_tax_price(self):
+        return self.get_total_inventory_price() * SALES_TAX_RATE
+
+    def get_final_price(self):
+        return self.get_total_inventory_price() + self.get_tax_price()
+
+    class Meta:
+        managed = False
+        db_table = 'Order_Detail'
+        verbose_name = 'Order Detail'
+        verbose_name_plural = 'Order Details'
+
+
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
     order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
     cust = models.ForeignKey(Customer, models.DO_NOTHING)
+    emp = models.ForeignKey(Employee, models.DO_NOTHING)
     #inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
-    inventory = models.ManyToManyField(Inventory)
-    quantity = models.PositiveIntegerField()
+    order_detail = models.ManyToManyField(OrderDetail)
+    #quantity = models.PositiveIntegerField()
     invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
-    emp_id = models.ForeignKey(Employee, models.DO_NOTHING)
     total_price = models.DecimalField(max_digits=10, decimal_places=2,)
     tax = models.DecimalField(max_digits=10, decimal_places=2,)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2,)
@@ -199,20 +221,11 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('order-detail', kwargs={'pk': self.order_id})
 
-    def get_total_price(self):
-        return self.quantity * self.inventory.price
-
-    def get_tax(self):
-        return self.get_total_price() * SALES_TAX_RATE
-
-    def get_grand_total(self):
-        return self.total_price + self.get_tax()
-
     @property
     def get_order_total(self):
         total = 0
-        for self in self.inventory.all():
-            total += self.get_grand_total()
+        for item in self.order_detail.all():
+            total += item.get_final_price()
         return total
 
     class Meta:
@@ -241,18 +254,6 @@ class Order(models.Model):
         managed = False
         db_table = 'Order'
 '''
-
-
-class OrderDetail(models.Model):
-    order_id = models.IntegerField(primary_key=True)
-    inventory = models.ForeignKey(Inventory, models.DO_NOTHING, blank=True, null=True)
-    quantity = models.PositiveIntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'Order_Detail'
-        verbose_name = 'Order Detail'
-        verbose_name_plural = 'Order Details'
 
 
 class AuthGroup(models.Model):

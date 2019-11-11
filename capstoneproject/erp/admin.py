@@ -56,14 +56,15 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('order_id', 'order_dt', 'status', 'quantity', 'get_inventory', 'get_invoice')
+    list_display = ('order_id', 'order_dt', 'status', 'get_invoice')
+    #list_display = ('order_id', 'order_dt', 'status', 'quantity', 'get_inventory', 'get_invoice')
     search_fields = ('order_id', 'order_dt')
     ordering = ('order_id',)
     list_filter = ('status',)
 
-    def get_inventory(self, obj):
-        return obj.inventory.make + ' ' + obj.inventory.model
-    get_inventory.short_description = 'Make & Model'
+    #def get_inventory(self, obj):
+    #    return obj.inventory.make + ' ' + obj.inventory.model
+    #get_inventory.short_description = 'Make & Model'
 
     def get_invoice(self, obj):
         return obj.invoice.invoice_id
@@ -71,7 +72,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class OrderDetailAdmin(admin.ModelAdmin):
-    ordering = ('order_id',)
+    ordering = ('detail_id',)
 
 
 admin.site.register(Customer, CustomerAdmin)

@@ -5,9 +5,9 @@
 {% block content %}
 <button onclick="history.back()">Back</button>
 <button onclick="location.href='/'">Back Home</button>
-
+<header>
 <h1>Update inventory data</h1>
-
+</header>
 <form method="post">{% csrf_token %}
     <table>
         {{ form.as_table }}

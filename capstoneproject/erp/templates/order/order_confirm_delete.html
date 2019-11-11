@@ -3,6 +3,9 @@
 {% block title %}Delete order{% endblock %}
 
 {% block content %}
+<header>
+    <h1>Delete Order Confirmation</h1>
+</header>
 <form action="" method="post">{% csrf_token %}
     <p>Are you sure you want to delete order "{{ object }}"?</p>
     <input type="button" value="Cancel" onclick="history.back()">

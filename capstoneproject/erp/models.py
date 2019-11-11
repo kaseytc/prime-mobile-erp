@@ -26,6 +26,8 @@ class ErpUser(models.Model):
     class Meta:
         managed = False
         db_table = 'ErpUser'
+        verbose_name = 'ERP User'
+        verbose_name_plural = 'ERP Users'
 
 
 '''
@@ -76,6 +78,8 @@ class Customer(models.Model):
         managed = False
         db_table = 'Customer'
         ordering = ['lname', 'fname', 'cust_id',]
+        verbose_name = 'Customer'
+        verbose_name_plural = 'Customers'
 
 
 class Employee(models.Model):
@@ -110,6 +114,8 @@ class Employee(models.Model):
         managed = False
         db_table = 'Employee'
         ordering = ['title', 'lname', 'fname', 'emp_id', ]
+        verbose_name = 'Employee'
+        verbose_name_plural = 'Employees'
 
 
 class Inventory(models.Model):
@@ -134,6 +140,8 @@ class Inventory(models.Model):
         managed = False
         db_table = 'Inventory'
         ordering = ['make', 'model',]
+        verbose_name = 'Inventory'
+        verbose_name_plural = 'Inventories'
 
 
 class Invoice(models.Model):
@@ -168,6 +176,9 @@ class Invoice(models.Model):
     class Meta:
         managed = False
         db_table = 'Invoice'
+        verbose_name = 'Invoice'
+        verbose_name_plural = 'Invoices'
+
 '''
 class Invoice(models.Model):
     invoice_id = models.IntegerField(primary_key=True)
@@ -222,6 +233,8 @@ class Order(models.Model):
         managed = False
         db_table = 'Order'
         ordering=['status', 'order_id',]
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
 
 '''class Order(models.Model):
     order_id = models.IntegerField(primary_key=True)
@@ -243,14 +256,16 @@ class Order(models.Model):
 '''
 
 
-class OrderDetails(models.Model):
+class OrderDetail(models.Model):
     order_id = models.IntegerField(primary_key=True)
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING, blank=True, null=True)
     quantity = models.PositiveIntegerField()
 
     class Meta:
         managed = False
-        db_table = 'Order_Details'
+        db_table = 'Order_Detail'
+        verbose_name = 'Order Detail'
+        verbose_name_plural = 'Order Details'
 
 
 class AuthGroup(models.Model):

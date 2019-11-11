@@ -179,10 +179,13 @@ class Invoice(models.Model):
 
 
 class OrderDetail(models.Model):
-    detail_id = models.AutoField(primary_key=True)
+    detail_id = models.PositiveIntegerField(primary_key=True)
     #order = models.ForeignKey(Order, models.DO_NOTHING)
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return str(self.quantity) + " of " + self.inventory.make + self.inventory.model
 
     def get_total_inventory_price(self):
         return self.quantity * self.inventory.price
@@ -215,8 +218,8 @@ class Order(models.Model):
     grand_total = models.DecimalField(max_digits=10, decimal_places=2,)
     pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
 
-    def __unicode__(self):
-        return self.order_id
+    def __str__(self):
+        return str(self.order_id)
 
     def get_absolute_url(self):
         return reverse('order-detail', kwargs={'pk': self.order_id})

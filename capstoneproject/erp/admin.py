@@ -72,7 +72,8 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class OrderDetailAdmin(admin.ModelAdmin):
-    ordering = ('detail_id',)
+    # ordering = ('inventory',)
+    pass
 
 
 admin.site.register(Customer, CustomerAdmin)

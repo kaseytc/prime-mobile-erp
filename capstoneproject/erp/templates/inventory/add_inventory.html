@@ -3,8 +3,11 @@
 {% block title %}Add Inventory{% endblock %}
 
 {% block content %}
-<button onclick="history.back()">Back</button>
-<button onclick="location.href='/'">Back Home</button>
+<!--<button onclick="history.back()">Back</button>
+<button onclick="location.href='/'">Back Home</button>-->
+<a href="javascript:history.back()">Back</a> |
+<a href="{% url 'index' %}">Home</a>
+
 <header>
 <h1>Add new inventory</h1>
 </header>

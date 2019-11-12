@@ -2,14 +2,22 @@
     content: "*";
 }
 
-.container {
+#wrapper {
 	width: 80%;
 	text-align: left;
 	margin: auto auto;
 }
+
+.container {
+	padding: 2% 7% 5% 7%;
+}
+/************** Header **************/
 header h1 {
 	font: bold small-caps 2em Tahoma, Arial, sans-serif;
 }
+/************** Navigation **************/
+
+/************** Body **************/
 body {
     padding: 2% 2% 0 20%;
 }

@@ -3,9 +3,12 @@
 {% block title %}Show employees detail{% endblock %}
 
 {% block content %}
-<button onclick="history.back()">Back</button>
+<!--<button onclick="history.back()">Back</button>
 <button onclick="location.href='/'">Back Home</button>
-<button onclick="location.href='.'">Back Employee List</button>
+<button onclick="location.href='.'">Back Employee List</button>-->
+<a href="javascript:history.back()">Back</a> |
+<a href="{% url 'employee-list' %}">Employee List</a> |
+<a href="{% url 'index' %}">Home</a>
 <!--<a href="{% url 'employee-list' %}">Back Employee List</a>-->
 <header>
 <h1>Show employees detail</h1>

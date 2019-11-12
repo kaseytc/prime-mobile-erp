@@ -66,26 +66,26 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Employees</h4>
-            <p><a href="add_employee/">Create</a></p>
+            <p><a href="{% url 'add-employee' %}">Create</a></p>
             <!--<p><a href="employee_form/">Create</a></p>-->
-            <p><a href="employees/">View</a></p>
-            <p><a href="search_employee/">Search</a></p>
+            <p><a href="{% url 'employee-list' %}">View</a></p>
+            <p><a href="{% url 'search-employee-form' %}">Search</a></p>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="well">
             <h4>Customers</h4>
-            <p><a href="add_customer/">Create</a></p>
-            <p><a href="customers/">View</a></p>
-            <p><a href="search_customer/">Search</a></p>
+            <p><a href="{% url 'add-customer' %}">Create</a></p>
+            <p><a href="{% url 'customer-list' %}">View</a></p>
+            <p><a href="{% url 'search-customer-form' %}">Search</a></p>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="well">
             <h4>Inventories</h4>
-            <p><a href="add_inventory/">Create</a></p>
-            <p><a href="inventories/">View</a></p>
-            <p><a href="search_inventory/">Search</a></p>
+            <p><a href="{% url 'add-inventory' %}">Create</a></p>
+            <p><a href="{% url 'inventory-list' %}">View</a></p>
+            <p><a href="{% url 'search-inventory-form' %}">Search</a></p>
           </div>
         </div>
       </div>
@@ -93,8 +93,8 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Orders</h4>
-            <p><a href="add_order/">Create</a></p>
-            <p><a href="orders/">View</a></p>
+            <p><a href="{% url 'add-order' %}">Create</a></p>
+            <p><a href="{% url 'order-list' %}">View</a></p>
             <!--<p><a href="#">Search</a></p>-->
           </div>
         </div>
@@ -102,7 +102,7 @@
           <div class="well">
             <h4>Invoices</h4>
             <!-- <p><a href="add_invoice/">Create</a></p>-->
-            <p><a href="invoices/">View</a></p>
+            <p><a href="{% url 'invoice-list' %}">View</a></p>
            <!-- <p><a href="#">Search</a></p>-->
           </div>
         </div>
@@ -130,26 +130,26 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Employees</h4>
-            <p><a href="add_employee/">Create</a></p>
+            <p><a href="{% url 'add-employee' %}">Create</a></p>
             <!--<p><a href="employee_form/">Create</a></p>-->
-            <p><a href="employees/">View</a></p>
-            <p><a href="search_employee/">Search</a></p>
+            <p><a href="{% url 'employee-list' %}">View</a></p>
+            <p><a href="{% url 'search-employee-form' %}">Search</a></p>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="well">
             <h4>Customers</h4>
-            <p><a href="add_customer/">Create</a></p>
-            <p><a href="customers/">View</a></p>
-            <p><a href="search_customer/">Search</a></p>
+            <p><a href="{% url 'add-customer' %}">Create</a></p>
+            <p><a href="{% url 'customer-list' %}">View</a></p>
+            <p><a href="{% url 'search-customer-form' %}">Search</a></p>
           </div>
         </div>
          <div class="col-sm-4">
           <div class="well">
             <h4>Inventories</h4>
-            <p><a href="add_inventory/">Create</a></p>
-            <p><a href="inventories/">View</a></p>
-            <p><a href="search_inventory/">Search</a></p>
+            <p><a href="{% url 'add-inventory' %}">Create</a></p>
+            <p><a href="{% url 'inventory-list' %}">View</a></p>
+            <p><a href="{% url 'search-inventory-form' %}">Search</a></p>
           </div>
         </div>
       </div>
@@ -157,15 +157,15 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Orders</h4>
-            <p><a href="add_order/">Create</a></p>
-            <p><a href="orders/">View</a></p>
+            <p><a href="{% url 'add-order' %}">Create</a></p>
+            <p><a href="{% url 'order-list' %}">View</a></p>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="well">
             <h4>Invoices</h4>
             <!-- <p><a href="add_invoice/">Create</a></p>-->
-            <p><a href="invoices/">View</a></p>
+            <p><a href="{% url 'invoice-list' %}">View</a></p>
           </div>
         </div>
     </div>

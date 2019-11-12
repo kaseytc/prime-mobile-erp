@@ -98,9 +98,6 @@ class Employee(models.Model):
     def get_absolute_url(self):
         return reverse('employee-detail', kwargs={'pk': self.emp_id})
 
-    #def delete(self, using=None, keep_parents=False):
-       # self.
-
     class Meta:
         managed = False
         db_table = 'Employee'

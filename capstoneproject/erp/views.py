@@ -99,9 +99,10 @@ class EmployeeDelete(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object(*args)
-        user_account_id = ErpUser.objects.get(emp=self.object.emp_id).account_id
+        user_account_id = None
         # delete ErpUser data
         try:
+            user_account_id = ErpUser.objects.get(emp=self.object.emp_id).account_id
             ErpUser.objects.get(emp=self.object.emp_id).delete()
         except ErpUser.DoesNotExist:
             print("ErpUser does not exist")

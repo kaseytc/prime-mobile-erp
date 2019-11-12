@@ -7,12 +7,26 @@ import datetime
 
 from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser
 
+TITLE_TYPE_CHOICES = [
+    ('Manager', 'Manager'),
+    ('Sales', 'Sales'),
+]
+
+STATUS_CHOICES = [
+    ('Complete', 'Complete'),
+    ('Pending', 'Pending'),
+]
+
+PAY_TYPE_CHOICES = [
+    ('Unpaid', 'Unpaid'),
+    ('Cash', 'Cash'),
+    ('VISA', 'VISA'),
+    ('MasterCard', 'MasterCard'),
+    ('AmEx', 'AmEx'),
+]
+
 
 class EmployeeForm(forms.Form):
-    TITLE_TYPE_CHOICES = [
-        ('Manager', 'Manager'),
-        ('Sales', 'Sales'),
-    ]
     YEARS = [x for x in range(1950, 2010)]
     phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
     zip_regex = RegexValidator(regex='^\d{5}$', message="Enter a valid ZIP code")
@@ -129,17 +143,7 @@ class OrderForm(forms.ModelForm):
 
 class OrderForm(forms.ModelForm):
     #required_css_class = 'required'
-    STATUS_CHOICES = [
-        ('Complete', 'Complete'),
-        ('Pending', 'Pending'),
-    ]
-    PAY_TYPE_CHOICES = [
-        ('Unpaid', 'Unpaid'),
-        ('Cash', 'Cash'),
-        ('VISA', 'VISA'),
-        ('MasterCard', 'MasterCard'),
-        ('AmEx', 'AmEx'),
-    ]
+
 
     #cust = forms.ModelChoiceField(queryset=Customer.objects.all(), required=True)
     #inventory = forms.ModelChoiceField(queryset=Inventory.objects.all(), required=True)
@@ -198,8 +202,6 @@ class OrderUpdateForm(forms.ModelForm):
 '''
 
 
-
-
 class InvoiceForm(forms.ModelForm):
     #required_css_class = 'required'
 
@@ -207,41 +209,4 @@ class InvoiceForm(forms.ModelForm):
         model = Invoice
         fields = '__all__'
 
-
-'''
-class AccountForm(forms.ModelForm):
-    #required_css_class = 'required'
-
-    class Meta:
-        model = Account
-        fields = '__all__'
-'''
-
-
-'''
-class UserForm(forms.ModelForm):
-    #required_css_class = 'required'
-
-    class Meta:
-        model = User
-        fields = '__all__'
-
-
-
-class ErpUserCreationForm(UserCreationForm):
-    emp = forms.ModelChoiceField(queryset=Employee.objects.all(), label='Employee')
-
-    class Meta:
-        model = User
-        #fields = '__all__'
-        fields = ['username', 'emp', 'groups', 'is_staff']
-        #exclude = ['password', 'last_login', 'is_active', 'date_joined',
-        # 'user_permissions', 'is_staff', 'is_superuser',]
-
-
-class ErpUserChangeForm(UserChangeForm):
-    class Meta:
-        model = User
-        fields = '__all__'
-'''
 

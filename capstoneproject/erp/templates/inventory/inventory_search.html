@@ -4,8 +4,9 @@
 
 {% block content %}
 <button onclick="history.back()">Back</button>
-
+<header>
 <h1>Search Inventory Data</h1>
+</header>
     <!--{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}-->
 
     <form action="{% url 'search-inventory-result' %}" method="get" id="inventory_search_form">

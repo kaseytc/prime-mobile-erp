@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     -->
     <title> {% block title %}{% endblock %} </title>
-    <link href="{% static 'main.css' %}" rel="stylesheet">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
 </head>
 <body>
+<div class="container">
    <!--<div class="container">
       <div class="row justify-content-center">
         <div class="col-8">
@@ -39,9 +40,6 @@
     {% endif %}
   </ul>
 {% endif %}
-
+</div>
 </body>
-<!--<footer>
-        <p><small>Copyright © 2019. All rights reserved.</small></p>
-</footer>-->
 </html>

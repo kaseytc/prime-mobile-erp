@@ -1,11 +1,10 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}Logout{% endblock %}
 {% block content %}
-<div>
-    <p class="success">
-        <h4>Thank you {{ name }}. You have successfully logged out.</h4>
-    </p>
+<div class="logout">
+    <img src="{% static 'images/PrimeMobileLogo.png' %}" alt="Logo" style="width:150px;height:150px;" class="center">
+    <p>Thank you {{ name }}. You have successfully logged out.</p>
     <a href="{% url 'erp-login' %}">Return to Login Page</a>
 </div>
 {% endblock %}

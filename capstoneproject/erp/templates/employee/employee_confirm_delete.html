@@ -3,6 +3,9 @@
 {% block title %}Delete employees {% endblock %}
 
 {% block content %}
+<header>
+    <h1>Delete Employee Confirmation</h1>
+</header>
 <form action="" method="post">{% csrf_token %}
     <p>Are you sure you want to delete "{{ object }}"?</p>
     <input type="button" value="Cancel" onclick="history.back()">

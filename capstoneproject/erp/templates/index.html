@@ -5,27 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Prime Mobile Inc.</title>
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <style>
-    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-    .row.content {height: 550px}
-
-    /* Set gray background color and 100% height */
-    .sidenav {
-      background-color: #f1f1f1;
-      height: 100%;
-    }
-
-    /* On small screens, set height to 'auto' for the grid */
-    @media screen and (max-width: 767px) {
-      .row.content {height: auto;}
-    }
-    </style>
 </head>
 <body>
 {% if user.is_authenticated %}
+<div class="bigcontainer">
 <nav class="navbar navbar-inverse visible-xs">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -34,7 +21,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Logo</a>
+      <a class="navbar-brand" href="#">Prime Mobile ERP</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
@@ -47,7 +34,7 @@
   <div class="row content">
     <div class="col-sm-3 sidenav hidden-xs">
       <br>
-      <img src="{% static 'images/PrimeMobileLogo.png' %}" alt="Logo" style="width:150px;height:150px;>
+      <img src="{% static 'images/PrimeMobileLogo.png' %}" alt="Logo" style="width:150px;height:150px;">
         <br>
       <ul class="nav nav-pills nav-stacked">
            <br>
@@ -79,26 +66,26 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Employees</h4>
-            <p><a href="add_employee/">Create</a></p>
+            <p><a href="{% url 'add-employee' %}">Create</a></p>
             <!--<p><a href="employee_form/">Create</a></p>-->
-            <p><a href="employees/">View</a></p>
-            <p><a href="search_employee/">Search</a></p>
+            <p><a href="{% url 'employee-list' %}">View</a></p>
+            <p><a href="{% url 'search-employee-form' %}">Search</a></p>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="well">
             <h4>Customers</h4>
-            <p><a href="add_customer/">Create</a></p>
-            <p><a href="customers/">View</a></p>
-            <p><a href="search_customer/">Search</a></p>
+            <p><a href="{% url 'add-customer' %}">Create</a></p>
+            <p><a href="{% url 'customer-list' %}">View</a></p>
+            <p><a href="{% url 'search-customer-form' %}">Search</a></p>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="well">
             <h4>Inventories</h4>
-            <p><a href="add_inventory/">Create</a></p>
-            <p><a href="inventories/">View</a></p>
-            <p><a href="search_inventory/">Search</a></p>
+            <p><a href="{% url 'add-inventory' %}">Create</a></p>
+            <p><a href="{% url 'inventory-list' %}">View</a></p>
+            <p><a href="{% url 'search-inventory-form' %}">Search</a></p>
           </div>
         </div>
       </div>
@@ -106,8 +93,8 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Orders</h4>
-            <p><a href="add_order/">Create</a></p>
-            <p><a href="orders/">View</a></p>
+            <p><a href="{% url 'add-order' %}">Create</a></p>
+            <p><a href="{% url 'order-list' %}">View</a></p>
             <!--<p><a href="#">Search</a></p>-->
           </div>
         </div>
@@ -115,7 +102,7 @@
           <div class="well">
             <h4>Invoices</h4>
             <!-- <p><a href="add_invoice/">Create</a></p>-->
-            <p><a href="invoices/">View</a></p>
+            <p><a href="{% url 'invoice-list' %}">View</a></p>
            <!-- <p><a href="#">Search</a></p>-->
           </div>
         </div>
@@ -143,26 +130,26 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Employees</h4>
-            <p><a href="add_employee/">Create</a></p>
+            <p><a href="{% url 'add-employee' %}">Create</a></p>
             <!--<p><a href="employee_form/">Create</a></p>-->
-            <p><a href="employees/">View</a></p>
-            <p><a href="search_employee/">Search</a></p>
+            <p><a href="{% url 'employee-list' %}">View</a></p>
+            <p><a href="{% url 'search-employee-form' %}">Search</a></p>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="well">
             <h4>Customers</h4>
-            <p><a href="add_customer/">Create</a></p>
-            <p><a href="customers/">View</a></p>
-            <p><a href="search_customer/">Search</a></p>
+            <p><a href="{% url 'add-customer' %}">Create</a></p>
+            <p><a href="{% url 'customer-list' %}">View</a></p>
+            <p><a href="{% url 'search-customer-form' %}">Search</a></p>
           </div>
         </div>
          <div class="col-sm-4">
           <div class="well">
             <h4>Inventories</h4>
-            <p><a href="add_inventory/">Create</a></p>
-            <p><a href="inventories/">View</a></p>
-            <p><a href="search_inventory/">Search</a></p>
+            <p><a href="{% url 'add-inventory' %}">Create</a></p>
+            <p><a href="{% url 'inventory-list' %}">View</a></p>
+            <p><a href="{% url 'search-inventory-form' %}">Search</a></p>
           </div>
         </div>
       </div>
@@ -170,30 +157,36 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Orders</h4>
-            <p><a href="add_order/">Create</a></p>
-            <p><a href="orders/">View</a></p>
+            <p><a href="{% url 'add-order' %}">Create</a></p>
+            <p><a href="{% url 'order-list' %}">View</a></p>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="well">
             <h4>Invoices</h4>
             <!-- <p><a href="add_invoice/">Create</a></p>-->
-            <p><a href="invoices/">View</a></p>
+            <p><a href="{% url 'invoice-list' %}">View</a></p>
           </div>
         </div>
     </div>
       {% endif %}
   </div>
+  </div>
+  <br><br>
+  <!--<footer>
+        <p><small>Copyright © 2019. All rights reserved.</small></p>
+  </footer>-->
 </div>
 {% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'erp-login' %}">Login</a>
+  <div id="notlogin">
+    <img src="{% static 'images/PrimeMobileLogo.png' %}" alt="Logo" style="width:150px;height:150px;" class="center">
+    <p>You are not logged in. Please log in and try again.</p>
+    <a href="{% url 'erp-login' %}">Login</a>
+  </div>
 {% endif %}
 </body>
 
-<!--<footer>
-        <p><small>Copyright © 2019. All rights reserved.</small></p>
-</footer>-->
+
 
 </html>
 

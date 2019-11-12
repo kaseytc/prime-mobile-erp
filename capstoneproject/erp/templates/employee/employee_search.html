@@ -4,8 +4,8 @@
 
 {% block content %}
 <button onclick="history.back()">Back</button>
-
-<h1>Search Employee Data</h1>
+<header>
+    <h1>Search Employee Data</h1></header>
     <!--{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}-->
 
     <form action="{% url 'search-employee-result' %}" method="get" id="employee_search_form">

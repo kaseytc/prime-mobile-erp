@@ -15,6 +15,26 @@ from django.utils.translation import ugettext_lazy as _
 
 # User = get_user_model()
 
+TITLE_TYPE_CHOICES = [
+    ('Manager', 'Manager'),
+    ('Sales', 'Sales'),
+]
+
+STATUS_CHOICES = [
+    ('Complete', 'Complete'),
+    ('Pending', 'Pending'),
+]
+
+PAY_TYPE_CHOICES = [
+    ('Unpaid', 'Unpaid'),
+    ('Cash', 'Cash'),
+    ('VISA', 'VISA'),
+    ('MasterCard', 'MasterCard'),
+    ('AmEx', 'AmEx'),
+]
+
+SALES_TAX_RATE = 0.089
+
 
 class ErpUser(models.Model):
     account = models.OneToOneField(User, on_delete=models.CASCADE,  primary_key=True)
@@ -26,31 +46,8 @@ class ErpUser(models.Model):
     class Meta:
         managed = False
         db_table = 'ErpUser'
-
-
-'''
-class Account(models.Model):
-    ACCT_TYPE_CHOICES = [
-        ('Administrator', 'Administrator'),
-        ('Standard', 'Standard'),
-    ]
-    acct_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=50, blank=False, null=False)
-    pwd = models.CharField(max_length=100, blank=False, null=False)
-    acct_type = models.CharField(max_length=20, blank=False, null=False, choices=ACCT_TYPE_CHOICES)
-    emp = models.ForeignKey('Employee', models.DO_NOTHING)
-
-    def __str__(self):
-        return self.username
-
-    def get_absolute_url(self):
-        return reverse('account-detail', kwargs={'pk': self.acct_id})
-
-    class Meta:
-        managed = False
-        db_table = 'Account'
-        ordering = ['acct_type', ]
-'''
+        verbose_name = 'ERP User'
+        verbose_name_plural = 'ERP Users'
 
 
 class Customer(models.Model):
@@ -76,13 +73,11 @@ class Customer(models.Model):
         managed = False
         db_table = 'Customer'
         ordering = ['lname', 'fname', 'cust_id',]
+        verbose_name = 'Customer'
+        verbose_name_plural = 'Customers'
 
 
 class Employee(models.Model):
-    TITLE_TYPE_CHOICES = [
-        ('Manager', 'Manager'),
-        ('Sales', 'Sales'),
-    ]
     emp_id = models.AutoField(primary_key=True)
     fname = models.CharField(max_length=50, blank=False, null=False)
     lname = models.CharField(max_length=50, blank=False, null=False)
@@ -103,13 +98,12 @@ class Employee(models.Model):
     def get_absolute_url(self):
         return reverse('employee-detail', kwargs={'pk': self.emp_id})
 
-    #def delete(self, using=None, keep_parents=False):
-       # self.
-
     class Meta:
         managed = False
         db_table = 'Employee'
         ordering = ['title', 'lname', 'fname', 'emp_id', ]
+        verbose_name = 'Employee'
+        verbose_name_plural = 'Employees'
 
 
 class Inventory(models.Model):
@@ -134,21 +128,21 @@ class Inventory(models.Model):
         managed = False
         db_table = 'Inventory'
         ordering = ['make', 'model',]
+        verbose_name = 'Inventory'
+        verbose_name_plural = 'Inventories'
 
 
 class Invoice(models.Model):
-    PAY_TYPE_CHOICES = [
-        ('Unpaid', 'Unpaid'),
-        ('Cash', 'Cash'),
-        ('VISA', 'VISA'),
-        ('MasterCard', 'MasterCard'),
-        ('AmEx', 'AmEx'),
-    ]
     invoice_id = models.AutoField(primary_key=True)
     invoice_dt = models.DateTimeField(auto_now=True, auto_now_add=False)
     pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
     emp = models.ForeignKey(Employee, models.DO_NOTHING)
     invoice_num = models.IntegerField()
+    total_price = models.DecimalField(max_digits=10, decimal_places=2,)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
+    grand_total = models.DecimalField(max_digits=10, decimal_places=2,)
+    tax = models.DecimalField(max_digits=10, decimal_places=2,)
+    cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
 
     def __str__(self):
         return str(self.invoice_id)
@@ -159,31 +153,107 @@ class Invoice(models.Model):
     class Meta:
         managed = False
         db_table = 'Invoice'
+        verbose_name = 'Invoice'
+        verbose_name_plural = 'Invoices'
+
+'''
+class Invoice(models.Model):
+    invoice_id = models.IntegerField(primary_key=True)
+    invoice_dt = models.DateTimeField(blank=True, null=True)
+    pay_type = models.CharField(max_length=10, blank=True, null=True)
+    emp = models.ForeignKey(Employee, models.DO_NOTHING, blank=True, null=True)
+    invoice_num = models.IntegerField()
+    total_price = models.TextField(blank=True, null=True)  # This field type is a guess.
+    status = models.CharField(max_length=-1, blank=True, null=True)
+    grand_total = models.TextField(blank=True, null=True)  # This field type is a guess.
+    tax = models.TextField(blank=True, null=True)  # This field type is a guess.
+    cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'Invoice'
+        '''
+
+
+class OrderDetail(models.Model):
+    detail_id = models.PositiveIntegerField(primary_key=True)
+    #order = models.ForeignKey(Order, models.DO_NOTHING)
+    inventory = models.ForeignKey(Inventory, models.DO_NOTHING, blank=True, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return str(self.quantity) + " of " + self.inventory.make + self.inventory.model
+
+    def get_total_inventory_price(self):
+        return self.quantity * self.inventory.price
+
+    def get_tax_price(self):
+        return self.get_total_inventory_price() * SALES_TAX_RATE
+
+    def get_final_price(self):
+        return self.get_total_inventory_price() + self.get_tax_price()
+
+    class Meta:
+        managed = False
+        db_table = 'OrderDetail'
+        verbose_name = 'Order Detail'
+        verbose_name_plural = 'Order Details'
 
 
 class Order(models.Model):
-    STATUS_CHOICES = [
-        ('Complete', 'Complete'),
-        ('Pending', 'Pending'),
-    ]
     order_id = models.AutoField(primary_key=True)
     order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
     cust = models.ForeignKey(Customer, models.DO_NOTHING)
-    inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
-    quantity = models.PositiveIntegerField()
+    emp = models.ForeignKey(Employee, models.DO_NOTHING)
+    #inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
+    order_detail = models.ManyToManyField(OrderDetail)
+    #quantity = models.PositiveIntegerField()
     invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2,)
+    tax = models.DecimalField(max_digits=10, decimal_places=2,)
+    grand_total = models.DecimalField(max_digits=10, decimal_places=2,)
+    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
 
-    def __unicode__(self):
-        return self.order_id
+    def __str__(self):
+        return str(self.order_id)
 
     def get_absolute_url(self):
         return reverse('order-detail', kwargs={'pk': self.order_id})
+
+    @property
+    def get_order_total(self):
+        total = 0
+        for item in self.order_detail.all():
+            total += item.get_final_price()
+        return total
 
     class Meta:
         managed = False
         db_table = 'Order'
         ordering=['status', 'order_id',]
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
+
+
+'''class Order(models.Model):
+    order_id = models.IntegerField(primary_key=True)
+    order_dt = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=20, blank=True, null=True)
+    cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
+    inventory = models.ForeignKey(Inventory, models.DO_NOTHING, blank=True, null=True)
+    quantity = models.IntegerField(blank=True, null=True)
+    invoice = models.ForeignKey(Invoice, models.DO_NOTHING, blank=True, null=True)
+    emp_id = models.IntegerField(blank=True, null=True)
+    total_price = models.TextField(blank=True, null=True)  # This field type is a guess.
+    tax = models.TextField(blank=True, null=True)  # This field type is a guess.
+    grand_total = models.TextField(blank=True, null=True)  # This field type is a guess.
+    pay_type = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'Order'
+'''
 
 
 class AuthGroup(models.Model):

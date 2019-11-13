@@ -181,10 +181,6 @@ class Order(models.Model):
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
     cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
     emp = models.ForeignKey(Employee, models.DO_NOTHING, blank=True, null=True)
-    #inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
-    #order_detail = models.ManyToManyField(OrderDetail)
-    #quantity = models.PositiveIntegerField()
-    #invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -241,7 +237,8 @@ class OrderDetail(models.Model):
         verbose_name_plural = 'Order Details'
 
 
-'''class Order(models.Model):
+'''
+class Order(models.Model):
     order_id = models.IntegerField(primary_key=True)
     order_dt = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True)

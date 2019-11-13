@@ -11,6 +11,7 @@
 <header>
     <h1>Update employees data</h1></header>
 <form method="post">{% csrf_token %}
+    <p>If you want to update DOB, please contact admin.</p>
    <table>
         {{ form.as_table }}
         <tr>

@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 import datetime
 
-from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser
+from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
 
 TITLE_TYPE_CHOICES = [
     ('Manager', 'Manager'),
@@ -36,7 +36,8 @@ class EmployeeForm(forms.Form):
     title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True,)
     manager = forms.ModelChoiceField(queryset=Employee.objects.filter(title__in=["Manager", "Owner"]), required=False)
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
-                                    required=False, initial=datetime.date.today, label='Date of Birth')
+                                    required=False, label='Date of Birth',
+                                    help_text='DOB cannot be updated later')
     phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}))
     email = forms.EmailField(max_length=100, required=False)
@@ -81,7 +82,8 @@ class CustomerForm(forms.Form):
     first_name = forms.CharField(max_length=50, required=True)
     last_name = forms.CharField(max_length=50, required=True)
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
-                                    required=False, initial=datetime.date.today, label='Date of Birth')
+                                    required=False, label='Date of Birth',
+                                    help_text='DOB cannot be updated later')
     phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}),)
     email = forms.EmailField(max_length=100, required=False)
@@ -171,42 +173,53 @@ class OrderUpdateForm(forms.ModelForm):
         labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
 
 
-'''
-    STATUS_CHOICES = [
-        ('Complete', 'Complete'),
-        ('Pending', 'Pending'),
-    ]
-    order_id = models.AutoField(primary_key=True)
-    order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
-    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
-    cust = models.ForeignKey(Customer, models.DO_NOTHING)
-    inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
-    quantity = models.PositiveIntegerField()
-    invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
-    
-    PAY_TYPE_CHOICES = [
-        ('Unpaid', 'Unpaid'),
-        ('Cash', 'Cash'),
-        ('VISA', 'VISA'),
-        ('MasterCard', 'MasterCard'),
-        ('AmEx', 'AmEx'),
-    ]
-    invoice_id = models.AutoField(primary_key=True)
-    invoice_dt = models.DateTimeField(auto_now=True, auto_now_add=False)
-    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
-    emp = models.ForeignKey(Employee, models.DO_NOTHING)
-    invoice_num = models.IntegerField()
-
-
-
-'''
-
-
 class InvoiceForm(forms.ModelForm):
     #required_css_class = 'required'
 
     class Meta:
         model = Invoice
         fields = '__all__'
+
+
+class OrderDetailForm(forms.ModelForm):
+    quantity = forms.IntegerField(min_value=1)
+    class Meta:
+        model = OrderDetail
+        fields = '__all__'
+
+
+class OrderCreateForm(forms.ModelForm):
+    cust = forms.CharField(max_length=50, required=True, label='Customer Name')
+    class Meta:
+        model = Order
+        fields = ['cust', ]
+        labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
+        #fields = '__all__'
+
+
+'''
+order_id = models.AutoField(primary_key=True)
+    order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
+    cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
+    emp = models.ForeignKey(Employee, models.DO_NOTHING, blank=True, null=True)
+    #inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
+    #order_detail = models.ManyToManyField(OrderDetail)
+    #quantity = models.PositiveIntegerField()
+    #invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    grand_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
+    
+    detail_id = models.AutoField(primary_key=True)
+    order = models.ForeignKey(Order, models.DO_NOTHING)
+    inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
+    quantity = models.PositiveIntegerField(default=0)
+    
+    
+    '''
+
+
 
 

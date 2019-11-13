@@ -1,11 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-import datetime
 
-from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
+from .models import Customer, Employee, Inventory, Invoice, Order, OrderDetail, ErpUser
 
 TITLE_TYPE_CHOICES = [
     ('Manager', 'Manager'),
@@ -190,12 +188,20 @@ class OrderDetailForm(forms.ModelForm):
 
 
 class OrderCreateForm(forms.ModelForm):
-    #cust = forms.CharField(max_length=50, required=True, label='Customer Name')
+    status = forms.ChoiceField(widget=forms.HiddenInput(), choices=STATUS_CHOICES, required=True, initial='Create')
+    emp = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=Employee.objects.all(),
+                                 label='Employee Name', required=True)
+    cust = forms.ModelChoiceField(queryset=Customer.objects.all(), label='Customer Name', required=True)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(OrderCreateForm, self).__init__(*args, **kwargs)
+        self.initial['status'] = 'Create'
+        self.initial['emp'] = ErpUser.objects.get(pk=self.request.user.id).emp
+
     class Meta:
         model = Order
-        fields = ['cust', ]
-        labels = dict(cust=_('Customer Name'))
-        #fields = '__all__'
+        fields = ['status', 'emp', 'cust',]
 
 
 '''

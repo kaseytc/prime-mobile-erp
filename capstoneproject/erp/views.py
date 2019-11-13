@@ -8,15 +8,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from django.http import Http404
 
-from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser
+from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
 from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
-    EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm, InvoiceForm, OrderUpdateForm
-# from .forms import ErpUserCreationForm
+    EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm, InvoiceForm, OrderUpdateForm, \
+    OrderDetailForm, OrderCreateForm
 
 # Create your views here.
 
@@ -440,6 +439,51 @@ class InvoiceUpdate(UpdateView):
     model = Invoice
     fields = '__all__'
     template_name = 'invoice/invoice_update_form.html'
+
+
+# TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
+#  remove and store invoices for customers. assign and remove employees on an order.
+class ProductListView(generic.ListView):
+    model = Inventory
+    queryset = Inventory.objects.all()
+    template_name = 'shopping/order_step_2_detail.html'
+   # template_name = 'shopping/product_list.html'
+    paginate_by = 25
+
+
+class OrderSummaryView(generic.ListView):
+    model = OrderDetail
+    form_class = OrderDetailForm
+    queryset = OrderDetail.objects.all()
+    template_name = 'shopping/order_summary.html'
+    paginate_by = 25
+
+
+class OrderItemView(CreateView):
+    model = OrderDetail
+    form_class = OrderDetailForm
+    template_name = 'shopping/order_item.html'
+    success_url = reverse_lazy('order-list')
+
+
+# NewOrder
+# TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
+#  remove and store invoices for customers. assign and remove employees on an order.
+class OrderCreateView(CreateView):
+    model = Order
+    form_class = OrderCreateForm
+    template_name = 'shopping/order_step_1_create.html'
+    success_url = reverse_lazy('order-item-list')
+
+    def get_form_kwargs(self):
+        kwargs = super(OrderCreateView, self).get_form_kwargs()
+        # Update the existing form kwargs dict with the request's user.
+        kwargs.update({"request": self.request})
+        return kwargs
+
+
+
+
 
 
 

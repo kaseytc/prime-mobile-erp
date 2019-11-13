@@ -11,16 +11,6 @@
     <!--{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}-->
 
     <form action="{% url 'search-employee-result' %}" method="get" id="employee_search_form">
-        <!--<p>Title:
-            <select name="title">
-                <option value="" disabled selected>Search by title</option>
-                <option value="Sales">Sales</option>
-                <option value="Manager">Manager</option>
-                <option value="Owner">Owner</option>
-            </select>
-        </p>
-        <p>First Name: <input type="text" name="fname"></p>
-        <p>Last Name: <input type="text" name="lname"></p>-->
         <p>Search: <input type="text" name="query" placeholder="Search... Title or Name"></p>
         <p><input type="submit" value="Search"></p>
     </form>

@@ -21,8 +21,9 @@ TITLE_TYPE_CHOICES = [
 ]
 
 STATUS_CHOICES = [
-    ('Complete', 'Complete'),
+    ('Create', 'Create'),
     ('Pending', 'Pending'),
+    ('Complete', 'Complete'),
 ]
 
 PAY_TYPE_CHOICES = [

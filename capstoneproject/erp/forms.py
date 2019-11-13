@@ -13,8 +13,9 @@ TITLE_TYPE_CHOICES = [
 ]
 
 STATUS_CHOICES = [
-    ('Complete', 'Complete'),
+    ('Create', 'Create'),
     ('Pending', 'Pending'),
+    ('Complete', 'Complete'),
 ]
 
 PAY_TYPE_CHOICES = [
@@ -152,14 +153,14 @@ class OrderForm(forms.ModelForm):
     #quantity = forms.IntegerField(min_value=0, required=True)
     #price = forms.DecimalField(max_digits=10, decimal_places=2, required=True)
 
-    status = forms.ChoiceField(widget=forms.RadioSelect, choices=STATUS_CHOICES, label='Order Status')
-    pay_type = forms.ChoiceField(choices=PAY_TYPE_CHOICES, label='Payment Type')
-    invoice = forms.ModelChoiceField(queryset=Invoice.objects.all())
+    status = forms.ChoiceField(widget=forms.RadioSelect, choices=STATUS_CHOICES, label='Order Status', required=False)
+    pay_type = forms.ChoiceField(choices=PAY_TYPE_CHOICES, label='Payment Type', required=False)
+    #invoice = forms.ModelChoiceField(queryset=Invoice.objects.all())
 
     class Meta:
         model = Order
         fields = '__all__'
-        exclude = ['invoice', ]
+        #exclude = ['invoice', ]
         labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
 
 
@@ -189,11 +190,11 @@ class OrderDetailForm(forms.ModelForm):
 
 
 class OrderCreateForm(forms.ModelForm):
-    cust = forms.CharField(max_length=50, required=True, label='Customer Name')
+    #cust = forms.CharField(max_length=50, required=True, label='Customer Name')
     class Meta:
         model = Order
         fields = ['cust', ]
-        labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
+        labels = dict(cust=_('Customer Name'))
         #fields = '__all__'
 
 

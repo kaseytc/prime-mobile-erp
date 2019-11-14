@@ -12,6 +12,7 @@
     <h3>Step 1: Select Customer Name</h3>
 </header>
 <hr class="mt-0 mb-4">
+<h4>If you cannot find customer name, please <a href="{% url 'add-customer' %}">add customer</a> first.</h4>
 
 <form action="" method="post" novalidate>{% csrf_token %}
     <table>

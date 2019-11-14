@@ -20,7 +20,7 @@ from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
 # Create your views here.
 
 invoice_num = 1
-
+new_order = None
 
 def index(request):
     return render(request, 'index.html', locals())
@@ -443,14 +443,6 @@ class InvoiceUpdate(UpdateView):
 
 # TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
 #  remove and store invoices for customers. assign and remove employees on an order.
-class ProductListView(generic.ListView):
-    model = Inventory
-    queryset = Inventory.objects.all()
-    template_name = 'shopping/order_step_2_detail.html'
-   # template_name = 'shopping/product_list.html'
-    paginate_by = 25
-
-
 class OrderSummaryView(generic.ListView):
     model = OrderDetail
     form_class = OrderDetailForm
@@ -470,6 +462,7 @@ class OrderItemView(CreateView):
 # TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
 #  remove and store invoices for customers. assign and remove employees on an order.
 class OrderCreateView(CreateView):
+    global new_order
     model = Order
     form_class = OrderCreateForm
     template_name = 'shopping/order_step_1_create.html'
@@ -481,9 +474,55 @@ class OrderCreateView(CreateView):
         kwargs.update({"request": self.request})
         return kwargs
 
+    def form_valid(self, form):
+        self.object = form.save()
+        new_order = self.object
+        print(new_order.order_id)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ProductListView(generic.ListView):
+    model = Inventory
+    queryset = Inventory.objects.all()
+    template_name = 'shopping/order_step_2_detail.html'
+    paginate_by = 25
+
+
+def orderDetail(request):
+    global new_order
 
 
 
-
-
-
+'''
+def add_inventory(request):
+    submitted = False
+    inserted = False
+    if request.method == 'POST':
+        form = InventoryForm(request.POST)
+        if form.is_valid():
+            sku = form.cleaned_data.get('sku')
+            make = form.cleaned_data.get('make')
+            model = form.cleaned_data.get('model')
+            inv_desc = form.cleaned_data.get('description')
+            inv_price = form.cleaned_data.get('price')
+            inv_cost = form.cleaned_data.get('cost')
+            quantity = form.cleaned_data.get('quantity')
+            bin_aisle = form.cleaned_data.get('bin_aisle')
+            bin_bay = form.cleaned_data.get('bin_bay')
+            p = Inventory(
+                sku=sku, make=make, model=model, inv_desc=inv_desc, inv_price=inv_price,
+                inv_cost=inv_cost, quantity=quantity, bin_aisle=bin_aisle, bin_bay=bin_bay,
+            )
+            while inserted is False:
+                try:
+                    p.save()
+                    inserted = True
+                except IntegrityError:
+                    pass
+            return HttpResponseRedirect('./?submitted=True')
+    else:
+        form = InventoryForm()
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'inventory/add_inventory.html', {'form': form, 'submitted': submitted})
+'''

@@ -6,7 +6,7 @@
 
 <header>
     <h1>Product List</h1>
-    <h3>Step 2: Select Inventories / Products</h3>
+    <h3>Step 2: Select Inventories / Products Quantity</h3>
 </header>
 
 <div id="product-list">
@@ -17,15 +17,15 @@
                     <legend>order-detail-{{product.inventory_id}}</legend>
                     <span><a href="../inventories/{{product.inventory_id}}">{{ product }}</a></span>
                     <br>
-                    <span>Price: {{ product.inv_price }}</span>
-                    <br>
+                    <span>Price: {{ product.inv_price }}</span>&nbsp
+
                     <span>Available Qty: {{ product.quantity }}</span>
-                    <br>
+
                     {% if product.quantity != 0 %}
-                    <span style="float: right;">Quantity: <input type="number" name="quantity" min="1" max="{{ product.quantity }}" >
-                    <input type="submit" value="Add to Cart" style="float: right;"></span>
+                    <br><span>Quantity: <input type="number" name="quantity" min="1" max="{{ product.quantity }}" >
+                    &nbsp<input type="submit" value="Add to Cart"></span>
                     {% else %}
-                    <span style="color:sienna;">This item is currently unavailable.</span>
+                    <br><span style="color:sienna;">This item is currently unavailable.</span>
                 {% comment %}
                 <!--<a href="{% url 'shopping_cart:add_to_cart' object.id %}" class="btn btn-warning">Add to Cart</a>-->
                 {% endcomment %}

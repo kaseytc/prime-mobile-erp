@@ -15,30 +15,32 @@
 </header>
 <hr class="mt-0 mb-4">
 
-
-<form action="" method="post" novalidate>{% csrf_token %}
 <table>
     <tr>
         <th>Order ID</th>
         <th>Inventory</th>
         <th>Quantity</th>
-        <th>Price</th>
+        <th>Unit Price</th>
     </tr>
 
 {% for item in object_list %}
+    <form action="" method="post" novalidate>{% csrf_token %}
     <tr>
         <td>{{item.order}}</td>
         <td>{{item.inventory}}</td>
         <td align="center">{{item.quantity}}</td>
         <td align="center">{{item.inventory.inv_price}}</td>
-        <td><input type="hidden" name="detail_id" value="{{item.detail_id}}" disable readonly ></td>
-        <td><input type="submit" value="Delete"></td>
+        <td><input type="hidden" name="order" value="{{request.session.new_order}}" readonly >
+            <input type="hidden" name="detail_id" value="{{item.detail_id}}" readonly >
+            <input type="hidden" name="inventory" value="{{item.inventory_id}}" readonly >
+            <input type="hidden" name="quantity" value="{{item.quantity}}" readonly >
+            <input type="submit" value="Delete"></td>
     </tr>
-
+    </form>
 {% empty %}
     <li>No items yet.</li>
 </table>
-</form>
+
 {% endfor %}
 
 

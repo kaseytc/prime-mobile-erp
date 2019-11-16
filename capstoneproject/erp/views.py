@@ -12,6 +12,8 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from django.http import Http404
 from django.db.models import F
+from django.http import JsonResponse
+from django.template import RequestContext
 
 from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
 from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
@@ -21,7 +23,7 @@ from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
 # Create your views here.
 
 invoice_num = 1
-
+#new_order = Order()
 
 def index(request):
     return render(request, 'index.html', locals())
@@ -448,6 +450,32 @@ class InvoiceUpdate(UpdateView):
 #    template_name = 'shopping/order_item.html'
 #   success_url = reverse_lazy('order-list')
 
+'''
+class AjaxableResponseMixin:
+    """
+    Mixin to add AJAX support to a form.
+    Must be used with an object-based FormView (e.g. CreateView)
+    """
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        # We make sure to call the parent's form_valid() method because
+        # it might do some processing (in the case of CreateView, it will
+        # call form.save() for example).
+        response = super().form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'pk': self.object.pk,
+            }
+            return JsonResponse(data)
+        else:
+            return response
+'''
 
 # NewOrder
 # TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
@@ -465,15 +493,45 @@ class OrderCreateView(CreateView):
         kwargs.update({"request": self.request})
         return kwargs
 
-    # def get_success_url(self, **kwargs):
-    #    # obj = form.instance or self.object
-    #    return reverse_lazy("orders", kwargs={'pk': self.object.pk})
+    #def get_success_url(self, **kwargs):
+    #     obj = self.object
+    #     return reverse_lazy("product-list", kwargs={'pk': self.object.pk})
 
-    # def form_valid(self, form):
-    #    self.object = form.save()
-    #   new_order = self.object
-    #   print(new_order.order_id)
-    #    return HttpResponseRedirect(self.get_success_url())
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+        """
+        form = self.get_form()
+        if form.is_valid():
+            self.object = form.save()
+            new_order = self.object
+            request.session['new_order'] = new_order.order_id
+            print(new_order.order_id)
+            print(request.session['new_order'])
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    #def form_valid(self, form):
+       # self.object = form.save()
+      #  new_order = self.object
+        #request.session['new_order'] = new_order
+       #print(new_order.order_id)
+      #  print(new_order.pk)
+      #  return super().form_valid(form)
+        #return HttpResponseRedirect(redirect(self.get_success_url(), arg=new_order.pk))
+
+    #def post(self, request, *args, **kwargs):
+        #global new_order
+        #form = OrderCreateForm(request.POST)
+        #order = Order()
+
+    #    if form.is_valid():
+            #self.object = form.save()
+     #       new_order = form.save()
+     #       return HttpResponseRedirect(self.get_success_url())
+            #return render(request, 'shopping/order_step_1_create,html', {'order': new_order})
 
 
 def product_list(request):
@@ -481,7 +539,6 @@ def product_list(request):
     context = {
         'object_list': object_list,
     }
-
     return render(request, "shopping/order_step_2_detail.html", context)
 
 
@@ -489,33 +546,42 @@ def add_to_cart(request):
     inserted = False
     if request.method == 'POST':
         if request.POST.get('quantity') and request.POST.get('inventory'):
-            order_detail = OrderDetail()
-            order_detail.order = Order.objects.latest('order_dt')
-            inventory_id = request.POST.get('inventory')
-            order_detail.inventory = Inventory.objects.get(pk=inventory_id)
-            order_detail.quantity = request.POST.get('quantity')
+            if request.POST.get('order'):
+                order_detail = OrderDetail()
+                # order_detail.order = Order.objects.latest('order_dt')
+                order_detail.order = Order.objects.get(pk=request.POST.get('order'))
+                inventory_id = request.POST.get('inventory')
+                order_detail.inventory = Inventory.objects.get(pk=inventory_id)
+                order_detail.quantity = request.POST.get('quantity')
+                #request.session['new_order'] = order_detail.order.order_id
+                while inserted is False:
+                    try:
+                        order_detail.save()
+                        Inventory.objects.filter(pk=inventory_id).update(quantity=F('quantity') - order_detail.quantity)
+                        inserted = True
+                    except IntegrityError:
+                        query = OrderDetail.objects.filter(inventory=order_detail.inventory, order=order_detail.order)
+                        query.update(quantity=F('quantity') + order_detail.quantity)
+                        Inventory.objects.filter(pk=inventory_id).update(quantity=F('quantity') - order_detail.quantity)
+                        # print(query)
+                        # print('IntegrityError')
+                        break
+                #return HttpResponseRedirect('order-summary')
+                #return render(request, 'shopping/order_step_3_summary.html')
+                return redirect('order-summary')
+        return redirect('product-list')
 
-            while inserted is False:
-                try:
-                    order_detail.save()
-                    inserted = True
-                except IntegrityError:
-                    query = OrderDetail.objects.filter(inventory=order_detail.inventory, order=order_detail.order)
-                    query.update(quantity=F('quantity') + order_detail.quantity)
-                    # print(query)
-                    # print('IntegrityError')
-                    break
-            # return HttpResponseRedirect('./?submitted=True')
-            # return render(request, 'shopping/order_step_2_detail.html')
-            return redirect('order-summary')
 
-
+# TODO: session get order id
 class OrderSummaryView(generic.ListView):
     model = OrderDetail
     form_class = OrderDetailForm
-    order_id = Order.objects.latest('order_dt')
-    queryset = OrderDetail.objects.filter(order=order_id)
     template_name = 'shopping/order_step_3_summary.html'
+
+    def get_queryset(self):
+        order_id = self.request.session['new_order']
+        order = Order.objects.get(pk=order_id)
+        return OrderDetail.objects.filter(order=order)
 
     #def get(self, request, *args, **kwargs):
     #    stuff = self.get_queryset()
@@ -529,9 +595,12 @@ class OrderSummaryView(generic.ListView):
         # if not request.POST.get('payment'):
             detail_id = request.POST.get('detail_id')
             OrderDetail.objects.filter(detail_id=detail_id).delete()
+            Inventory.objects.filter(pk=request.POST.get('inventory')).update(quantity=F('quantity') + request.POST.get('quantity'))
             # stuff = self.get_queryset()
             return redirect('order-summary')
+        return redirect('order-summary')
         # return render(request, self.template_name, {'stuff': stuff, })
+
 
         #elif request.POST.get('payment'):
         #    payment = request.POST.get('payment')

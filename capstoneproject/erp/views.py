@@ -513,45 +513,12 @@ def add_to_cart(request):
 class OrderSummaryView(generic.ListView):
     model = OrderDetail
     form_class = OrderDetailForm
-    queryset = OrderDetail.objects.all()
-    # order_id = Order.objects.latest('order_dt')
-    # queryset = OrderDetail.objects.get(order_id=order_id)
-    # customer = Order.objects.latest('order_dt').cust_id
+    order_id = Order.objects.latest('order_dt')
+    queryset = OrderDetail.objects.filter(order=order_id)
     template_name = 'shopping/order_step_3_summary.html'
-    # paginate_by = 25
+
+
+# def order_summary(request):
 
 
 
-'''
-def add_inventory(request):
-    submitted = False
-    inserted = False
-    if request.method == 'POST':
-        form = InventoryForm(request.POST)
-        if form.is_valid():
-            sku = form.cleaned_data.get('sku')
-            make = form.cleaned_data.get('make')
-            model = form.cleaned_data.get('model')
-            inv_desc = form.cleaned_data.get('description')
-            inv_price = form.cleaned_data.get('price')
-            inv_cost = form.cleaned_data.get('cost')
-            quantity = form.cleaned_data.get('quantity')
-            bin_aisle = form.cleaned_data.get('bin_aisle')
-            bin_bay = form.cleaned_data.get('bin_bay')
-            p = Inventory(
-                sku=sku, make=make, model=model, inv_desc=inv_desc, inv_price=inv_price,
-                inv_cost=inv_cost, quantity=quantity, bin_aisle=bin_aisle, bin_bay=bin_bay,
-            )
-            while inserted is False:
-                try:
-                    p.save()
-                    inserted = True
-                except IntegrityError:
-                    pass
-            return HttpResponseRedirect('./?submitted=True')
-    else:
-        form = InventoryForm()
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'inventory/add_inventory.html', {'form': form, 'submitted': submitted})
-'''

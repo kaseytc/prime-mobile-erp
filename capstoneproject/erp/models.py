@@ -218,7 +218,7 @@ class OrderDetail(models.Model):
         #return reverse('index', kwargs={'pk': self.detail_id})
 
     def get_total_inventory_price(self):
-        return self.quantity * self.inventory.price
+        return self.quantity * self.inventory.inv_price
 
     def get_tax_price(self):
         return self.get_total_inventory_price() * SALES_TAX_RATE

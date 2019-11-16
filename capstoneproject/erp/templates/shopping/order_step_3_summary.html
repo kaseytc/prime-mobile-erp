@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Order Summary{% endblock %}
+
+{% block content %}
+
+<a href="javascript:history.back()">Back</a>
+
+<header>
+    <h1>Order Summary</h1>
+    <h3>Step 3: Order Summary and Select Payment</h3>
+</header>
+<hr class="mt-0 mb-4">
+
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>Inventory</th>
+        <th>Quantity</th>
+    </tr>
+
+{% for item in object_list %}
+    <tr>
+        <td>{{item.order}}</td>
+        <td>{{item.inventory}}</td>
+        <td align="center">{{item.quantity}}</td>
+    </tr>
+{% empty %}
+    <li>No items yet.</li>
+{% endfor %}
+</table>
+
+
+<form action="" method="post" novalidate>{% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+                <td><input type="reset" value="Reset">
+                    <input type="submit" value="Create"></td>
+        </tr>
+    </table>
+</form>
+{% endblock %}
+

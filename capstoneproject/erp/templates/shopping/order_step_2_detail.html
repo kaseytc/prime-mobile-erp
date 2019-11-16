@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Product List{% endblock %}
+{% block title %}Select Inventories / Products Quantityt{% endblock %}
 
 {% block content %}
 
@@ -8,7 +8,7 @@
     <h1>Product List</h1>
     <h3>Step 2: Select Inventories / Products Quantity</h3>
 </header>
-
+{{ message }}
 <div id="product-list">
     {% for product in object_list %}
         <div id="detail">

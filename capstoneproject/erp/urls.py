@@ -1,5 +1,6 @@
 from django.contrib.auth.views import LoginView
 from django.urls import include, path
+from django.conf.urls import url
 
 from . import views
 
@@ -69,6 +70,8 @@ urlpatterns += [
     path('order_summary/', views.OrderSummaryView.as_view(), name='order-summary'),
 
     #path('order_item/', views.OrderItemView.as_view(), name='order-item'),
+
+
 
 ]
 

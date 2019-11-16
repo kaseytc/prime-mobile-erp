@@ -11,6 +11,7 @@ from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from django.http import Http404
+from django.db.models import F
 
 from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
 from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
@@ -441,28 +442,18 @@ class InvoiceUpdate(UpdateView):
     template_name = 'invoice/invoice_update_form.html'
 
 
-# TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
-#  remove and store invoices for customers. assign and remove employees on an order.
-class OrderSummaryView(generic.ListView):
-    model = OrderDetail
-    form_class = OrderDetailForm
-    queryset = OrderDetail.objects.all()
-    template_name = 'shopping/order_summary.html'
-    paginate_by = 25
-
-
-#class OrderItemView(CreateView):
+# class OrderItemView(CreateView):
 #    model = OrderDetail
 #    form_class = OrderDetailForm
- #   template_name = 'shopping/order_item.html'
- #   success_url = reverse_lazy('order-list')
+#    template_name = 'shopping/order_item.html'
+#   success_url = reverse_lazy('order-list')
 
 
 # NewOrder
 # TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
 #  remove and store invoices for customers. assign and remove employees on an order.
 class OrderCreateView(CreateView):
-    global new_order
+    # global new_order
     model = Order
     form_class = OrderCreateForm
     template_name = 'shopping/order_step_1_create.html'
@@ -474,10 +465,14 @@ class OrderCreateView(CreateView):
         kwargs.update({"request": self.request})
         return kwargs
 
-    #def form_valid(self, form):
+    # def get_success_url(self, **kwargs):
+    #    # obj = form.instance or self.object
+    #    return reverse_lazy("orders", kwargs={'pk': self.object.pk})
+
+    # def form_valid(self, form):
     #    self.object = form.save()
-     #   new_order = self.object
-     #   print(new_order.order_id)
+    #   new_order = self.object
+    #   print(new_order.order_id)
     #    return HttpResponseRedirect(self.get_success_url())
 
 
@@ -505,10 +500,25 @@ def add_to_cart(request):
                     order_detail.save()
                     inserted = True
                 except IntegrityError:
-                    print('IntegrityError')
+                    query = OrderDetail.objects.filter(inventory=order_detail.inventory, order=order_detail.order)
+                    query.update(quantity=F('quantity') + order_detail.quantity)
+                    # print(query)
+                    # print('IntegrityError')
                     break
-            #return HttpResponseRedirect('./?submitted=True')
-            return render(request, 'shopping/order_summary.html')
+            # return HttpResponseRedirect('./?submitted=True')
+            # return render(request, 'shopping/order_step_2_detail.html')
+            return redirect('order-summary')
+
+
+class OrderSummaryView(generic.ListView):
+    model = OrderDetail
+    form_class = OrderDetailForm
+    queryset = OrderDetail.objects.all()
+    # order_id = Order.objects.latest('order_dt')
+    # queryset = OrderDetail.objects.get(order_id=order_id)
+    # customer = Order.objects.latest('order_dt').cust_id
+    template_name = 'shopping/order_step_3_summary.html'
+    # paginate_by = 25
 
 
 

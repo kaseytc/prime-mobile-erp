@@ -132,15 +132,6 @@ class InventoryUpdateForm(forms.ModelForm):
         labels = dict(sku=_('SKU'), bin_aisle=_('Bin Aisle'), bin_bay=_('Bin Bay'), inv_cost=_('Cost'),
                       inv_price=_('Price'), inv_desc=_('Description'))
 
-'''
-class OrderForm(forms.ModelForm):
-    #required_css_class = 'required'
-
-    class Meta:
-        model = Order
-        fields = '__all__'
-'''
-
 
 class OrderForm(forms.ModelForm):
     #required_css_class = 'required'
@@ -180,13 +171,6 @@ class InvoiceForm(forms.ModelForm):
         fields = '__all__'
 
 
-class OrderDetailForm(forms.ModelForm):
-    quantity = forms.IntegerField(min_value=1)
-    class Meta:
-        model = OrderDetail
-        fields = '__all__'
-
-
 class OrderCreateForm(forms.ModelForm):
     status = forms.ChoiceField(widget=forms.HiddenInput(), choices=STATUS_CHOICES, required=True, initial='Create')
     emp = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=Employee.objects.all(),
@@ -204,28 +188,34 @@ class OrderCreateForm(forms.ModelForm):
         fields = ['status', 'emp', 'cust',]
 
 
+class OrderDetailForm(forms.ModelForm):
+
+    class Meta:
+        model = OrderDetail
+        fields = '__all__'
+
+
+
+
 '''
-order_id = models.AutoField(primary_key=True)
+    order_id = models.AutoField(primary_key=True)
     order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
     cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
     emp = models.ForeignKey(Employee, models.DO_NOTHING, blank=True, null=True)
-    #inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
-    #order_detail = models.ManyToManyField(OrderDetail)
-    #quantity = models.PositiveIntegerField()
-    #invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
+    
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
+    
     
     detail_id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, models.DO_NOTHING)
     inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
     quantity = models.PositiveIntegerField(default=0)
     
-    
-    '''
+'''
 
 
 

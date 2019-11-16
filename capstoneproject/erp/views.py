@@ -20,7 +20,7 @@ from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
 # Create your views here.
 
 invoice_num = 1
-new_order = None
+
 
 def index(request):
     return render(request, 'index.html', locals())
@@ -451,11 +451,11 @@ class OrderSummaryView(generic.ListView):
     paginate_by = 25
 
 
-class OrderItemView(CreateView):
-    model = OrderDetail
-    form_class = OrderDetailForm
-    template_name = 'shopping/order_item.html'
-    success_url = reverse_lazy('order-list')
+#class OrderItemView(CreateView):
+#    model = OrderDetail
+#    form_class = OrderDetailForm
+ #   template_name = 'shopping/order_item.html'
+ #   success_url = reverse_lazy('order-list')
 
 
 # NewOrder
@@ -466,7 +466,7 @@ class OrderCreateView(CreateView):
     model = Order
     form_class = OrderCreateForm
     template_name = 'shopping/order_step_1_create.html'
-    success_url = reverse_lazy('order-item-list')
+    success_url = reverse_lazy('product-list')
 
     def get_form_kwargs(self):
         kwargs = super(OrderCreateView, self).get_form_kwargs()
@@ -474,22 +474,41 @@ class OrderCreateView(CreateView):
         kwargs.update({"request": self.request})
         return kwargs
 
-    def form_valid(self, form):
-        self.object = form.save()
-        new_order = self.object
-        print(new_order.order_id)
-        return HttpResponseRedirect(self.get_success_url())
+    #def form_valid(self, form):
+    #    self.object = form.save()
+     #   new_order = self.object
+     #   print(new_order.order_id)
+    #    return HttpResponseRedirect(self.get_success_url())
 
 
-class ProductListView(generic.ListView):
-    model = Inventory
-    queryset = Inventory.objects.all()
-    template_name = 'shopping/order_step_2_detail.html'
-    paginate_by = 25
+def product_list(request):
+    object_list = Inventory.objects.all()
+    context = {
+        'object_list': object_list,
+    }
+
+    return render(request, "shopping/order_step_2_detail.html", context)
 
 
-def orderDetail(request):
-    global new_order
+def add_to_cart(request):
+    inserted = False
+    if request.method == 'POST':
+        if request.POST.get('quantity') and request.POST.get('inventory'):
+            order_detail = OrderDetail()
+            order_detail.order = Order.objects.latest('order_dt')
+            inventory_id = request.POST.get('inventory')
+            order_detail.inventory = Inventory.objects.get(pk=inventory_id)
+            order_detail.quantity = request.POST.get('quantity')
+
+            while inserted is False:
+                try:
+                    order_detail.save()
+                    inserted = True
+                except IntegrityError:
+                    print('IntegrityError')
+                    break
+            #return HttpResponseRedirect('./?submitted=True')
+            return render(request, 'shopping/order_summary.html')
 
 
 

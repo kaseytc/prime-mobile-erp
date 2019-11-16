@@ -62,14 +62,13 @@ urlpatterns += [
 
 # NewOrder
 urlpatterns += [
-    path('order_create/', views.OrderCreateView.as_view(), name='order-create'),
-    path('order_item_list/', views.ProductListView.as_view(), name='order-item-list'),
+    path('order_create/', views.OrderCreateView.as_view(), name='order-create'), #step1
+    path('product_list/', views.product_list, name='product-list'), #step2
+    path('add_item/', views.add_to_cart, name='add-item'), #step2.5
 
-    #path('products/', views.ProductListView.as_view(), name='product-list'),
     path('order_summary/', views.OrderSummaryView.as_view(), name='order-summary'),
 
     #path('order_item/', views.OrderItemView.as_view(), name='order-item'),
-
 
 ]
 

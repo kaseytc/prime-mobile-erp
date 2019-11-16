@@ -517,8 +517,36 @@ class OrderSummaryView(generic.ListView):
     queryset = OrderDetail.objects.filter(order=order_id)
     template_name = 'shopping/order_step_3_summary.html'
 
+    #def get(self, request, *args, **kwargs):
+    #    stuff = self.get_queryset()
+    #    if request.GET.get('detail_id'):
+    #        detail_id = request.GET.get('detail_id')
+    #        OrderDetail.objects.filter(detail_id=detail_id).delete()
+    #    return render(request, self.template_name, {'stuff': stuff, })
 
-# def order_summary(request):
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('detail_id'):
+        # if not request.POST.get('payment'):
+            detail_id = request.POST.get('detail_id')
+            OrderDetail.objects.filter(detail_id=detail_id).delete()
+            # stuff = self.get_queryset()
+            return redirect('order-summary')
+        # return render(request, self.template_name, {'stuff': stuff, })
+
+        #elif request.POST.get('payment'):
+        #    payment = request.POST.get('payment')
+        #    order = Order.objects.latest('order_dt')
+        #    order.pay_type = payment
+        #    order.save()
+            #OrderDetail.objects.filter(detail_id=detail_id).delete()
+            #stuff = self.get_queryset()
+       #     return redirect('order-summary')
+        #return render(request, self.template_name, {'stuff': stuff, })
+
+
+
+
+
 
 
 

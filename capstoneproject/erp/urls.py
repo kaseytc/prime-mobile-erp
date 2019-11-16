@@ -69,6 +69,8 @@ urlpatterns += [
 
     path('order_summary/', views.OrderSummaryView.as_view(), name='order-summary'),
 
+    # path('order_finish/', views.order_finish, name='order-finish'),
+
     #path('order_item/', views.OrderItemView.as_view(), name='order-item'),
 
 

@@ -12,8 +12,11 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from django.http import Http404
 from django.db.models import F
+import locale
 from django.http import JsonResponse
 from django.template import RequestContext
+from decimal import Decimal
+from re import sub
 
 from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
 from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
@@ -24,6 +27,8 @@ from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
 
 invoice_num = 1
 #new_order = Order()
+SALES_TAX_RATE = 0.089
+
 
 def index(request):
     return render(request, 'index.html', locals())
@@ -507,8 +512,8 @@ class OrderCreateView(CreateView):
             self.object = form.save()
             new_order = self.object
             request.session['new_order'] = new_order.order_id
-            print(new_order.order_id)
-            print(request.session['new_order'])
+            #print(new_order.order_id)
+            #print(request.session['new_order'])
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
@@ -582,6 +587,34 @@ class OrderSummaryView(generic.ListView):
         order_id = self.request.session['new_order']
         order = Order.objects.get(pk=order_id)
         return OrderDetail.objects.filter(order=order)
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderSummaryView, self).get_context_data(**kwargs)
+        #context['total'] = self.get_queryset().count()
+        queryset = self.get_queryset()
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        total = 0
+        for item in queryset:
+            db_price = item.inventory.inv_price
+            unit_price = Decimal(sub(r'[^\d.]', '', db_price))
+
+            #print(type(item.inventory.inv_price))
+            #print(type(item.quantity))
+            #print(item.inventory.inv_price)
+            #print(item.quantity)
+            total += unit_price*item.quantity
+            #print(type(total))
+        tax = total*Decimal(SALES_TAX_RATE)
+        grand_total = total+tax
+
+        final_total = locale.currency(total, grouping=True)
+        final_tax = locale.currency(tax, grouping=True)
+        final_grand_total = locale.currency(grand_total, grouping=True)
+
+        context['total'] = final_total
+        context['tax'] = final_tax
+        context['grand_total'] = final_grand_total
+        return context
 
     #def get(self, request, *args, **kwargs):
     #    stuff = self.get_queryset()

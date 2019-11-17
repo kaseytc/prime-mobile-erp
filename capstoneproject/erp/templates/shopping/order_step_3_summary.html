@@ -5,7 +5,7 @@
 {% block content %}
 
 <a href="javascript:history.back()">Back</a> |
-<a href="{% url 'product-list' %}">Add Other Item</a> |
+<a href="{% url 'product-list' %}">Add More Items</a> |
 <!--<a href="">Select Payment Method</a>
 <a href="">Checkout</a>-->
 
@@ -28,8 +28,8 @@
     <tr>
         <td>{{item.order}}</td>
         <td>{{item.inventory}}</td>
-        <td align="center">{{item.quantity}}</td>
-        <td align="center">{{item.inventory.inv_price}}</td>
+        <td align="center" id="q">{{item.quantity}}</td>
+        <td align="center" id="p">{{item.inventory.inv_price}}</td>
         <td><input type="hidden" name="order" value="{{request.session.new_order}}" readonly >
             <input type="hidden" name="detail_id" value="{{item.detail_id}}" readonly >
             <input type="hidden" name="inventory" value="{{item.inventory_id}}" readonly >
@@ -42,9 +42,17 @@
 </table>
 
 {% endfor %}
+<table>
+    <th>Total Price</th>
+    <th>Tax</th>
+    <th>Grand Total</th>
+<tr><td><p>Total Price: <span id="total">{{total}}</span></p></td>
+    <tr><td><p>Tax: <span >{{tax}}</span></p></td></tr>
+    <tr><td><p>Grand Total: <span >{{grand_total}}</span></p></td></tr>
+</tr>
+</table>
 
-
-<form action="" method="post" id="paymentform"novalidate>{% csrf_token %}
+<!--<form action="" method="post" id="paymentform"novalidate>{% csrf_token %}
 
     <table>
         <br><br><br>
@@ -63,7 +71,6 @@
 
     </table>
 
-</form>
+</form>-->
 
 {% endblock %}
-

@@ -9,6 +9,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+
 from django.utils.translation import ugettext_lazy as _
 
 TITLE_TYPE_CHOICES = [
@@ -29,8 +30,6 @@ PAY_TYPE_CHOICES = [
     ('MasterCard', 'MasterCard'),
     ('AmEx', 'AmEx'),
 ]
-
-SALES_TAX_RATE = 0.089
 
 
 class ErpUser(models.Model):
@@ -189,13 +188,6 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('order-detail', kwargs={'pk': self.order_id})
 
-    @property
-    def get_order_total(self):
-        total = 0
-        for item in self.order_detail.all():
-            total += item.get_final_price()
-        return total
-
     class Meta:
         managed = False
         db_table = 'Order'
@@ -216,15 +208,6 @@ class OrderDetail(models.Model):
 
     #def get_absolute_url(self):
         #return reverse('index', kwargs={'pk': self.detail_id})
-
-    def get_total_inventory_price(self):
-        return self.quantity * self.inventory.inv_price
-
-    def get_tax_price(self):
-        return self.get_total_inventory_price() * SALES_TAX_RATE
-
-    def get_final_price(self):
-        return self.get_total_inventory_price() + self.get_tax_price()
 
     class Meta:
         managed = False

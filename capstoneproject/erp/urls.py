@@ -1,7 +1,6 @@
-from django.contrib.auth import views as auth_views
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView
 from django.urls import include, path
-# from .views import UserCreateView
+from django.conf.urls import url
 
 from . import views
 
@@ -61,3 +60,19 @@ urlpatterns += [
     path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
     path('invoices/invoice_update/<pk>', views.InvoiceUpdate.as_view(), name='invoice-update')
 ]
+
+# NewOrder
+urlpatterns += [
+    path('order_create/', views.OrderCreateView.as_view(), name='order-create'), #step1
+    path('product_list/', views.product_list, name='product-list'), #step2
+    path('add_item/', views.add_to_cart, name='add-item'), #step2.5
+    path('order_summary/', views.OrderSummaryView.as_view(), name='order-summary'),
+    #path('order_finish/', views.order_finish, name='order-finish'),
+    #path('order_save/', views.order_save, name='order-save'),
+
+    #path('order_item/', views.OrderItemView.as_view(), name='order-item'),
+
+
+
+]
+

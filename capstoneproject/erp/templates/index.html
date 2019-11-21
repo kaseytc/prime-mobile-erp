@@ -93,7 +93,9 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Orders</h4>
-            <p><a href="{% url 'add-order' %}">Create</a></p>
+            <!--<p><a href="{% url 'order-summary' %}">Order Summary</a></p>-->
+            <p><a href="{% url 'order-create' %}">Create</a></p>
+            <!--<p><a href="{% url 'add-order' %}">Old Create</a></p>-->
             <p><a href="{% url 'order-list' %}">View</a></p>
             <!--<p><a href="#">Search</a></p>-->
           </div>
@@ -120,7 +122,7 @@
         <div class="col-sm-8">
           <div class="well">
             <h4>Reports</h4>
-            <p><a href="#">View</a></p>
+            <p><a href="../admin/explorer/query/">View</a></p>
           </div>
         </div>
       </div>
@@ -157,7 +159,7 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>Orders</h4>
-            <p><a href="{% url 'add-order' %}">Create</a></p>
+            <p><a href="{% url 'order-create' %}">Create</a></p>
             <p><a href="{% url 'order-list' %}">View</a></p>
           </div>
         </div>

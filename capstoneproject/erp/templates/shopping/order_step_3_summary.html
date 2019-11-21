@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Order Summary{% endblock %}
+
+{% block content %}
+
+<a href="javascript:history.back()">Back</a> |
+<a href="{% url 'product-list' %}">Add More Items</a>
+<!--<a href="">Select Payment Method</a>
+<a href="">Checkout</a>-->
+
+<header>
+    <h1>Order Summary</h1>
+    <h3>Step 3: Order Summary and Select Payment</h3>
+</header>
+<hr class="mt-0 mb-4">
+
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>Inventory</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+    </tr>
+
+{% for item in object_list %}
+    <form action="" method="post" novalidate>{% csrf_token %}
+    <tr>
+        <td>{{item.order}}</td>
+        <td>{{item.inventory}}</td>
+        <td align="center" id="q">{{item.quantity}}</td>
+        <td align="center" id="p">{{item.inventory.inv_price}}</td>
+        <td><input type="hidden" name="order" value="{{request.session.new_order}}" readonly >
+            <input type="hidden" name="detail_id" value="{{item.detail_id}}" readonly >
+            <input type="hidden" name="inventory" value="{{item.inventory_id}}" readonly >
+            <input type="hidden" name="quantity" value="{{item.quantity}}" readonly >
+            <input type="submit" value="Delete"></td>
+    </tr>
+    </form>
+{% empty %}
+    <li>No items yet.</li>
+</table>
+
+{% endfor %}
+
+<table style="float:right;border-collapse:collapse;">
+    <!--<th></th>
+    <th></th>-->
+    <!--<th>Tax</th>
+    <th>Grand Total</th>
+<tr><td>Total Price: <span id="total">{{total}}</span></td>
+    <tr><td>Tax: <span >{{tax}}</span></td></tr>
+    <tr><td>Grand Total: <span >{{grand_total}}</span></td></tr>-->
+    <tr><td>Total before tax:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</td><td style="float:right"> <span>{{total}}</span></td>
+    <tr style="border-bottom: 1px solid #000;"><td>Estimated Tax:</td><td style="float:right"> <span >{{tax}}</span></td></tr>
+    <tr style="color: brown;font-weight: bold;"><td>Order Total:</td><td style="float:right"> <span >{{grand_total}}</span></td></tr>
+</tr>
+</table>
+
+<form action="" method="post" id="paymentform"novalidate>{% csrf_token %}
+    <table>
+        <br><br><br>
+        <p>Select Payment Method:</p>
+        <td>
+        <select name="payment" form="paymentform" required>
+            <option selected disabled hidden>Choose payment method</option>
+            <option value="Cash">Cash</option>
+            <option value="VISA">VISA</option>
+            <option value="MasterCard">MasterCard</option>
+            <option value="AmEx">AmEx</option>
+        </select>
+        <td><input type="hidden" name="total" value="{{total}}" readonly >
+            <input type="hidden" name="tax" value="{{tax}}" readonly >
+            <input type="hidden" name="grand_total" value="{{grand_total}}" readonly ></td>
+            <td><input type="submit" value="Skip" name="skip">
+            <input type="submit" value="Confirm and Finish" name="submit_payment"></td>
+    </td>
+
+    </table>
+
+</form>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

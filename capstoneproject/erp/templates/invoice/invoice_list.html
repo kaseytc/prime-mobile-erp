@@ -3,8 +3,9 @@
 {% block title %}Show invoices data{% endblock %}
 
 {% block content %}
-<button onclick="history.back()">Back</button>
-<button onclick="location.href='/'">Back Home</button>
+<a href="javascript:history.back()">Back</a> |
+<a href="{% url 'index' %}">Home</a>
+
 <header>
 <h1>Show invoices data</h1>
 </header>
@@ -23,8 +24,8 @@
         <td>{{invoice.pay_type}}</td>
         <td>{{invoice.emp}}</td>
         <td><a href="{{invoice.invoice_id}}">View</a></td>
-        <!--<td><a href="invoice_update/{{invoice.invoice_id}}">Update</a></td>
-        <td><a href="invoice_confirm_delete/{{invoice.invoice_id}}">Delete</a></td>-->
+        <!--<td><a href="invoice_update/{{invoice.invoice_id}}">Update</a></td>-->
+        <td><a href="invoice_confirm_delete/{{invoice.invoice_id}}">Delete</a></td>
     </tr>
 {% empty %}
     <li>No orders yet.</li>

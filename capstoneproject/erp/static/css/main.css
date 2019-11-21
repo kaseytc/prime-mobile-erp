@@ -2,14 +2,22 @@
     content: "*";
 }
 
-.container {
+#wrapper {
 	width: 80%;
 	text-align: left;
 	margin: auto auto;
 }
+
+.container {
+	padding: 2% 7% 5% 7%;
+}
+/************** Header **************/
 header h1 {
 	font: bold small-caps 2em Tahoma, Arial, sans-serif;
 }
+/************** Navigation **************/
+
+/************** Body **************/
 body {
     padding: 2% 2% 0 20%;
 }
@@ -19,16 +27,10 @@ body a {
 	text-decoration: none;
 }
 
-#body a:link {
-#	color: darkblue;
-#}
-#body a:visited {
-#	color: #70ad9a;
-#}
-
 body a:hover, body a:focus {
 	text-decoration: underline;
 }
+
 .logout {
       text-align: center;
 	  #margin: auto auto;
@@ -37,9 +39,13 @@ body a:hover, body a:focus {
 	  display: block;
       width: 50%;
 }
+
 .center {
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 50%;
 }
+
+
+

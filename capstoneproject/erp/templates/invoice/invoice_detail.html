@@ -3,10 +3,10 @@
 {% block title %}Show invoice detail{% endblock %}
 
 {% block content %}
-<button onclick="history.back()">Back</button>
-<button onclick="location.href='/'">Back Home</button>
-<button onclick="location.href='.'">Back Invoice List</button>
-<!--<a href="{% url 'invoice-list' %}">Back Invoice List</a>-->
+<a href="javascript:history.back()">Back</a> |
+<a href="{% url 'invoice-list' %}">Invoice List</a> |
+<a href="{% url 'index' %}">Home</a>
+
 <header>
 <h1>Show invoice detail</h1>
 </header>
@@ -17,7 +17,7 @@
         <tr><td><strong>Invoice Number:</strong></td><td>{{invoice.invoice_num}}</td></tr>
         <tr><td><strong>Payment Type:</strong></td><td>{{invoice.pay_type}}</td></tr>
         <tr><td><strong>Employee:</strong></td><td>{{invoice.emp.fname}} {{invoice.emp.lname}}</td></tr>
-        <tr><td><strong>Customer:</strong></td><!--<td>{{order.cust.fname}} {{order.cust.lname}}</td>--></tr>
+        <tr><td><strong>Customer:</strong></td><td>{{invoice.cust.fname}} {{invoice.cust.lname}}</td></tr>
         <tr><td><strong>Inventory:</strong></td><!--<td>{{order.inventory.make}} {{order.inventory.model}}</td>--></tr>
         <tr><td><strong>Quantity:</strong></td><!--<td>{{order.quantity}}</td>--></tr>
     </td>

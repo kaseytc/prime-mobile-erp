@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Select Inventories / Products Quantityt{% endblock %}
+
+{% block content %}
+
+<header>
+    <h1>Product List</h1>
+    <h3>Step 2: Select Inventories / Products Quantity</h3>
+</header>
+{{ message }}
+<div id="product-list">
+    {% for product in object_list %}
+        <div id="detail">
+            <form name="order-detail-{{product.inventory_id}}" action="{% url 'add-item' %}" method="post">{% csrf_token %}
+                <fieldset  class="fieldset-auto-width" style="width: 50%">
+                    <legend>Inventory-ID-{{product.inventory_id}}</legend>
+                    <span><a href="../inventories/{{product.inventory_id}}">{{ product }}</a></span>
+                    <br>
+                    <span>Price: {{ product.inv_price }}</span>&nbsp
+
+                    <span>Available Qty: {{ product.quantity }}</span>
+
+                    {% if product.quantity != 0 %}
+                    <br><input type="hidden" name="order" value="{{request.session.new_order}}" readonly >
+                    <input type="hidden" name="inventory" value="{{product.inventory_id}}" readonly >
+
+                    <span>Quantity: <input type="number" name="quantity" min="1" max="{{ product.quantity }}" required>
+                    &nbsp<input type="submit" value="Add to Cart"></span>
+                    {% else %}
+                    <br><span style="color:sienna;">This item is currently unavailable.</span>
+
+                {% comment %}
+                <!--<a href="{% url 'shopping_cart:add_to_cart' object.id %}" class="btn btn-warning">Add to Cart</a>-->
+                {% endcomment %}
+                    {% endif %}
+                </fieldset>
+            </form>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+

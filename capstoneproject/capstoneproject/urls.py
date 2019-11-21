@@ -23,9 +23,9 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('erp/', include('erp.urls')),
-    path('', RedirectView.as_view(url='/erp/', permanent=True)),
-
     # Django authentication urls (login, logout, password management)
     path('users/', include('django.contrib.auth.urls')),
+    path('', RedirectView.as_view(url='/erp/', permanent=True)),
+    path(r'^explorer/', include('explorer.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

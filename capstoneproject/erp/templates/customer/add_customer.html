@@ -3,8 +3,11 @@
 {% block title %}Add Customer{% endblock %}
 
 {% block content %}
-<button onclick="history.back()">Back</button>
-<button onclick="location.href='/'">Back Home</button>
+<!--<button onclick="history.back()">Back</button>
+<button onclick="location.href='/'">Back Home</button>-->
+<a href="javascript:history.back()">Back</a> |
+<a href="{% url 'index' %}">Home</a>
+
 <header>
 <h1>Add new customer</h1>
 </header>
@@ -22,7 +25,8 @@
             {{ form.as_table }}
             <tr>
                 <td>&nbsp;</td>
-                <td><input type="submit" value="Submit"></td>
+                <td><input type="reset" value="Reset">
+                    <input type="submit" value="Submit"></td>
             </tr>
         </table>
     </form>

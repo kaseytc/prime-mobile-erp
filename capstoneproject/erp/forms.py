@@ -16,8 +16,14 @@ STATUS_CHOICES = [
     ('Complete', 'Complete'),
 ]
 
-PAY_TYPE_CHOICES = [
+INVOICE_STATUS_CHOICES = [
     ('Unpaid', 'Unpaid'),
+    ('Paid', 'Paid'),
+    #('Complete', 'Complete'),
+]
+
+PAY_TYPE_CHOICES = [
+    #('Unpaid', 'Unpaid'),
     ('Cash', 'Cash'),
     ('VISA', 'VISA'),
     ('MasterCard', 'MasterCard'),

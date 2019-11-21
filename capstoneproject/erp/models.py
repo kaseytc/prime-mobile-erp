@@ -23,8 +23,14 @@ STATUS_CHOICES = [
     ('Complete', 'Complete'),
 ]
 
-PAY_TYPE_CHOICES = [
+INVOICE_STATUS_CHOICES = [
     ('Unpaid', 'Unpaid'),
+    ('Paid', 'Paid'),
+    #('Complete', 'Complete'),
+]
+
+PAY_TYPE_CHOICES = [
+    #('Unpaid', 'Unpaid'),
     ('Cash', 'Cash'),
     ('VISA', 'VISA'),
     ('MasterCard', 'MasterCard'),
@@ -203,7 +209,7 @@ class Invoice(models.Model):
     emp = models.ForeignKey(Employee, models.DO_NOTHING)
     invoice_num = models.IntegerField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2,)
-    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=INVOICE_STATUS_CHOICES)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2,)
     tax = models.DecimalField(max_digits=10, decimal_places=2,)
     cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)

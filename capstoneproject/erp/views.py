@@ -665,7 +665,7 @@ class OrderSummaryView(generic.ListView):
                 order.save()
                 # TODO: invoice number
                 invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp, invoice_num=1, total_price=order.total_price,
-                                  status='Complete', grand_total=order.grand_total, tax=order.tax, cust=order.cust)
+                                  status='Paid', grand_total=order.grand_total, tax=order.tax, cust=order.cust)
                 invoice.save()
 
                 #new_order = self.object

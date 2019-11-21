@@ -19,6 +19,7 @@ from decimal import Decimal
 from re import sub
 from money.money import Money
 from money.currency import Currency
+from django.contrib import messages
 
 from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
 from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
@@ -579,7 +580,7 @@ def add_to_cart(request):
         return redirect('product-list')
 
 
-# TODO: session get order id
+# TODO: order update
 class OrderSummaryView(generic.ListView):
     model = OrderDetail
     form_class = OrderDetailForm
@@ -599,33 +600,21 @@ class OrderSummaryView(generic.ListView):
         for item in queryset:
             db_price = item.inventory.inv_price
             unit_price = Decimal(sub(r'[^\d.]', '', db_price))
-            #print(unit_price)
-            #print(type(item.inventory.inv_price))
-            #print(type(item.quantity))
-            #print(item.inventory.inv_price)
-            #print(item.quantity)
             subtotal += unit_price*item.quantity
-            #print(type(total))
+
         subtotal = Money(subtotal, Currency.USD)
         tax = subtotal * SALES_TAX_RATE
         #tax = subtotal*Decimal(SALES_TAX_RATE)
-        #print(tax)
+
         grand_total = subtotal + tax
         subtotal = subtotal.format('en_US')
         tax = tax.format('en_US')
         grand_total = grand_total.format('en_US')
-        #print(grand_total)
 
-        #print(grand_total)
         #final_total = locale.currency(total, grouping=True)
         #final_tax = locale.currency(tax, grouping=True)
-
-        #final_tax = Decimal(sub(r'[^\d.]', '', final_tax))
-        #print(final_tax)
-
         #final_grand_total = final_total + final_tax
         #final_grand_total = locale.currency(grand_total, grouping=True)
-        #print(final_grand_total)
 
         #context['total'] = final_total
         #context['tax'] = final_tax
@@ -645,13 +634,75 @@ class OrderSummaryView(generic.ListView):
     def post(self, request, *args, **kwargs):
         if request.POST.get('detail_id'):
         # if not request.POST.get('payment'):
+            print(2)
             detail_id = request.POST.get('detail_id')
             OrderDetail.objects.filter(detail_id=detail_id).delete()
             Inventory.objects.filter(pk=request.POST.get('inventory')).update(quantity=F('quantity') + request.POST.get('quantity'))
             # stuff = self.get_queryset()
             return redirect('order-summary')
+
+        if request.POST.get('submit_payment'):
+            if request.POST.get('payment'):
+                print(1)
+
+                payment = request.POST.get('payment')
+                total_price = request.POST.get('total')
+                tax = request.POST.get('tax')
+                grand_total = request.POST.get('grand_total')
+                #print(payment)
+
+                #print(type(total_price))
+                order_id = self.request.session['new_order']
+                #print(order_id)
+                order = Order.objects.get(pk=order_id)
+
+                order.pay_type = payment
+                order.total_price = Decimal(sub(r'[^\d.]', '', total_price))
+                order.tax = Decimal(sub(r'[^\d.]', '', tax))
+                order.grand_total = Decimal(sub(r'[^\d.]', '', grand_total))
+
+                order.status = 'Complete'
+                order.save()
+                # TODO: invoice number
+                invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp, invoice_num=1, total_price=order.total_price,
+                                  status='Complete', grand_total=order.grand_total, tax=order.tax, cust=order.cust)
+                invoice.save()
+
+                #new_order = self.object
+                request.session['new_invoice'] = invoice.invoice_id
+                print(request.session['new_invoice'])
+
+                #return redirect('order-summary')
+                return render(request, 'shopping/order_step_4_finish.html', )
+            else:
+                messages.error(request, 'Payment method is required.')
+                return redirect('order-summary')
+        elif request.POST.get('skip'):
+            print(3)
+            total_price = request.POST.get('total')
+            tax = request.POST.get('tax')
+            grand_total = request.POST.get('grand_total')
+            # print(payment)
+
+            # print(type(total_price))
+            order_id = self.request.session['new_order']
+            # print(order_id)
+            order = Order.objects.get(pk=order_id)
+
+            #order.pay_type = payment
+            order.total_price = Decimal(sub(r'[^\d.]', '', total_price))
+            order.tax = Decimal(sub(r'[^\d.]', '', tax))
+            order.grand_total = Decimal(sub(r'[^\d.]', '', grand_total))
+
+            order.status = 'Pending'
+            order.save()
+            #return redirect('order-summary')
+            return render(request, 'shopping/order_step_4_stored.html', )
         return redirect('order-summary')
         # return render(request, self.template_name, {'stuff': stuff, })
+
+
+        #return redirect('order-summary')
 
 
         #elif request.POST.get('payment'):
@@ -665,9 +716,12 @@ class OrderSummaryView(generic.ListView):
         #return render(request, self.template_name, {'stuff': stuff, })
 
 
+#def order_finish(request):
+#    return render(request, 'shopping/order_step_4_finish.html', locals())
 
 
-
+#def order_save(request):
+    #return render(request, 'shopping/order_step_4_stored.html', locals())
 
 
 

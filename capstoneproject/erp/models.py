@@ -128,29 +128,7 @@ class Inventory(models.Model):
         verbose_name_plural = 'Inventories'
 
 
-class Invoice(models.Model):
-    invoice_id = models.AutoField(primary_key=True)
-    invoice_dt = models.DateTimeField(auto_now=True, auto_now_add=False)
-    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
-    emp = models.ForeignKey(Employee, models.DO_NOTHING)
-    invoice_num = models.IntegerField()
-    total_price = models.DecimalField(max_digits=10, decimal_places=2,)
-    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
-    grand_total = models.DecimalField(max_digits=10, decimal_places=2,)
-    tax = models.DecimalField(max_digits=10, decimal_places=2,)
-    cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
 
-    def __str__(self):
-        return str(self.invoice_id)
-
-    def get_absolute_url(self):
-        return reverse('invoice-detail', kwargs={'pk': self.invoice_id})
-
-    class Meta:
-        managed = False
-        db_table = 'Invoice'
-        verbose_name = 'Invoice'
-        verbose_name_plural = 'Invoices'
 
 '''
 class Invoice(models.Model):
@@ -216,6 +194,31 @@ class OrderDetail(models.Model):
         verbose_name = 'Order Detail'
         verbose_name_plural = 'Order Details'
 
+
+class Invoice(models.Model):
+    invoice_id = models.AutoField(primary_key=True)
+    invoice_dt = models.DateTimeField(auto_now=True, auto_now_add=False)
+    order = emp = models.ForeignKey(Order, models.DO_NOTHING)
+    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
+    emp = models.ForeignKey(Employee, models.DO_NOTHING)
+    invoice_num = models.IntegerField()
+    total_price = models.DecimalField(max_digits=10, decimal_places=2,)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
+    grand_total = models.DecimalField(max_digits=10, decimal_places=2,)
+    tax = models.DecimalField(max_digits=10, decimal_places=2,)
+    cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.invoice_id)
+
+    def get_absolute_url(self):
+        return reverse('invoice-detail', kwargs={'pk': self.invoice_id})
+
+    class Meta:
+        managed = False
+        db_table = 'Invoice'
+        verbose_name = 'Invoice'
+        verbose_name_plural = 'Invoices'
 
 '''
 class Order(models.Model):

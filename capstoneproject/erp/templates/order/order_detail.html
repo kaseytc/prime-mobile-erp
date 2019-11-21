@@ -3,10 +3,10 @@
 {% block title %}Show order detail{% endblock %}
 
 {% block content %}
-<button onclick="history.back()">Back</button>
-<button onclick="location.href='/'">Back Home</button>
-<button onclick="location.href='.'">Back Order List</button>
-<!--<a href="{% url 'order-list' %}">Back Order List</a>-->
+<a href="javascript:history.back()">Back</a> |
+<a href="{% url 'order-list' %}">Order List</a> |
+<a href="{% url 'index' %}">Home</a>
+
 <header>
 <h1>Show order detail</h1>
 </header>
@@ -15,13 +15,16 @@
         <tr><td><strong>Order ID:</strong></td><td>{{order.order_id}}</td></tr>
         <tr><td><strong>Time</strong></td><td>{{order.order_dt}}</td></tr>
         <tr><td><strong>Status:</strong></td><td>{{order.status}}</td></tr>
-        <tr><td><strong>Customer Name:</strong></td><td>{{order.cust.fname}} {{order.cust.lname}}</td></tr>
+        <tr><td><strong>Customer:</strong></td><td>{{order.cust.fname}} {{order.cust.lname}}</td></tr>
         <!--<tr><td><strong>Inventory:</strong></td><td>{{order.inventory.make}} {{order.inventory.model}}</td></tr>
         <tr><td><strong>Quantity:</strong></td><td>{{order.quantity}}</td></tr>
         <tr><td><strong>Invoice ID:</strong></td><td>{{order.invoice}}</td></tr>
         <tr><td><strong>Invoice Number:</strong></td><td>{{order.invoice.invoice_num}}</td></tr>-->
-        <tr><td><strong>Payment Type:</strong></td><td>{{order.invoice.pay_type}}</td></tr>
         <tr><td><strong>Employee:</strong></td><td>{{order.emp.fname}} {{order.emp.lname}}</td></tr>
+        <tr><td><strong>Subtotal:</strong></td><td style="float:right">{{order.total_price}}</td></tr>
+        <tr><td><strong>Tax:</strong></td><td style="float:right">{{order.tax}}</td></tr>
+        <tr><td><strong>Total Price:</strong></td><td style="float:right">{{order.grand_total}} </td></tr>
+        <tr><td><strong>Payment Type:</strong></td><td>{{order.invoice.pay_type}}</td></tr>
     </td>
 </table>
 

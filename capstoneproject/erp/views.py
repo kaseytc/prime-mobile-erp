@@ -17,6 +17,8 @@ from django.http import JsonResponse
 from django.template import RequestContext
 from decimal import Decimal
 from re import sub
+from money.money import Money
+from money.currency import Currency
 
 from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
 from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
@@ -593,27 +595,44 @@ class OrderSummaryView(generic.ListView):
         #context['total'] = self.get_queryset().count()
         queryset = self.get_queryset()
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-        total = 0
+        subtotal = 0
         for item in queryset:
             db_price = item.inventory.inv_price
             unit_price = Decimal(sub(r'[^\d.]', '', db_price))
-
+            #print(unit_price)
             #print(type(item.inventory.inv_price))
             #print(type(item.quantity))
             #print(item.inventory.inv_price)
             #print(item.quantity)
-            total += unit_price*item.quantity
+            subtotal += unit_price*item.quantity
             #print(type(total))
-        tax = total*Decimal(SALES_TAX_RATE)
-        grand_total = total+tax
+        subtotal = Money(subtotal, Currency.USD)
+        tax = subtotal * SALES_TAX_RATE
+        #tax = subtotal*Decimal(SALES_TAX_RATE)
+        #print(tax)
+        grand_total = subtotal + tax
+        subtotal = subtotal.format('en_US')
+        tax = tax.format('en_US')
+        grand_total = grand_total.format('en_US')
+        #print(grand_total)
 
-        final_total = locale.currency(total, grouping=True)
-        final_tax = locale.currency(tax, grouping=True)
-        final_grand_total = locale.currency(grand_total, grouping=True)
+        #print(grand_total)
+        #final_total = locale.currency(total, grouping=True)
+        #final_tax = locale.currency(tax, grouping=True)
 
-        context['total'] = final_total
-        context['tax'] = final_tax
-        context['grand_total'] = final_grand_total
+        #final_tax = Decimal(sub(r'[^\d.]', '', final_tax))
+        #print(final_tax)
+
+        #final_grand_total = final_total + final_tax
+        #final_grand_total = locale.currency(grand_total, grouping=True)
+        #print(final_grand_total)
+
+        #context['total'] = final_total
+        #context['tax'] = final_tax
+        #context['grand_total'] = final_grand_total
+        context['total'] = subtotal
+        context['tax'] = tax
+        context['grand_total'] = grand_total
         return context
 
     #def get(self, request, *args, **kwargs):

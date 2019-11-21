@@ -42,17 +42,22 @@
 </table>
 
 {% endfor %}
-<table>
-    <th>Total Price</th>
-    <th>Tax</th>
+
+<table style="float:right;border-collapse:collapse;">
+    <!--<th></th>
+    <th></th>-->
+    <!--<th>Tax</th>
     <th>Grand Total</th>
-<tr><td><p>Total Price: <span id="total">{{total}}</span></p></td>
-    <tr><td><p>Tax: <span >{{tax}}</span></p></td></tr>
-    <tr><td><p>Grand Total: <span >{{grand_total}}</span></p></td></tr>
+<tr><td>Total Price: <span id="total">{{total}}</span></td>
+    <tr><td>Tax: <span >{{tax}}</span></td></tr>
+    <tr><td>Grand Total: <span >{{grand_total}}</span></td></tr>-->
+    <tr><td>Total before tax:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</td><td style="float:right"> <span>{{total}}</span></td>
+    <tr style="border-bottom: 1px solid #000;"><td>Estimated Tax:</td><td style="float:right"> <span >{{tax}}</span></td></tr>
+    <tr style="color: brown;font-weight: bold;"><td>Order Total:</td><td style="float:right"> <span >{{grand_total}}</span></td></tr>
 </tr>
 </table>
 
-<!--<form action="" method="post" id="paymentform"novalidate>{% csrf_token %}
+<form action="" method="post" id="paymentform"novalidate>{% csrf_token %}
 
     <table>
         <br><br><br>
@@ -71,6 +76,6 @@
 
     </table>
 
-</form>-->
+</form>
 
 {% endblock %}

@@ -20,6 +20,8 @@ from re import sub
 from money.money import Money
 from money.currency import Currency
 from django.contrib import messages
+import datetime
+
 
 from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
 from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
@@ -28,8 +30,6 @@ from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
 
 # Create your views here.
 
-invoice_num = 1
-#new_order = Order()
 SALES_TAX_RATE = 0.089
 
 
@@ -633,12 +633,11 @@ class OrderSummaryView(generic.ListView):
 
     def post(self, request, *args, **kwargs):
         if request.POST.get('detail_id'):
-        # if not request.POST.get('payment'):
             print(2)
             detail_id = request.POST.get('detail_id')
             OrderDetail.objects.filter(detail_id=detail_id).delete()
-            Inventory.objects.filter(pk=request.POST.get('inventory')).update(quantity=F('quantity') + request.POST.get('quantity'))
-            # stuff = self.get_queryset()
+            Inventory.objects.filter(
+                pk=request.POST.get('inventory')).update(quantity=F('quantity') + request.POST.get('quantity'))
             return redirect('order-summary')
 
         if request.POST.get('submit_payment'):
@@ -649,11 +648,8 @@ class OrderSummaryView(generic.ListView):
                 total_price = request.POST.get('total')
                 tax = request.POST.get('tax')
                 grand_total = request.POST.get('grand_total')
-                #print(payment)
 
-                #print(type(total_price))
                 order_id = self.request.session['new_order']
-                #print(order_id)
                 order = Order.objects.get(pk=order_id)
 
                 order.pay_type = payment
@@ -663,16 +659,32 @@ class OrderSummaryView(generic.ListView):
 
                 order.status = 'Complete'
                 order.save()
+
                 # TODO: invoice number
-                invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp, invoice_num=1, total_price=order.total_price,
-                                  status='Paid', grand_total=order.grand_total, tax=order.tax, cust=order.cust)
-                invoice.save()
+                date = datetime.date.today()
+                year = date.strftime("%Y")
+                year = year[2:]
+                month = date.strftime("%m")
+                day = date.strftime("%d")
 
-                #new_order = self.object
+                base_number_str = year + month + day + str(order.cust.cust_id)
+                serial_number_base = int(base_number_str)
+
+                if Invoice.objects.filter(invoice_num__startswith=serial_number_base):
+                    queryset = Invoice.objects.filter(invoice_num__startswith=serial_number_base).last()
+                    serial_number = queryset.invoice_num + 1
+                    invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
+                                      invoice_num=serial_number, total_price=order.total_price, status='Paid',
+                                      grand_total=order.grand_total, tax=order.tax, cust=order.cust)
+                    invoice.save()
+                else:
+                    serial_number = int(base_number_str + '01')
+                    invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
+                                      invoice_num=serial_number, total_price=order.total_price, status='Paid',
+                                      grand_total=order.grand_total, tax=order.tax, cust=order.cust)
+                    invoice.save()
+
                 request.session['new_invoice'] = invoice.invoice_id
-                print(request.session['new_invoice'])
-
-                #return redirect('order-summary')
                 return render(request, 'shopping/order_step_4_finish.html', )
             else:
                 messages.error(request, 'Payment method is required.')

@@ -66,7 +66,7 @@ class Customer(models.Model):
     zip = models.CharField(max_length=5, blank=True, null=True)
 
     def __str__(self):
-        return self.fname + " " + self.lname
+        return "#" + str(self.cust_id) + ". " + self.fname + " " + self.lname
 
     def get_absolute_url(self):
         return reverse('customer-detail', kwargs={'pk': self.cust_id})

@@ -1,11 +1,8 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
-# from .forms import ErpUserCreationForm, ErpUserChangeForm
+from .models import Customer, Employee, Inventory, Invoice, Order, OrderDetail
 from .models import ErpUser
 
 # Register your models here.
@@ -57,14 +54,9 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_id', 'order_dt', 'status', 'get_invoice')
-    #list_display = ('order_id', 'order_dt', 'status', 'quantity', 'get_inventory', 'get_invoice')
     search_fields = ('order_id', 'order_dt')
     ordering = ('order_id',)
     list_filter = ('status',)
-
-    #def get_inventory(self, obj):
-    #    return obj.inventory.make + ' ' + obj.inventory.model
-    #get_inventory.short_description = 'Make & Model'
 
     def get_invoice(self, obj):
         return obj.invoice.invoice_id
@@ -72,7 +64,6 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class OrderDetailAdmin(admin.ModelAdmin):
-    # ordering = ('inventory',)
     pass
 
 

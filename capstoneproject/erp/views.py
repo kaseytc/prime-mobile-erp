@@ -1,9 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import F, Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
@@ -11,22 +12,19 @@ from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 import operator
 from django.http import Http404
-from django.db.models import F
-import locale
 from django.http import JsonResponse
 from django.template import RequestContext
 from decimal import Decimal
-from re import sub
-from money.money import Money
 from money.currency import Currency
-from django.contrib import messages
+from money.money import Money
+from re import sub
+
+from .models import Customer, Employee, ErpUser, Inventory, Invoice, Order, OrderDetail
+from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderCreateForm, OrderDetailForm
+from .forms import EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm, OrderUpdateForm, OrderUpdateEmpForm
+
 import datetime
-
-
-from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
-from .forms import CustomerForm, EmployeeForm, InventoryForm, \
-    EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm, OrderUpdateForm, \
-    OrderDetailForm, OrderCreateForm, OrderUpdateEmpForm
+import locale
 
 # Create your views here.
 
@@ -311,152 +309,10 @@ class InventorySearchResultsView(generic.ListView):
         return object_list
 
 
-'''
-# TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
-#  remove and store invoices for customers. assign and remove employees on an order.
-def add_order(request):
-    global invoice_num
-    submitted = False
-    inserted_o = False
-    inserted_i = False
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            status = form.cleaned_data.get('status')
-            cust = form.cleaned_data.get('cust')
-            inventory = form.cleaned_data.get('inventory')
-            quantity = form.cleaned_data.get('quantity')
-            #invoice = form.cleaned_data.get('invoice')
-            pay_type = form.cleaned_data.get('pay_type')
-            #price = form.cleaned_data.get('price')
-
-            new_invoice = Invoice(pay_type=pay_type, invoice_num=invoice_num,
-                                  emp=ErpUser.objects.get(pk=request.user.id).emp)
-            while inserted_i is False:
-                try:
-                    new_invoice.save()
-                    inserted_i = True
-                except IntegrityError:
-                    pass
-            invoice_num += 1
-            latest_invoice_num = Invoice.objects.last()
-
-            new_order = Order(status=status, cust=cust, inventory=inventory, quantity=quantity,
-                              invoice=latest_invoice_num)
-            while inserted_o is False:
-                try:
-                    new_order.save()
-                    inserted_o = True
-                except IntegrityError:
-                    pass
-            return HttpResponseRedirect('./?submitted=True')
-    else:
-        form = OrderForm()
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'order/add_order.html', {'form': form, 'submitted': submitted})
-'''
-
-''' 
-     STATUS_CHOICES = [
-        ('Complete', 'Complete'),
-        ('Pending', 'Pending'),
-    ]
-    order_id = models.AutoField(primary_key=True)
-    order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
-    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
-    cust = models.ForeignKey(Customer, models.DO_NOTHING)
-    inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
-    quantity = models.PositiveIntegerField()
-    invoice = models.ForeignKey(Invoice, models.DO_NOTHING)
-    
-    PAY_TYPE_CHOICES = [
-        ('Unpaid', 'Unpaid'),
-        ('Cash', 'Cash'),
-        ('VISA', 'VISA'),
-        ('MasterCard', 'MasterCard'),
-        ('AmEx', 'AmEx'),
-    ]
-    invoice_id = models.AutoField(primary_key=True)
-    invoice_dt = models.DateTimeField(auto_now=True, auto_now_add=False)
-    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
-    emp = models.ForeignKey(Employee, models.DO_NOTHING)
-    invoice_num = models.IntegerField()
-'''
-
-
-
-'''
-def add_invoice(request):
-    submitted = False
-    inserted = False
-    if request.method == 'POST':
-        form = InvoiceForm(request.POST)
-        if form.is_valid():
-            while inserted is False:
-                try:
-                    form.save()
-                    inserted = True
-                except IntegrityError:
-                    pass
-            return HttpResponseRedirect('./?submitted=""True')
-    else:
-        form = InvoiceForm()
-        if 'submitted' in request.GET:
-            submitted = True
-    return render(request, 'invoice/add_invoice.html', {'form': form, 'submitted': submitted})
-'''
-
-
-
-
-
-'''
-class InvoiceUpdate(UpdateView):
-    model = Invoice
-    fields = '__all__'
-    template_name = 'invoice/invoice_update_form.html'
-'''
-
-# class OrderItemView(CreateView):
-#    model = OrderDetail
-#    form_class = OrderDetailForm
-#    template_name = 'shopping/order_item.html'
-#   success_url = reverse_lazy('order-list')
-
-'''
-class AjaxableResponseMixin:
-    """
-    Mixin to add AJAX support to a form.
-    Must be used with an object-based FormView (e.g. CreateView)
-    """
-    def form_invalid(self, form):
-        response = super().form_invalid(form)
-        if self.request.is_ajax():
-            return JsonResponse(form.errors, status=400)
-        else:
-            return response
-
-    def form_valid(self, form):
-        # We make sure to call the parent's form_valid() method because
-        # it might do some processing (in the case of CreateView, it will
-        # call form.save() for example).
-        response = super().form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                'pk': self.object.pk,
-            }
-            return JsonResponse(data)
-        else:
-            return response
-'''
-
-
 # NewOrder
 # TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
 #  remove and store invoices for customers. assign and remove employees on an order.
 class OrderCreateView(CreateView):
-    # global new_order
     model = Order
     form_class = OrderCreateForm
     template_name = 'shopping/order_step_1_create.html'
@@ -468,10 +324,6 @@ class OrderCreateView(CreateView):
         kwargs.update({"request": self.request})
         return kwargs
 
-    #def get_success_url(self, **kwargs):
-    #     obj = self.object
-    #     return reverse_lazy("product-list", kwargs={'pk': self.object.pk})
-
     def post(self, request, *args, **kwargs):
         """
         Handle POST requests: instantiate a form instance with the passed
@@ -482,31 +334,9 @@ class OrderCreateView(CreateView):
             self.object = form.save()
             new_order = self.object
             request.session['new_order'] = new_order.order_id
-            #print(new_order.order_id)
-            #print(request.session['new_order'])
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-
-    #def form_valid(self, form):
-       # self.object = form.save()
-      #  new_order = self.object
-        #request.session['new_order'] = new_order
-       #print(new_order.order_id)
-      #  print(new_order.pk)
-      #  return super().form_valid(form)
-        #return HttpResponseRedirect(redirect(self.get_success_url(), arg=new_order.pk))
-
-    #def post(self, request, *args, **kwargs):
-        #global new_order
-        #form = OrderCreateForm(request.POST)
-        #order = Order()
-
-    #    if form.is_valid():
-            #self.object = form.save()
-     #       new_order = form.save()
-     #       return HttpResponseRedirect(self.get_success_url())
-            #return render(request, 'shopping/order_step_1_create,html', {'order': new_order})
 
 
 def product_list(request):
@@ -523,12 +353,11 @@ def add_to_cart(request):
         if request.POST.get('quantity') and request.POST.get('inventory'):
             if request.POST.get('order'):
                 order_detail = OrderDetail()
-                # order_detail.order = Order.objects.latest('order_dt')
                 order_detail.order = Order.objects.get(pk=request.POST.get('order'))
                 inventory_id = request.POST.get('inventory')
                 order_detail.inventory = Inventory.objects.get(pk=inventory_id)
                 order_detail.quantity = request.POST.get('quantity')
-                #request.session['new_order'] = order_detail.order.order_id
+
                 while inserted is False:
                     try:
                         order_detail.save()
@@ -538,16 +367,12 @@ def add_to_cart(request):
                         query = OrderDetail.objects.filter(inventory=order_detail.inventory, order=order_detail.order)
                         query.update(quantity=F('quantity') + order_detail.quantity)
                         Inventory.objects.filter(pk=inventory_id).update(quantity=F('quantity') - order_detail.quantity)
-                        # print(query)
-                        # print('IntegrityError')
+
                         break
-                #return HttpResponseRedirect('order-summary')
-                #return render(request, 'shopping/order_step_3_summary.html')
                 return redirect('order-summary')
         return redirect('product-list')
 
 
-# TODO: order update
 class OrderSummaryView(generic.ListView):
     model = OrderDetail
     form_class = OrderDetailForm
@@ -560,7 +385,6 @@ class OrderSummaryView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(OrderSummaryView, self).get_context_data(**kwargs)
-        #context['total'] = self.get_queryset().count()
         queryset = self.get_queryset()
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
         subtotal = 0
@@ -571,36 +395,19 @@ class OrderSummaryView(generic.ListView):
 
         subtotal = Money(subtotal, Currency.USD)
         tax = subtotal * SALES_TAX_RATE
-        #tax = subtotal*Decimal(SALES_TAX_RATE)
 
         grand_total = subtotal + tax
         subtotal = subtotal.format('en_US')
         tax = tax.format('en_US')
         grand_total = grand_total.format('en_US')
 
-        #final_total = locale.currency(total, grouping=True)
-        #final_tax = locale.currency(tax, grouping=True)
-        #final_grand_total = final_total + final_tax
-        #final_grand_total = locale.currency(grand_total, grouping=True)
-
-        #context['total'] = final_total
-        #context['tax'] = final_tax
-        #context['grand_total'] = final_grand_total
         context['total'] = subtotal
         context['tax'] = tax
         context['grand_total'] = grand_total
         return context
 
-    #def get(self, request, *args, **kwargs):
-    #    stuff = self.get_queryset()
-    #    if request.GET.get('detail_id'):
-    #        detail_id = request.GET.get('detail_id')
-    #        OrderDetail.objects.filter(detail_id=detail_id).delete()
-    #    return render(request, self.template_name, {'stuff': stuff, })
-
     def post(self, request, *args, **kwargs):
         if request.POST.get('detail_id'):
-            print(2)
             detail_id = request.POST.get('detail_id')
             OrderDetail.objects.filter(detail_id=detail_id).delete()
             Inventory.objects.filter(
@@ -609,8 +416,6 @@ class OrderSummaryView(generic.ListView):
 
         if request.POST.get('submit_payment'):
             if request.POST.get('payment'):
-                print(1)
-
                 payment = request.POST.get('payment')
                 total_price = request.POST.get('total')
                 tax = request.POST.get('tax')
@@ -627,10 +432,8 @@ class OrderSummaryView(generic.ListView):
                 order.status = 'Complete'
                 order.save()
 
-                # TODO: invoice number
                 date = datetime.date.today()
                 year = date.strftime("%Y")
-                #year = year[2:]
                 month = date.strftime("%m")
                 day = date.strftime("%d")
 
@@ -657,29 +460,21 @@ class OrderSummaryView(generic.ListView):
                 messages.error(request, 'Payment method is required.')
                 return redirect('order-summary')
         elif request.POST.get('skip'):
-            print(3)
             total_price = request.POST.get('total')
             tax = request.POST.get('tax')
             grand_total = request.POST.get('grand_total')
-            # print(payment)
-            # print(type(total_price))
+
             order_id = self.request.session['new_order']
-            # print(order_id)
             order = Order.objects.get(pk=order_id)
 
-            #order.pay_type = payment
             order.total_price = Decimal(sub(r'[^\d.]', '', total_price))
             order.tax = Decimal(sub(r'[^\d.]', '', tax))
             order.grand_total = Decimal(sub(r'[^\d.]', '', grand_total))
 
             order.status = 'Pending'
             order.save()
-            #return redirect('order-summary')
             return render(request, 'shopping/order_step_4_stored.html', )
         return redirect('order-summary')
-        # return render(request, self.template_name, {'stuff': stuff, })
-        #return redirect('order-summary')
-
 
 
 class OrderListView(generic.ListView):
@@ -687,7 +482,6 @@ class OrderListView(generic.ListView):
     queryset = Order.objects.all()
     template_name = 'order/order_list.html'
     paginate_by = 25
-
 
 
 class OrderDetailView(generic.DetailView):
@@ -709,26 +503,16 @@ class OrderUpdateEmp(UpdateView):
 
 def edit_order_payment(request, pk):
     order_obj = get_object_or_404(Order, pk=pk)
-
     form = OrderUpdateForm(request.POST or None, instance=order_obj)
-
     order_details = OrderDetail.objects.filter(order_id=pk)
-
-    context = {'form': form, 'order': order_obj}
 
     if form.is_valid():
         order = form.save(commit=False)
         order.status = 'Complete'
         order.save()
 
-        #messages.success(request, "You successfully updated the post")
-
-        context = {'form': form}
-
-        # TODO: invoice number
         date = datetime.date.today()
         year = date.strftime("%Y")
-        #year = year[2:]
         month = date.strftime("%m")
         day = date.strftime("%d")
 
@@ -751,8 +535,6 @@ def edit_order_payment(request, pk):
 
         request.session['new_invoice'] = invoice.invoice_num
         return render(request, 'shopping/order_step_4_finish.html', )
-
-        #return render(request, 'order-detail', context)
 
     else:
         context = {'form': form, 'order': order_obj, 'order_details': order_details,}

@@ -309,7 +309,6 @@ class InventorySearchResultsView(generic.ListView):
         return object_list
 
 
-# NewOrder
 # TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
 #  remove and store invoices for customers. assign and remove employees on an order.
 class OrderCreateView(CreateView):
@@ -383,7 +382,7 @@ def save_invoice(order):
     serial_number_base = int(base_number_str)
 
     if Invoice.objects.filter(invoice_num__startswith=serial_number_base):
-        queryset = Invoice.objects.filter(invoice_num__startswith=serial_number_base).last()
+        queryset = Invoice.objects.filter(invoice_num__startswith=serial_number_base).first()
         serial_number = queryset.invoice_num + 1
         invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
                           invoice_num=serial_number, total_price=order.total_price, status='Paid',

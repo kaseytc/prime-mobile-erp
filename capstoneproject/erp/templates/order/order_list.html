@@ -24,7 +24,10 @@
         <td>{{order.status}}</td>
         <td>{{order.cust.fname}} {{order.cust.lname}}</td>
         <td><a href="{{order.order_id}}">View</a></td>
-        <td><a href="order_update/{{order.order_id}}">Update</a></td>
+        {% if order.status != 'Complete' %}
+        <td><a href="order_update_emp/{{order.order_id}}">Change Employee </a></td>
+        <td><a href="order_update_payment/{{order.order_id}}">Mark as Paid </a></td>
+        {% endif %}
     </tr>
 {% empty %}
     <li>No orders yet.</li>

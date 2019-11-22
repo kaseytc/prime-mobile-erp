@@ -46,22 +46,16 @@ urlpatterns += [
 # Order
 urlpatterns += [
     path('orders/', views.OrderListView.as_view(), name='order-list'),
-    path('add_order/', views.add_order, name='add-order'),
+    #path('add_order/', views.add_order, name='add-order'),
     path('orders/<pk>', views.OrderDetailView.as_view(), name='order-detail'),
     path('orders/order_confirm_delete/<pk>', views.OrderDelete.as_view(), name='order-delete'),
-    path('orders/order_update/<pk>', views.OrderUpdate.as_view(), name='order-update'),
+    #path('orders/order_update/<pk>', views.OrderUpdate.as_view(), name='order-update'),
+    path('orders/order_update_payment/<pk>', views.edit_order_payment, name='order-update-payment'),
+    path('orders/order_update_emp/<pk>', views.OrderUpdateEmp.as_view(), name='order-update-emp'),
 ]
 
-# Invoice
-urlpatterns += [
-    path('invoices/', views.InvoiceListView.as_view(), name='invoice-list'),
-    path('add_invoice/', views.add_invoice, name='add-invoice'),
-    path('invoices/<pk>', views.InvoiceDetailView.as_view(), name='invoice-detail'),
-    path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
-    path('invoices/invoice_update/<pk>', views.InvoiceUpdate.as_view(), name='invoice-update')
-]
 
-# NewOrder
+# Create Order
 urlpatterns += [
     path('order_create/', views.OrderCreateView.as_view(), name='order-create'), #step1
     path('product_list/', views.product_list, name='product-list'), #step2
@@ -69,10 +63,16 @@ urlpatterns += [
     path('order_summary/', views.OrderSummaryView.as_view(), name='order-summary'),
     #path('order_finish/', views.order_finish, name='order-finish'),
     #path('order_save/', views.order_save, name='order-save'),
-
     #path('order_item/', views.OrderItemView.as_view(), name='order-item'),
-
-
-
 ]
+
+# Invoice
+urlpatterns += [
+    path('invoices/', views.InvoiceListView.as_view(), name='invoice-list'),
+    #path('add_invoice/', views.add_invoice, name='add-invoice'),
+    path('invoices/<pk>', views.InvoiceDetailView.as_view(), name='invoice-detail'),
+    path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
+    #path('invoices/invoice_update/<pk>', views.InvoiceUpdate.as_view(), name='invoice-update')
+]
+
 

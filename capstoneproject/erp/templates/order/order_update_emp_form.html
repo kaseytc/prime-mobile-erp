@@ -17,8 +17,6 @@
         <tr><td><strong>Status:</strong></td><td>{{order.status}}</td></tr>
         <tr><td><strong>Customer:</strong></td><td>{{order.cust.fname}} {{order.cust.lname}}</td></tr>
         <tr><td><strong>Employee:</strong></td><td>{{order.emp.fname}} {{order.emp.lname}}</td></tr>
-
-        <!--<tr><td><strong>Payment Type:</strong></td><td>{{order.invoice.pay_type}}</td></tr>-->
         {% for order_detail in order_details %}
         <tr><td><strong>Item:</strong></td><td>{{order_detail.inventory}} </td>
             <td><strong>Quantity:</strong></td><td>{{order_detail.quantity}}</td></tr>
@@ -47,21 +45,4 @@
     </table>
 </form>
 
-<!--<form action="" method="post" id="paymentform"novalidate>{% csrf_token %}
-    <table>
-        <p>Select Payment Method:</p>
-        <td>
-        <select name="payment" form="paymentform" required>
-            <option selected disabled hidden>Choose payment method</option>
-            <option value="Cash">Cash</option>
-            <option value="VISA">VISA</option>
-            <option value="MasterCard">MasterCard</option>
-            <option value="AmEx">AmEx</option>
-        </select>
-            <td><input type="submit" value="Confirm" name="submit_payment"></td>
-    </td>
-
-    </table>
-
-</form>-->
 {% endblock %}

@@ -17,10 +17,11 @@ TITLE_TYPE_CHOICES = [
     ('Sales', 'Sales'),
 ]
 
-STATUS_CHOICES = [
+ORDER_STATUS_CHOICES = [
     ('Create', 'Create'),
     ('Pending', 'Pending'),
     ('Complete', 'Complete'),
+    ('Canceled', 'Canceled'),
 ]
 
 INVOICE_STATUS_CHOICES = [
@@ -158,7 +159,7 @@ class Invoice(models.Model):
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
     order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
-    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=ORDER_STATUS_CHOICES)
     cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
     emp = models.ForeignKey(Employee, models.DO_NOTHING, blank=True, null=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -175,7 +176,7 @@ class Order(models.Model):
     class Meta:
         managed = False
         db_table = 'Order'
-        ordering=['status', 'order_id',]
+        ordering=['-status', 'order_id',]
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
 

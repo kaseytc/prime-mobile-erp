@@ -24,9 +24,9 @@ import datetime
 
 
 from .models import Customer, Employee, Inventory, Invoice, Order, ErpUser, OrderDetail
-from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderForm, \
-    EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm, InvoiceForm, OrderUpdateForm, \
-    OrderDetailForm, OrderCreateForm
+from .forms import CustomerForm, EmployeeForm, InventoryForm, \
+    EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm, OrderUpdateForm, \
+    OrderDetailForm, OrderCreateForm, OrderUpdateEmpForm
 
 # Create your views here.
 
@@ -311,6 +311,7 @@ class InventorySearchResultsView(generic.ListView):
         return object_list
 
 
+'''
 # TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
 #  remove and store invoices for customers. assign and remove employees on an order.
 def add_order(request):
@@ -354,7 +355,7 @@ def add_order(request):
         if 'submitted' in request.GET:
             submitted = True
     return render(request, 'order/add_order.html', {'form': form, 'submitted': submitted})
-
+'''
 
 ''' 
      STATUS_CHOICES = [
@@ -384,30 +385,8 @@ def add_order(request):
 '''
 
 
-class OrderListView(generic.ListView):
-    model = Order
-    queryset = Order.objects.all()
-    template_name = 'order/order_list.html'
-    paginate_by = 25
 
-
-class OrderDetailView(generic.DetailView):
-    model = Order
-    template_name = 'order/order_detail.html'
-
-
-class OrderDelete(DeleteView):
-    model = Order
-    template_name = 'order/order_confirm_delete.html'
-    success_url = reverse_lazy('order-list')
-
-
-class OrderUpdate(UpdateView):
-    model = Order
-    form_class = OrderUpdateForm
-    template_name = 'order/order_update_form.html'
-
-
+'''
 def add_invoice(request):
     submitted = False
     inserted = False
@@ -426,31 +405,18 @@ def add_invoice(request):
         if 'submitted' in request.GET:
             submitted = True
     return render(request, 'invoice/add_invoice.html', {'form': form, 'submitted': submitted})
+'''
 
 
-class InvoiceListView(generic.ListView):
-    model = Invoice
-    queryset = Invoice.objects.all()
-    template_name = 'invoice/invoice_list.html'
-    paginate_by = 25
 
 
-class InvoiceDetailView(generic.DetailView):
-    model = Invoice
-    template_name = 'invoice/invoice_detail.html'
 
-
-class InvoiceDelete(DeleteView):
-    model = Invoice
-    template_name = 'invoice/invoice_confirm_delete.html'
-    success_url = reverse_lazy('invoice-list')
-
-
+'''
 class InvoiceUpdate(UpdateView):
     model = Invoice
     fields = '__all__'
     template_name = 'invoice/invoice_update_form.html'
-
+'''
 
 # class OrderItemView(CreateView):
 #    model = OrderDetail
@@ -484,6 +450,7 @@ class AjaxableResponseMixin:
         else:
             return response
 '''
+
 
 # NewOrder
 # TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
@@ -695,7 +662,6 @@ class OrderSummaryView(generic.ListView):
             tax = request.POST.get('tax')
             grand_total = request.POST.get('grand_total')
             # print(payment)
-
             # print(type(total_price))
             order_id = self.request.session['new_order']
             # print(order_id)
@@ -712,28 +678,114 @@ class OrderSummaryView(generic.ListView):
             return render(request, 'shopping/order_step_4_stored.html', )
         return redirect('order-summary')
         # return render(request, self.template_name, {'stuff': stuff, })
-
-
         #return redirect('order-summary')
 
 
-        #elif request.POST.get('payment'):
-        #    payment = request.POST.get('payment')
-        #    order = Order.objects.latest('order_dt')
-        #    order.pay_type = payment
-        #    order.save()
-            #OrderDetail.objects.filter(detail_id=detail_id).delete()
-            #stuff = self.get_queryset()
-       #     return redirect('order-summary')
-        #return render(request, self.template_name, {'stuff': stuff, })
+
+class OrderListView(generic.ListView):
+    model = Order
+    queryset = Order.objects.all()
+    template_name = 'order/order_list.html'
+    paginate_by = 25
 
 
-#def order_finish(request):
-#    return render(request, 'shopping/order_step_4_finish.html', locals())
+
+class OrderDetailView(generic.DetailView):
+    model = Order
+    template_name = 'order/order_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        order_details = OrderDetail.objects.filter(order_id=self.kwargs['pk'])
+        context['order_details'] = order_details
+        return context
 
 
-#def order_save(request):
-    #return render(request, 'shopping/order_step_4_stored.html', locals())
 
+
+class OrderUpdateEmp(UpdateView):
+    model = Order
+    form_class = OrderUpdateEmpForm
+    template_name = 'order/order_update_emp_form.html'
+
+
+
+
+def edit_order_payment(request, pk):
+    order_obj = get_object_or_404(Order, pk=pk)
+
+    form = OrderUpdateForm(request.POST or None, instance=order_obj)
+
+    order_details = OrderDetail.objects.filter(order_id=pk)
+
+    context = {'form': form, 'order': order_obj}
+
+    if form.is_valid():
+        order = form.save(commit=False)
+        order.status = 'Complete'
+        order.save()
+
+        #messages.success(request, "You successfully updated the post")
+
+        context = {'form': form}
+
+        # TODO: invoice number
+        date = datetime.date.today()
+        year = date.strftime("%Y")
+        year = year[2:]
+        month = date.strftime("%m")
+        day = date.strftime("%d")
+
+        base_number_str = year + month + day + str(order.cust.cust_id)
+        serial_number_base = int(base_number_str)
+
+        if Invoice.objects.filter(invoice_num__startswith=serial_number_base):
+            queryset = Invoice.objects.filter(invoice_num__startswith=serial_number_base).last()
+            serial_number = queryset.invoice_num + 1
+            invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
+                              invoice_num=serial_number, total_price=order.total_price, status='Paid',
+                              grand_total=order.grand_total, tax=order.tax, cust=order.cust)
+            invoice.save()
+        else:
+            serial_number = int(base_number_str + '01')
+            invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
+                              invoice_num=serial_number, total_price=order.total_price, status='Paid',
+                              grand_total=order.grand_total, tax=order.tax, cust=order.cust)
+            invoice.save()
+
+        request.session['new_invoice'] = invoice.invoice_id
+        return render(request, 'shopping/order_step_4_finish.html', )
+
+        #return render(request, 'order-detail', context)
+
+    else:
+        context = {'form': form, 'order': order_obj, 'order_details': order_details,}
+        return render(request, 'order/order_update_form.html', context)
+
+
+# TODO: order cancelled
+class OrderDelete(DeleteView):
+    model = Order
+    template_name = 'order/order_confirm_delete.html'
+    success_url = reverse_lazy('order-list')
+
+
+class InvoiceListView(generic.ListView):
+    model = Invoice
+    queryset = Invoice.objects.all()
+    template_name = 'invoice/invoice_list.html'
+    paginate_by = 25
+
+
+# TODO: invoice detail and print
+class InvoiceDetailView(generic.DetailView):
+    model = Invoice
+    template_name = 'invoice/invoice_detail.html'
+
+
+class InvoiceDelete(DeleteView):
+    model = Invoice
+    template_name = 'invoice/invoice_confirm_delete.html'
+    success_url = reverse_lazy('invoice-list')
 
 

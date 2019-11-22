@@ -4,16 +4,22 @@ from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Customer, Employee, Inventory, Invoice, Order, OrderDetail, ErpUser
+from .models import TITLE_TYPE_CHOICES, ORDER_STATUS_CHOICES, INVOICE_STATUS_CHOICES, PAY_TYPE_CHOICES
 
+
+PAY_TYPE_EMPTY = [('', '---------')] + PAY_TYPE_CHOICES
+
+'''
 TITLE_TYPE_CHOICES = [
     ('Manager', 'Manager'),
     ('Sales', 'Sales'),
 ]
 
-STATUS_CHOICES = [
+ORDER_STATUS_CHOICES = [
     ('Create', 'Create'),
     ('Pending', 'Pending'),
     ('Complete', 'Complete'),
+    ('Canceled', 'Canceled'),
 ]
 
 INVOICE_STATUS_CHOICES = [
@@ -24,12 +30,13 @@ INVOICE_STATUS_CHOICES = [
 
 PAY_TYPE_CHOICES = [
     #('Unpaid', 'Unpaid'),
+    ('', '---------'),
     ('Cash', 'Cash'),
     ('VISA', 'VISA'),
     ('MasterCard', 'MasterCard'),
     ('AmEx', 'AmEx'),
 ]
-
+'''
 
 class EmployeeForm(forms.Form):
     YEARS = [x for x in range(1950, 2010)]
@@ -139,6 +146,7 @@ class InventoryUpdateForm(forms.ModelForm):
                       inv_price=_('Price'), inv_desc=_('Description'))
 
 
+'''
 class OrderForm(forms.ModelForm):
     #required_css_class = 'required'
 
@@ -148,7 +156,7 @@ class OrderForm(forms.ModelForm):
     #quantity = forms.IntegerField(min_value=0, required=True)
     #price = forms.DecimalField(max_digits=10, decimal_places=2, required=True)
 
-    status = forms.ChoiceField(widget=forms.RadioSelect, choices=STATUS_CHOICES, label='Order Status', required=False)
+    status = forms.ChoiceField(widget=forms.RadioSelect, choices=ORDER_STATUS_CHOICES, label='Order Status', required=False)
     pay_type = forms.ChoiceField(choices=PAY_TYPE_CHOICES, label='Payment Type', required=False)
     #invoice = forms.ModelChoiceField(queryset=Invoice.objects.all())
 
@@ -157,28 +165,23 @@ class OrderForm(forms.ModelForm):
         fields = '__all__'
         #exclude = ['invoice', ]
         labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
+'''
 
 
-class OrderUpdateForm(forms.ModelForm):
-    #employee = Invoice.objects.last()
-
-    class Meta:
-        model = Order
-        fields = '__all__'
-        exclude = ['invoice', ]
-        labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
 
 
+'''
 class InvoiceForm(forms.ModelForm):
     #required_css_class = 'required'
 
     class Meta:
         model = Invoice
         fields = '__all__'
+'''
 
 
 class OrderCreateForm(forms.ModelForm):
-    status = forms.ChoiceField(widget=forms.HiddenInput(), choices=STATUS_CHOICES, required=True, initial='Create')
+    status = forms.ChoiceField(widget=forms.HiddenInput(), choices=ORDER_STATUS_CHOICES, required=True, initial='Create')
     emp = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=Employee.objects.all(),
                                  label='Employee Name', required=True)
     cust = forms.ModelChoiceField(queryset=Customer.objects.all(), label='Customer Name', required=True)
@@ -202,6 +205,37 @@ class OrderDetailForm(forms.ModelForm):
 
 
 
+class OrderUpdateForm(forms.ModelForm):
+    #status = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}),)
+    #emp = forms.ModelChoiceField(widget=forms.TextInput(attrs={'readonly':'readonly'}), queryset=Employee.objects.all(),
+    #                             label='Employee', )
+    #cust = forms.ModelChoiceField(widget=forms.TextInput(attrs={'readonly':'readonly'}), queryset=Customer.objects.all(), label='Customer', )
+    #total_price = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), )
+    #tax = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), )
+    #grand_total = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), )
+    pay_type = forms.ChoiceField(choices=PAY_TYPE_EMPTY, label='Payment Type', required=True)
+
+    class Meta:
+        model = Order
+        #fields = '__all__'
+        fields = ['pay_type', ]
+        #exclude = ['invoice', ]
+        #labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer'))
+
+
+class OrderUpdateEmpForm(forms.ModelForm):
+    #status = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}),)
+    emp = forms.ModelChoiceField(queryset=Employee.objects.all(), label='Employee', )
+    #cust = forms.ModelChoiceField(widget=forms.TextInput(attrs={'readonly':'readonly'}), queryset=Customer.objects.all(), label='Customer', )
+    #total_price = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), )
+    #tax = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), )
+    #grand_total = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), )
+    #pay_type = forms.ChoiceField(choices=PAY_TYPE_EMPTY, label='Payment Type', required=True)
+
+    class Meta:
+        model = Order
+        #fields = '__all__'
+        fields = ['emp', ]
 
 '''
     order_id = models.AutoField(primary_key=True)

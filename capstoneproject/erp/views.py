@@ -49,7 +49,7 @@ def logout_view(request):
     return render(request, 'logout.html', locals())
 
 
-# @permission_required('can add employee')
+@permission_required('can add employee')
 def add_employee(request):
     submitted = False
     inserted = False
@@ -99,11 +99,11 @@ class EmployeeDetailView(generic.DetailView):
     template_name = 'employee/employee_detail.html'
 
 
-# @permission_required('Can delete employee')
-class EmployeeDelete(DeleteView):
+class EmployeeDelete(PermissionRequiredMixin, DeleteView):
     model = Employee
     template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
+    permission_required = 'change_post'
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object(*args)
@@ -123,18 +123,17 @@ class EmployeeDelete(DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-# @permission_required('Can change employee')
-class EmployeeUpdate(UpdateView):
+class EmployeeUpdate(PermissionRequiredMixin, UpdateView):
     model = Employee
     form_class = EmployeeUpdateForm
     template_name = 'employee/employee_update_form.html'
+    permission_required = 'change_post'
 
 
 def search_employee(request):
     return render(request, 'employee/employee_search.html', locals())
 
 
-# class SearchResultsView(EmployeeListView):
 class EmployeeSearchResultsView(generic.ListView):
     template_name = 'employee/employee_search_result.html'
 

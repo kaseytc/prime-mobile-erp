@@ -224,6 +224,7 @@ class Invoice(models.Model):
     class Meta:
         managed = False
         db_table = 'Invoice'
+        ordering = ['-invoice_dt', ]
         verbose_name = 'Invoice'
         verbose_name_plural = 'Invoices'
 

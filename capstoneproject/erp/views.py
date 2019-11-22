@@ -630,7 +630,7 @@ class OrderSummaryView(generic.ListView):
                 # TODO: invoice number
                 date = datetime.date.today()
                 year = date.strftime("%Y")
-                year = year[2:]
+                #year = year[2:]
                 month = date.strftime("%m")
                 day = date.strftime("%d")
 
@@ -651,7 +651,7 @@ class OrderSummaryView(generic.ListView):
                                       grand_total=order.grand_total, tax=order.tax, cust=order.cust)
                     invoice.save()
 
-                request.session['new_invoice'] = invoice.invoice_id
+                request.session['new_invoice'] = invoice.invoice_num
                 return render(request, 'shopping/order_step_4_finish.html', )
             else:
                 messages.error(request, 'Payment method is required.')
@@ -701,14 +701,10 @@ class OrderDetailView(generic.DetailView):
         return context
 
 
-
-
 class OrderUpdateEmp(UpdateView):
     model = Order
     form_class = OrderUpdateEmpForm
     template_name = 'order/order_update_emp_form.html'
-
-
 
 
 def edit_order_payment(request, pk):
@@ -732,7 +728,7 @@ def edit_order_payment(request, pk):
         # TODO: invoice number
         date = datetime.date.today()
         year = date.strftime("%Y")
-        year = year[2:]
+        #year = year[2:]
         month = date.strftime("%m")
         day = date.strftime("%d")
 
@@ -753,7 +749,7 @@ def edit_order_payment(request, pk):
                               grand_total=order.grand_total, tax=order.tax, cust=order.cust)
             invoice.save()
 
-        request.session['new_invoice'] = invoice.invoice_id
+        request.session['new_invoice'] = invoice.invoice_num
         return render(request, 'shopping/order_step_4_finish.html', )
 
         #return render(request, 'order-detail', context)
@@ -777,10 +773,17 @@ class InvoiceListView(generic.ListView):
     paginate_by = 25
 
 
-# TODO: invoice detail and print
+# TODO: invoice print
 class InvoiceDetailView(generic.DetailView):
     model = Invoice
     template_name = 'invoice/invoice_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(InvoiceDetailView, self).get_context_data(**kwargs)
+        invoice = Invoice.objects.get(pk=self.kwargs['pk'])
+        order_details = OrderDetail.objects.filter(order_id=invoice.order)
+        context['order_details'] = order_details
+        return context
 
 
 class InvoiceDelete(DeleteView):

@@ -6,8 +6,6 @@
 
 <a href="javascript:history.back()">Back</a> |
 <a href="{% url 'product-list' %}">Add More Items</a>
-<!--<a href="">Select Payment Method</a>
-<a href="">Checkout</a>-->
 
 <header>
     <h1>Order Summary</h1>
@@ -39,18 +37,12 @@
     </form>
 {% empty %}
     <li>No items yet.</li>
+    <br>
 </table>
 
 {% endfor %}
 
 <table style="float:right;border-collapse:collapse;">
-    <!--<th></th>
-    <th></th>-->
-    <!--<th>Tax</th>
-    <th>Grand Total</th>
-<tr><td>Total Price: <span id="total">{{total}}</span></td>
-    <tr><td>Tax: <span >{{tax}}</span></td></tr>
-    <tr><td>Grand Total: <span >{{grand_total}}</span></td></tr>-->
     <tr><td>Total before tax:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</td><td style="float:right"> <span>{{total}}</span></td>
     <tr style="border-bottom: 1px solid #000;"><td>Estimated Tax:</td><td style="float:right"> <span >{{tax}}</span></td></tr>
     <tr style="color: brown;font-weight: bold;"><td>Order Total:</td><td style="float:right"> <span >{{grand_total}}</span></td></tr>
@@ -63,7 +55,7 @@
         <p>Select Payment Method:</p>
         <td>
         <select name="payment" form="paymentform" required>
-            <option selected disabled hidden>Choose payment method</option>
+            <option value="" disabled selected>Choose payment method</option>
             <option value="Cash">Cash</option>
             <option value="VISA">VISA</option>
             <option value="MasterCard">MasterCard</option>

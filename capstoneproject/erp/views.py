@@ -21,7 +21,7 @@ from re import sub
 
 from .models import Customer, Employee, ErpUser, Inventory, Invoice, Order, OrderDetail
 from .forms import CustomerForm, EmployeeForm, InventoryForm, OrderCreateForm, OrderDetailForm
-from .forms import EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm, OrderUpdateForm, OrderUpdateEmpForm
+from .forms import EmployeeUpdateForm, CustomerUpdateForm, InventoryUpdateForm, OrderUpdateForm
 
 import datetime
 import locale
@@ -373,6 +373,31 @@ def add_to_cart(request):
         return redirect('product-list')
 
 
+def save_invoice(order):
+    date = datetime.date.today()
+    year = date.strftime("%Y")
+    month = date.strftime("%m")
+    day = date.strftime("%d")
+
+    base_number_str = year + month + day + str(order.cust.cust_id)
+    serial_number_base = int(base_number_str)
+
+    if Invoice.objects.filter(invoice_num__startswith=serial_number_base):
+        queryset = Invoice.objects.filter(invoice_num__startswith=serial_number_base).last()
+        serial_number = queryset.invoice_num + 1
+        invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
+                          invoice_num=serial_number, total_price=order.total_price, status='Paid',
+                          grand_total=order.grand_total, tax=order.tax, cust=order.cust)
+        invoice.save()
+    else:
+        serial_number = int(base_number_str + '01')
+        invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
+                          invoice_num=serial_number, total_price=order.total_price, status='Paid',
+                          grand_total=order.grand_total, tax=order.tax, cust=order.cust)
+        invoice.save()
+    return invoice
+
+
 class OrderSummaryView(generic.ListView):
     model = OrderDetail
     form_class = OrderDetailForm
@@ -423,42 +448,20 @@ class OrderSummaryView(generic.ListView):
 
                 order_id = self.request.session['new_order']
                 order = Order.objects.get(pk=order_id)
-
                 order.pay_type = payment
                 order.total_price = Decimal(sub(r'[^\d.]', '', total_price))
                 order.tax = Decimal(sub(r'[^\d.]', '', tax))
                 order.grand_total = Decimal(sub(r'[^\d.]', '', grand_total))
-
                 order.status = 'Complete'
                 order.save()
 
-                date = datetime.date.today()
-                year = date.strftime("%Y")
-                month = date.strftime("%m")
-                day = date.strftime("%d")
-
-                base_number_str = year + month + day + str(order.cust.cust_id)
-                serial_number_base = int(base_number_str)
-
-                if Invoice.objects.filter(invoice_num__startswith=serial_number_base):
-                    queryset = Invoice.objects.filter(invoice_num__startswith=serial_number_base).last()
-                    serial_number = queryset.invoice_num + 1
-                    invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
-                                      invoice_num=serial_number, total_price=order.total_price, status='Paid',
-                                      grand_total=order.grand_total, tax=order.tax, cust=order.cust)
-                    invoice.save()
-                else:
-                    serial_number = int(base_number_str + '01')
-                    invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
-                                      invoice_num=serial_number, total_price=order.total_price, status='Paid',
-                                      grand_total=order.grand_total, tax=order.tax, cust=order.cust)
-                    invoice.save()
-
+                invoice = save_invoice(order)
                 request.session['new_invoice'] = invoice.invoice_num
                 return render(request, 'shopping/order_step_4_finish.html', )
             else:
                 messages.error(request, 'Payment method is required.')
                 return redirect('order-summary')
+
         elif request.POST.get('skip'):
             total_price = request.POST.get('total')
             tax = request.POST.get('tax')
@@ -466,11 +469,9 @@ class OrderSummaryView(generic.ListView):
 
             order_id = self.request.session['new_order']
             order = Order.objects.get(pk=order_id)
-
             order.total_price = Decimal(sub(r'[^\d.]', '', total_price))
             order.tax = Decimal(sub(r'[^\d.]', '', tax))
             order.grand_total = Decimal(sub(r'[^\d.]', '', grand_total))
-
             order.status = 'Pending'
             order.save()
             return render(request, 'shopping/order_step_4_stored.html', )
@@ -495,50 +496,37 @@ class OrderDetailView(generic.DetailView):
         return context
 
 
-class OrderUpdateEmp(UpdateView):
+class OrderUpdate(UpdateView):
     model = Order
-    form_class = OrderUpdateEmpForm
-    template_name = 'order/order_update_emp_form.html'
+    form_class = OrderUpdateForm
+    template_name = 'order/order_update_form.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(OrderUpdate, self).get_context_data(**kwargs)
+        order_details = OrderDetail.objects.filter(order_id=self.kwargs['pk'])
+        context['order_details'] = order_details
+        return context
 
-def edit_order_payment(request, pk):
-    order_obj = get_object_or_404(Order, pk=pk)
-    form = OrderUpdateForm(request.POST or None, instance=order_obj)
-    order_details = OrderDetail.objects.filter(order_id=pk)
+    def post(self, request, *args, **kwargs):
+        order = self.get_object(*args)
 
-    if form.is_valid():
-        order = form.save(commit=False)
-        order.status = 'Complete'
-        order.save()
+        if request.POST.get('pay_type'):
+            emp = Employee.objects.get(pk=request.POST.get('emp'))
+            order.emp = emp
+            order.pay_type = request.POST.get('pay_type')
+            order.status = 'Complete'
+            order.save()
 
-        date = datetime.date.today()
-        year = date.strftime("%Y")
-        month = date.strftime("%m")
-        day = date.strftime("%d")
+            invoice = save_invoice(order)
+            request.session['new_invoice'] = invoice.invoice_num
+            return render(request, 'shopping/order_step_4_finish.html', )
 
-        base_number_str = year + month + day + str(order.cust.cust_id)
-        serial_number_base = int(base_number_str)
-
-        if Invoice.objects.filter(invoice_num__startswith=serial_number_base):
-            queryset = Invoice.objects.filter(invoice_num__startswith=serial_number_base).last()
-            serial_number = queryset.invoice_num + 1
-            invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
-                              invoice_num=serial_number, total_price=order.total_price, status='Paid',
-                              grand_total=order.grand_total, tax=order.tax, cust=order.cust)
-            invoice.save()
         else:
-            serial_number = int(base_number_str + '01')
-            invoice = Invoice(order_id=order.order_id, pay_type=order.pay_type, emp=order.emp,
-                              invoice_num=serial_number, total_price=order.total_price, status='Paid',
-                              grand_total=order.grand_total, tax=order.tax, cust=order.cust)
-            invoice.save()
-
-        request.session['new_invoice'] = invoice.invoice_num
-        return render(request, 'shopping/order_step_4_finish.html', )
-
-    else:
-        context = {'form': form, 'order': order_obj, 'order_details': order_details,}
-        return render(request, 'order/order_update_form.html', context)
+            if request.POST.get('emp'):
+                emp = Employee.objects.get(pk=request.POST.get('emp'))
+                order.emp = emp
+                order.save()
+                return redirect('order-detail', pk=order.pk)
 
 
 # TODO: order cancelled

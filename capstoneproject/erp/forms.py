@@ -129,19 +129,13 @@ class OrderDetailForm(forms.ModelForm):
 
 
 class OrderUpdateForm(forms.ModelForm):
-    pay_type = forms.ChoiceField(choices=PAY_TYPE_EMPTY, label='Payment Type', required=True)
-
-    class Meta:
-        model = Order
-        fields = ['pay_type', ]
-
-
-class OrderUpdateEmpForm(forms.ModelForm):
     emp = forms.ModelChoiceField(queryset=Employee.objects.all(), label='Employee', )
+    pay_type = forms.ChoiceField(choices=PAY_TYPE_EMPTY, label='Payment Type', required=False)
 
     class Meta:
         model = Order
-        fields = ['emp', ]
+        fields = '__all__'
+
 
 
 

@@ -9,6 +9,7 @@
     <h3>Step 2: Select Inventories / Products Quantity</h3>
 </header>
 {{ message }}
+
 <div id="product-list">
     {% for product in object_list %}
         <div id="detail">
@@ -30,9 +31,6 @@
                     {% else %}
                     <br><span style="color:sienna;">This item is currently unavailable.</span>
 
-                {% comment %}
-                <!--<a href="{% url 'shopping_cart:add_to_cart' object.id %}" class="btn btn-warning">Add to Cart</a>-->
-                {% endcomment %}
                     {% endif %}
                 </fieldset>
             </form>

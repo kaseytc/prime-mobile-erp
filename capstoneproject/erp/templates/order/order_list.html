@@ -25,8 +25,10 @@
         <td>{{order.cust.fname}} {{order.cust.lname}}</td>
         <td><a href="{{order.order_id}}">View</a></td>
         {% if order.status != 'Complete' %}
-        <td><a href="order_update_emp/{{order.order_id}}">Change Employee </a></td>
-        <td><a href="order_update_payment/{{order.order_id}}">Mark as Paid </a></td>
+        <!--<td><a href="order_update_emp/{{order.order_id}}">Change Employee </a></td>-->
+        <td><a href="order_update/{{order.order_id}}">Update</a></td>
+        <!--<td><a href="order_confirm_delete/{{order.order_id}}">Delete</a></td>-->
+        <td><a href="order_confirm_cancel/{{order.order_id}}">Cancel</a></td>
         {% endif %}
     </tr>
 {% empty %}

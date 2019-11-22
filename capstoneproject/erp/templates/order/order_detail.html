@@ -22,6 +22,7 @@
         <tr><td><strong>Item:</strong></td><td>{{order_detail.inventory}} </td>
             <td><strong>Quantity:</strong></td><td>{{order_detail.quantity}}</td></tr>
         {% endfor %}
+
         <tr><td><strong>Subtotal:</strong></td><td style="float:right">{{order.total_price}}</td></tr>
         <tr><td><strong>Tax:</strong></td><td style="float:right">{{order.tax}}</td></tr>
         <tr><td><strong>Total Price:</strong></td><td style="float:right">{{order.grand_total}} </td></tr>

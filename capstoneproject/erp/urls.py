@@ -46,8 +46,7 @@ urlpatterns += [
 urlpatterns += [
     path('orders/', views.OrderListView.as_view(), name='order-list'),
     path('orders/<pk>', views.OrderDetailView.as_view(), name='order-detail'),
-    path('orders/order_confirm_delete/<pk>', views.OrderDelete.as_view(), name='order-delete'),
-    path('orders/order_confirm_cancel/<pk>', views.OrderDelete.as_view(), name='order-cancel'),
+    path('orders/order_confirm_cancel/<pk>', views.OrderCancel.as_view(), name='order-cancel'),
     path('orders/order_update/<pk>', views.OrderUpdate.as_view(), name='order-update'),
 ]
 

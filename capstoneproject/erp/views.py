@@ -529,11 +529,25 @@ class OrderUpdate(UpdateView):
                 return redirect('order-detail', pk=order.pk)
 
 
-# TODO: order cancelled
-class OrderDelete(DeleteView):
+class OrderCancel(generic.DetailView):
     model = Order
-    template_name = 'order/order_confirm_delete.html'
-    success_url = reverse_lazy('order-list')
+    template_name = 'order/order_confirm_cancel.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderCancel, self).get_context_data(**kwargs)
+        order_details = OrderDetail.objects.filter(order_id=self.kwargs['pk'])
+        context['order_details'] = order_details
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('cancel'):
+            Order.objects.filter(pk=self.kwargs['pk']).update(status='Cancelled')
+
+            order_details = OrderDetail.objects.filter(order_id=self.kwargs['pk'])
+            for item in order_details:
+                Inventory.objects.filter(pk=item.inventory.pk).update(quantity=F('quantity') + item.quantity)
+
+            return redirect('order-list')
 
 
 class InvoiceListView(generic.ListView):

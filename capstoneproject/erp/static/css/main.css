@@ -36,7 +36,7 @@ body a:hover, body a:focus {
 
 .logout {
       text-align: center;
-	  #margin: auto auto;
+	  margin: auto auto;
 	  padding: 5% 5%;
 	  font-size: 1.2em;
 	  display: block;

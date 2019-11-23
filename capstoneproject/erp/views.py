@@ -513,6 +513,9 @@ class OrderUpdate(UpdateView):
             emp = Employee.objects.get(pk=request.POST.get('emp'))
             order.emp = emp
             order.pay_type = request.POST.get('pay_type')
+            order.total_price = Decimal(sub(r'[^\d.]', '', order.total_price))
+            order.tax = Decimal(sub(r'[^\d.]', '', order.tax))
+            order.grand_total = Decimal(sub(r'[^\d.]', '', order.grand_total))
             order.status = 'Complete'
             order.save()
 
@@ -525,6 +528,9 @@ class OrderUpdate(UpdateView):
             if request.POST.get('emp'):
                 emp = Employee.objects.get(pk=request.POST.get('emp'))
                 order.emp = emp
+                order.total_price = Decimal(sub(r'[^\d.]', '', order.total_price))
+                order.tax = Decimal(sub(r'[^\d.]', '', order.tax))
+                order.grand_total = Decimal(sub(r'[^\d.]', '', order.grand_total))
                 order.save()
                 return redirect('order-detail', pk=order.pk)
 

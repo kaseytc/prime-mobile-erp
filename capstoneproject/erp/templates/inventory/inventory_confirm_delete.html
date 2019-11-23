@@ -3,11 +3,13 @@
 {% block title %}Delete inventory{% endblock %}
 
 {% block content %}
+
 <header>
     <h1>Delete Inventory Confirmation</h1>
 </header>
+
 <form action="" method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <p>Are you sure you want to delete <span style="color: brown;">{{ object }}</span>?</p>
     <input type="button" value="Cancel" onclick="history.back()">
     <input type="submit" value="Confirm" />
 </form>

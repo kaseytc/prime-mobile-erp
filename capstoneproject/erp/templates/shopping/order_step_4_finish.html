@@ -4,29 +4,16 @@
 
 {% block content %}
 
-<a href="javascript:history.back()">Back</a> |
 <a href="{% url 'index' %}">Home</a>
 
 <header>
     <h1>Order Completed</h1>
-    <!--<h3>Step 4: Finish</h3>-->
 </header>
 <hr class="mt-0 mb-4">
 
-<p>Thank you. The order was completed. The invoice ID is <span style="color: brown">{{request.session.new_invoice}}</span></p>
-<!--<form action="" method="post" novalidate>{% csrf_token %}
-    <table>
-        {{ form.as_table }}
-        <tr>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td></td>
-                <td><input type="reset" value="Reset">
-                    <input type="submit" value="Create"></td>
-        </tr>
-    </table>
-</form>-->
+<p>Thank you. The order was completed. The invoice number is <span style="color: brown">{{request.session.invoice_num}}</span></p>
+<a href="{% url 'invoice-detail' request.session.invoice_id%}" class="no-print" style="float:right">Check Invoice</a>
+
 {% endblock %}
 
 

@@ -3,8 +3,6 @@
 {% block title %}Add Employee{% endblock %}
 
 {% block content %}
-<!--<button onclick="history.back()">Back</button>
-<button onclick="location.href='/'">Back Home</button>-->
 <a href="javascript:history.back()">Back</a> |
 <a href="{% url 'index' %}">Home</a>
 
@@ -16,7 +14,6 @@
     <p class="success">
          New employee was submitted successfully. Thank you.
     </p>
-    <!--<p><a href="{% url 'index' %}">Back Home</a></p>-->
 
 {% else %}
     <form action="" method="post" novalidate>

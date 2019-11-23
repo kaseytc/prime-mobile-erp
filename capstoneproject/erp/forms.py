@@ -1,41 +1,18 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Customer, Employee, Inventory, Invoice, Order, OrderDetail, ErpUser
+from .models import Customer, Employee, ErpUser, Inventory, Order, OrderDetail
+from .models import ORDER_STATUS_CHOICES, PAY_TYPE_CHOICES, TITLE_TYPE_CHOICES
 
-TITLE_TYPE_CHOICES = [
-    ('Manager', 'Manager'),
-    ('Sales', 'Sales'),
-]
 
-STATUS_CHOICES = [
-    ('Create', 'Create'),
-    ('Pending', 'Pending'),
-    ('Complete', 'Complete'),
-]
-
-INVOICE_STATUS_CHOICES = [
-    ('Unpaid', 'Unpaid'),
-    ('Paid', 'Paid'),
-    #('Complete', 'Complete'),
-]
-
-PAY_TYPE_CHOICES = [
-    #('Unpaid', 'Unpaid'),
-    ('Cash', 'Cash'),
-    ('VISA', 'VISA'),
-    ('MasterCard', 'MasterCard'),
-    ('AmEx', 'AmEx'),
-]
+PAY_TYPE_EMPTY = [('', '---------')] + PAY_TYPE_CHOICES
 
 
 class EmployeeForm(forms.Form):
     YEARS = [x for x in range(1950, 2010)]
     phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
     zip_regex = RegexValidator(regex='^\d{5}$', message="Enter a valid ZIP code")
-    #required_css_class = 'required'
     first_name = forms.CharField(max_length=50, required=True)
     last_name = forms.CharField(max_length=50, required=True)
     title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True,)
@@ -54,11 +31,6 @@ class EmployeeForm(forms.Form):
 
 
 class EmployeeUpdateForm(forms.ModelForm):
-    TITLE_TYPE_CHOICES = [
-        ('Manager', 'Manager'),
-        ('Sales', 'Sales'),
-    ]
-    #YEARS = [x for x in range(1950, 2010)]
     phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
     zip_regex = RegexValidator(regex='^\d{5}$', message="Enter a valid ZIP code")
     title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True, )
@@ -68,8 +40,6 @@ class EmployeeUpdateForm(forms.ModelForm):
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}))
     email = forms.EmailField(max_length=100, required=False)
     zip = forms.CharField(max_length=5, required=False, validators=[zip_regex])
-    #dob = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
-    #                     required=False, label='Date of Birth')
 
     class Meta:
         model = Employee
@@ -83,7 +53,6 @@ class CustomerForm(forms.Form):
     YEARS = [x for x in range(1910, 2020)]
     phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
     zip_regex = RegexValidator(regex='^\d{5}$', message="Enter a valid ZIP code")
-    #required_css_class = 'required'
     first_name = forms.CharField(max_length=50, required=True)
     last_name = forms.CharField(max_length=50, required=True)
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
@@ -100,15 +69,12 @@ class CustomerForm(forms.Form):
 
 
 class CustomerUpdateForm(forms.ModelForm):
-    #YEARS = [x for x in range(1950, 2010)]
     phone_regex = RegexValidator(regex='^\d{3}-\d{3}-\d{4}$', message="Enter a valid phone number")
     zip_regex = RegexValidator(regex='^\d{5}$', message="Enter a valid ZIP code")
     phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}))
     email = forms.EmailField(max_length=100, required=False)
     zip = forms.CharField(max_length=5, required=False, validators=[zip_regex])
-    #dob = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
-    #                     required=False, label='Date of Birth')
 
     class Meta:
         model = Customer
@@ -119,7 +85,6 @@ class CustomerUpdateForm(forms.ModelForm):
 
 
 class InventoryForm(forms.Form):
-    #required_css_class = 'required'
     sku = forms.CharField(max_length=12, required=True, label='SKU')
     make = forms.CharField(max_length=50, required=True)
     model = forms.CharField(max_length=50, required=True)
@@ -139,46 +104,8 @@ class InventoryUpdateForm(forms.ModelForm):
                       inv_price=_('Price'), inv_desc=_('Description'))
 
 
-class OrderForm(forms.ModelForm):
-    #required_css_class = 'required'
-
-
-    #cust = forms.ModelChoiceField(queryset=Customer.objects.all(), required=True)
-    #inventory = forms.ModelChoiceField(queryset=Inventory.objects.all(), required=True)
-    #quantity = forms.IntegerField(min_value=0, required=True)
-    #price = forms.DecimalField(max_digits=10, decimal_places=2, required=True)
-
-    status = forms.ChoiceField(widget=forms.RadioSelect, choices=STATUS_CHOICES, label='Order Status', required=False)
-    pay_type = forms.ChoiceField(choices=PAY_TYPE_CHOICES, label='Payment Type', required=False)
-    #invoice = forms.ModelChoiceField(queryset=Invoice.objects.all())
-
-    class Meta:
-        model = Order
-        fields = '__all__'
-        #exclude = ['invoice', ]
-        labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
-
-
-class OrderUpdateForm(forms.ModelForm):
-    #employee = Invoice.objects.last()
-
-    class Meta:
-        model = Order
-        fields = '__all__'
-        exclude = ['invoice', ]
-        labels = dict(inventory=_('Inventory'), quantity=_('Quantity'), cust=_('Customer Name'))
-
-
-class InvoiceForm(forms.ModelForm):
-    #required_css_class = 'required'
-
-    class Meta:
-        model = Invoice
-        fields = '__all__'
-
-
 class OrderCreateForm(forms.ModelForm):
-    status = forms.ChoiceField(widget=forms.HiddenInput(), choices=STATUS_CHOICES, required=True, initial='Create')
+    status = forms.ChoiceField(widget=forms.HiddenInput(), choices=ORDER_STATUS_CHOICES, required=True, initial='Create')
     emp = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=Employee.objects.all(),
                                  label='Employee Name', required=True)
     cust = forms.ModelChoiceField(queryset=Customer.objects.all(), label='Customer Name', required=True)
@@ -201,27 +128,16 @@ class OrderDetailForm(forms.ModelForm):
         fields = '__all__'
 
 
+class OrderUpdateForm(forms.ModelForm):
+    emp = forms.ModelChoiceField(queryset=Employee.objects.all(), label='Employee', )
+    pay_type = forms.ChoiceField(choices=PAY_TYPE_EMPTY, label='Payment Type', required=False)
+
+    class Meta:
+        model = Order
+        fields = '__all__'
 
 
-'''
-    order_id = models.AutoField(primary_key=True)
-    order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
-    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_CHOICES)
-    cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
-    emp = models.ForeignKey(Employee, models.DO_NOTHING, blank=True, null=True)
-    
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    grand_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    pay_type = models.CharField(max_length=10, blank=True, null=True, choices=PAY_TYPE_CHOICES)
-    
-    
-    detail_id = models.AutoField(primary_key=True)
-    order = models.ForeignKey(Order, models.DO_NOTHING)
-    inventory = models.ForeignKey(Inventory, models.DO_NOTHING)
-    quantity = models.PositiveIntegerField(default=0)
-    
-'''
+
 
 
 

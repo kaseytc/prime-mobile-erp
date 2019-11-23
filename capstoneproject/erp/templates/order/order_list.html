@@ -22,9 +22,12 @@
         <td>{{order.order_id}}</td>
         <td>{{order.order_dt}}</td>
         <td>{{order.status}}</td>
-        <td>{{order.cust}}</td>
+        <td>{{order.cust.fname}} {{order.cust.lname}}</td>
         <td><a href="{{order.order_id}}">View</a></td>
+        {% if order.status != 'Complete' and order.status != 'Cancelled' %}
         <td><a href="order_update/{{order.order_id}}">Update</a></td>
+        <td><a href="order_confirm_cancel/{{order.order_id}}">Cancel</a></td>
+        {% endif %}
     </tr>
 {% empty %}
     <li>No orders yet.</li>

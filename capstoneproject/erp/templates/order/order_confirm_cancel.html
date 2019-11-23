@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Cancel order{% endblock %}
+
+{% block content %}
+<header>
+    <h1>Cancel Order Confirmation</h1>
+</header>
+<form action="" method="post">{% csrf_token %}
+    <p>Are you sure you want to cancel order <span style="color: brown;">{{ object }}</span>?</p>
+    <input type="button" value="Back" onclick="history.back()">
+    <input type="submit" name="cancel" value="Confirm" />
+</form>
+{% endblock %}

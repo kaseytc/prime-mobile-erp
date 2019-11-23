@@ -4,16 +4,14 @@
 
 {% block content %}
 
-<a href="javascript:history.back()">Back</a> |
 <a href="{% url 'index' %}">Home</a>
 
 <header>
     <h1>Order Waiting to be Paid</h1>
-    <!--<h3>Step 4: Finish</h3>-->
 </header>
 <hr class="mt-0 mb-4">
 
-<p>Thank you. The order was stored. Waiting to be paid.</p>
+<p>Thank you. The order was stored. Waiting to be paid. The order ID is <span style="color: brown">{{request.session.new_order}}</span></p>
 
 {% endblock %}
 

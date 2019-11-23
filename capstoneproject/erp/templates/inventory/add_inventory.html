@@ -3,8 +3,6 @@
 {% block title %}Add Inventory{% endblock %}
 
 {% block content %}
-<!--<button onclick="history.back()">Back</button>
-<button onclick="location.href='/'">Back Home</button>-->
 <a href="javascript:history.back()">Back</a> |
 <a href="{% url 'index' %}">Home</a>
 
@@ -12,11 +10,11 @@
 <h1>Add new inventory</h1>
 </header>
 <hr class="mt-0 mb-4">
+
 {% if submitted %}
     <p class="success">
          New inventory was submitted successfully. Thank you.
     </p>
-    <!--<p><a href="{% url 'index' %}">Back Home</a></p>-->
 
 {% else %}
     <form action="" method="post" novalidate>

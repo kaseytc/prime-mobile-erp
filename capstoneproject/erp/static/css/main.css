@@ -1,7 +1,16 @@
-.required label:after {
-    content: "*";
+/************** Print **************/
+@media print{
+.no-print {
+	display: none !important;
+}
 }
 
+/************** Header **************/
+header h1 {
+	font: bold small-caps 2em Tahoma, Arial, sans-serif;
+}
+
+/************** Body **************/
 #wrapper {
 	width: 80%;
 	text-align: left;
@@ -11,15 +20,9 @@
 .container {
 	padding: 2% 7% 5% 7%;
 }
-/************** Header **************/
-header h1 {
-	font: bold small-caps 2em Tahoma, Arial, sans-serif;
-}
-/************** Navigation **************/
 
-/************** Body **************/
 body {
-    padding: 2% 2% 0 20%;
+    padding: 2% 15% 0 15%;
 }
 body p { font:1.1em/1.6em Arial, Tahoma, sans-serif; }
 body a {
@@ -45,6 +48,10 @@ body a:hover, body a:focus {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+
+.required label:after {
+    content: "*";
 }
 
 

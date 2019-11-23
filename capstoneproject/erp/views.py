@@ -454,7 +454,8 @@ class OrderSummaryView(generic.ListView):
                 order.save()
 
                 invoice = save_invoice(order)
-                request.session['new_invoice'] = invoice.invoice_num
+                request.session['invoice_id'] = invoice.invoice_id
+                request.session['invoice_num'] = invoice.invoice_num
                 return render(request, 'shopping/order_step_4_finish.html', )
             else:
                 messages.error(request, 'Payment method is required.')
@@ -516,7 +517,8 @@ class OrderUpdate(UpdateView):
             order.save()
 
             invoice = save_invoice(order)
-            request.session['new_invoice'] = invoice.invoice_num
+            request.session['invoice_id'] = invoice.invoice_id
+            request.session['invoice_num'] = invoice.invoice_num
             return render(request, 'shopping/order_step_4_finish.html', )
 
         else:

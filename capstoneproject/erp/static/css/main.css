@@ -1,7 +1,11 @@
 /************** Print **************/
-@media print{
+@media print {
 .no-print {
 	display: none !important;
+}
+
+.print {
+  padding-top: 10%
 }
 }
 
@@ -22,7 +26,7 @@ header h1 {
 }
 
 body {
-    padding: 2% 15% 0 15%;
+    padding: 2% 10% 0 10%;
 }
 body p { font:1.1em/1.6em Arial, Tahoma, sans-serif; }
 body a {

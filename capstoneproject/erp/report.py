@@ -33,7 +33,7 @@ def popular_phone(request):
     df = df_merge.sort_values(by='quantity__sum', ascending=False)
 
     df = df.rename(columns={'inventory_id': 'Inventory ID', 'sku': 'SKU','make': 'Make',
-                            'model': 'Model','quantity__sum': 'Quantity'})
+                            'model': 'Model','quantity__sum': 'Unit Sold'})
 
     source = ColumnDataSource(df)
     columns = [TableColumn(field=Ci, title=Ci) for Ci in df.columns]  # bokeh columns
@@ -42,20 +42,35 @@ def popular_phone(request):
 
     return render(request, 'report/popular_phone.html', {'script': script, 'div': div, })
 
-'''
-select i.make, i.model, sum((inv_price * od.quantity) - (inv_cost * od.quantity)) as "profit"
-from "Inventory" i join "Order_Detail" od
-on i.inventory_id = od.inventory_id
-join "Invoice" inv
-on inv.order_id = od.order_id
-group by i.make, i.model
-order by profit desc
 
-Inventory profits
-
-'''
 def inventory_profits(request):
-    return render(request, 'report/customer_sales.html', locals())
+    query_invoice = str(Invoice.objects.values('order_id').query)
+    df_invoice = pd.read_sql_query(query_invoice, connection)
+
+    query_od = str(OrderDetail.objects.values('order_id', 'inventory_id', 'quantity').query)
+    df_od = pd.read_sql_query(query_od, connection)
+
+    query_inventory = str(Inventory.objects.values('inventory_id', 'make', 'model', 'inv_price', 'inv_cost').query)
+    df_inventory = pd.read_sql_query(query_inventory, connection)
+
+    df_merge_od_invoice = pd.merge(df_od, df_invoice, on='order_id', how='right')
+    df_merge = pd.merge(df_inventory, df_merge_od_invoice, on='inventory_id', how='right')
+    df_merge = df_merge.drop(['order_id', 'inventory_id'], axis=1)
+    df_merge = df_merge.groupby(['make', 'model', 'inv_price', 'inv_cost', ], as_index=False).sum()
+    df_merge['inv_price'] = df_merge['inv_price'].replace('[\$,]', '', regex=True).astype(float)
+    df_merge['inv_cost'] = df_merge['inv_cost'].replace('[\$,]', '', regex=True).astype(float)
+    df_merge['Profit'] = (df_merge['inv_price'] - df_merge['inv_cost']) * df_merge['quantity']
+    df_merge['Profit'] = ['${:,.2f}'.format(x) for x in df_merge['Profit']]
+
+    df = df_merge.drop(['inv_price', 'inv_cost', 'quantity'], axis=1)
+    df = df.sort_values(by='Profit', ascending=False)
+    df = df.rename(columns={'make': 'Make', 'model': 'Model'})
+
+    source = ColumnDataSource(df)
+    columns = [TableColumn(field=Ci, title=Ci) for Ci in df.columns]  # bokeh columns
+    data_table = DataTable(columns=columns, source=source)
+    script, div = components(data_table)
+    return render(request, 'report/inventory_profits.html', {'script': script, 'div': div, })
 
 
 def employee_sales(request):

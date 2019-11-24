@@ -5,15 +5,11 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.db.models import F, Q
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-import operator
-from django.http import Http404
-from django.http import JsonResponse
-from django.template import RequestContext
 from decimal import Decimal
 from money.currency import Currency
 from money.money import Money
@@ -308,8 +304,6 @@ class InventorySearchResultsView(generic.ListView):
         return object_list
 
 
-# TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
-#  remove and store invoices for customers. assign and remove employees on an order.
 class OrderCreateView(CreateView):
     model = Order
     form_class = OrderCreateForm
@@ -563,7 +557,6 @@ class InvoiceListView(generic.ListView):
     paginate_by = 25
 
 
-# TODO: invoice print
 class InvoiceDetailView(generic.DetailView):
     model = Invoice
     template_name = 'invoice/invoice_detail.html'
@@ -580,5 +573,6 @@ class InvoiceDelete(DeleteView):
     model = Invoice
     template_name = 'invoice/invoice_confirm_delete.html'
     success_url = reverse_lazy('invoice-list')
+
 
 

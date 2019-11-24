@@ -1,0 +1,18 @@
+{% extends "base_report.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<header>
+    <h1>Reports</h1>
+</header>
+
+<a href="{% url 'popular-phone' %}" target="iframe_a">Popular Phone</a> |
+<a href="{% url 'inventory-profits' %}" target="iframe_a">Inventory Profits</a> |
+<a href="{% url 'employee-sales' %}" target="iframe_a">Employee Sales</a> |
+<a href="{% url 'customer-sales' %}" target="iframe_a">Customer Sales</a>
+<br><br><br>
+
+<iframe height="800px" width="100%" src="popular_phone" name="iframe_a"></iframe>
+
+{% endblock %}

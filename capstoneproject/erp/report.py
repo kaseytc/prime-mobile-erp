@@ -24,9 +24,9 @@ import datetime as DT
 import io
 import numpy as np
 import pandas as pd
-import datetime
+from datetime import datetime
 import matplotlib.pyplot as plt
-
+from datetime import date
 
 def index(request):
     return render(request, 'report/report.html',locals())
@@ -135,22 +135,40 @@ def customer_sales(request):
     query_c = str(Customer.objects.values('cust_id', 'dob',).query)
     df_c = pd.read_sql_query(query_c, connection)
 
-    now = datetime.date.today().year
-    df_c['year'] = pd.DatetimeIndex(df_c['dob']).year
-    df_c['age'] = now - df_c['year']
-    df_c = df_c.drop(['dob', ], axis=1)
+    # calculate actual age
+    today = date.today()
+
+    for i in df_c['dob'].iteritems():
+        print(type(i[1]))
+        try:
+            age = today.year - i[1].year - ((today.month, today.day) < (i[1].month, i[1].day))
+            df_c.at[i[0], 'age'] = age
+        except AttributeError:
+            pass
+
+    #print(df_c)
+
+
+    #df_c = df_c.drop(['dob', ], axis=1)
 
     df_merge_od_i = pd.merge(df_i, df_od, on='inventory_id', how='right')
     df_merge_od_i_o = pd.merge(df_o, df_merge_od_i, on='order_id', how='right')
-    df_merge_od_i_o_c = pd.merge(df_c, df_merge_od_i_o, on='cust_id', how='right')
-    print(df_merge_od_i_o_c)
+    df_merge = pd.merge(df_c, df_merge_od_i_o, on='cust_id', how='right')
+    print(df_merge)
 
     # TODO: show bar chart or table
-    df_merge = df_merge_od_i_o_c.groupby(['age', 'make', 'model', ], as_index=False).sum()
-    series = df_merge_od_i_o_c.groupby(['age', 'make', 'model', ]).size()
-    print(series.keys)
-    print(type(series))
+    # Group by 'age', 'make', 'model'
+    df_groupby = df_merge.groupby(['age', 'make', 'model', ], as_index=False).sum()
+    series = df_groupby.groupby(['age', 'make', 'model', ]).size()
+    #print(series.keys)
+    #print(type(series))
     df = df_merge
+
+
+   # df = df_groupby
+
+
+    #print(df)
     #plt.clf()
     #df = series.plot(kind='bar')
     #plt.show()

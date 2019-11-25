@@ -134,7 +134,7 @@ class Inventory(models.Model):
 
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
-    order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
+    order_dt = models.DateTimeField(auto_now=True, auto_now_add=False, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True, choices=ORDER_STATUS_CHOICES)
     cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
     emp = models.ForeignKey(Employee, models.DO_NOTHING, blank=True, null=True)

@@ -12,10 +12,20 @@ from bokeh.io import output_file, show
 from bokeh.transform import factor_cmap
 from decimal import Decimal
 from re import sub
+from bokeh.core.properties import value
+from bokeh.io import show, output_file
+from bokeh.models import ColumnDataSource
+from bokeh.plotting import figure
+from bokeh.transform import dodge
 
 from .models import Customer, Employee, ErpUser, Inventory, Invoice, Order, OrderDetail
 
+import datetime as DT
+import io
+import numpy as np
 import pandas as pd
+import datetime
+import matplotlib.pyplot as plt
 
 
 def index(request):
@@ -60,10 +70,10 @@ def inventory_profits(request):
     df_merge['inv_price'] = df_merge['inv_price'].replace('[\$,]', '', regex=True).astype(float)
     df_merge['inv_cost'] = df_merge['inv_cost'].replace('[\$,]', '', regex=True).astype(float)
     df_merge['Profit'] = (df_merge['inv_price'] - df_merge['inv_cost']) * df_merge['quantity']
+    df_merge = df_merge.sort_values(by='Profit', ascending=False)
     df_merge['Profit'] = ['${:,.2f}'.format(x) for x in df_merge['Profit']]
 
     df = df_merge.drop(['inv_price', 'inv_cost', 'quantity'], axis=1)
-    df = df.sort_values(by='Profit', ascending=False)
     df = df.rename(columns={'make': 'Make', 'model': 'Model'})
 
     source = ColumnDataSource(df)
@@ -113,7 +123,80 @@ order by count(date_part('year', AGE(c.dob))) desc
 Sales per customer per age
 '''
 def customer_sales(request):
-    return render(request, 'report/customer_sales.html',locals())
+    query_o = str(Order.objects.values('order_id', 'cust_id').query)
+    df_o = pd.read_sql_query(query_o, connection)
+
+    query_od = str(OrderDetail.objects.values('order_id', 'inventory_id', 'quantity').query)
+    df_od = pd.read_sql_query(query_od, connection)
+
+    query_i = str(Inventory.objects.values('inventory_id', 'make', 'model').query)
+    df_i = pd.read_sql_query(query_i, connection)
+
+    query_c = str(Customer.objects.values('cust_id', 'dob',).query)
+    df_c = pd.read_sql_query(query_c, connection)
+
+    now = datetime.date.today().year
+    df_c['year'] = pd.DatetimeIndex(df_c['dob']).year
+    df_c['age'] = now - df_c['year']
+    df_c = df_c.drop(['dob', ], axis=1)
+
+    df_merge_od_i = pd.merge(df_i, df_od, on='inventory_id', how='right')
+    df_merge_od_i_o = pd.merge(df_o, df_merge_od_i, on='order_id', how='right')
+    df_merge_od_i_o_c = pd.merge(df_c, df_merge_od_i_o, on='cust_id', how='right')
+    print(df_merge_od_i_o_c)
+
+    # TODO: show bar chart or table
+    df_merge = df_merge_od_i_o_c.groupby(['age', 'make', 'model', ], as_index=False).sum()
+    series = df_merge_od_i_o_c.groupby(['age', 'make', 'model', ]).size()
+    print(series.keys)
+    print(type(series))
+    df = df_merge
+    #plt.clf()
+    #df = series.plot(kind='bar')
+    #plt.show()
+
+    #source = ColumnDataSource(data=data)
+
+    # get max possible value of plotted columns with some offset
+    #p = figure(x_range=dates, y_range=(0, g1[['fail', 'Pass']].values.max() + 3),
+    #           plot_height=250, title="Report",
+    #           toolbar_location=None, tools="")
+
+    #p.vbar(x=dodge('Report_datetime', -0.25, range=p.x_range), top='fail', width=0.4, source=source,
+    #       color="#c9d9d3", legend=value("fail"))
+
+   # p.vbar(x=dodge('Report_datetime', 0.25, range=p.x_range), top='Pass', width=0.4, source=source,
+    #       color="#718dbf", legend=value("Pass"))
+
+   # p.x_range.range_padding = 0.1
+   # p.xgrid.grid_line_color = None
+   # p.legend.location = "top_left"
+   # p.legend.orientation = "horizontal"
+
+    #df = pd.DataFrame(df_merge)
+
+    #df = df_merge.sort_values(by='Profit', ascending=False)
+
+    #df_merge_od_i_o = pd.merge(df_o, df_merge_od_i, on='order_id', how='right')
+    #print(df_merge_od_i)
+    #df_merge = pd.merge(df_inventory, df_merge_od_invoice, on='inventory_id', how='right')
+    #df_merge = df_merge.drop(['order_id', 'inventory_id'], axis=1)
+    #df_merge = df_merge.groupby(['make', 'model', 'inv_price', 'inv_cost', ], as_index=False).sum()
+    #df_merge['inv_price'] = df_merge['inv_price'].replace('[\$,]', '', regex=True).astype(float)
+    #df_merge['inv_cost'] = df_merge['inv_cost'].replace('[\$,]', '', regex=True).astype(float)
+    #df_merge['Profit'] = (df_merge['inv_price'] - df_merge['inv_cost']) * df_merge['quantity']
+    #df_merge['Profit'] = ['${:,.2f}'.format(x) for x in df_merge['Profit']]
+
+    #df = df_merge.drop(['inv_price', 'inv_cost', 'quantity'], axis=1)
+    #df = df.sort_values(by='Profit', ascending=False)
+    #df = df.rename(columns={'make': 'Make', 'model': 'Model'})
+
+    source = ColumnDataSource(df)
+    columns = [TableColumn(field=Ci, title=Ci) for Ci in df.columns]  # bokeh columns
+    data_table = DataTable(columns=columns, source=source)
+    script, div = components(data_table)
+    return render(request, 'report/customer_sales.html', {'script': script, 'div': div, })
+    #return render(request, 'report/customer_sales.html',locals())
 
 
 

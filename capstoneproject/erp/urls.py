@@ -71,7 +71,8 @@ urlpatterns += [
     path('report/popular_phone/', report.popular_phone, name='popular-phone'),
     path('report/inventory_profits/', report.inventory_profits, name='inventory-profits'),
     path('report/employee_sales/', report.employee_sales, name='employee-sales'),
-    path('report/customer_sales/', report.customer_sales, name='customer-sales'),
+    path('report/customer_sales_table/', report.customer_sales_table, name='customer-sales-table'),
+    path('report/customer_sales_graph/', report.customer_sales_table, name='customer-sales-graph'),
 ]
 
 

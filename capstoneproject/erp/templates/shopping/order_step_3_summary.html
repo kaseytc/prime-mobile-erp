@@ -14,12 +14,14 @@
 <hr class="mt-0 mb-4">
 
 <table>
+    {% if object_list|length > 0 %}
     <tr>
         <th>Order ID</th>
         <th>Inventory</th>
         <th>Quantity</th>
         <th>Unit Price</th>
     </tr>
+    {% endif %}
 
 {% for item in object_list %}
     <form action="" method="post" novalidate>{% csrf_token %}
@@ -49,6 +51,7 @@
 </tr>
 </table>
 
+{% if object_list %}
 <form action="" method="post" id="paymentform"novalidate>{% csrf_token %}
     <table>
         <br><br><br>
@@ -71,6 +74,7 @@
     </table>
 
 </form>
+{% endif %}
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}

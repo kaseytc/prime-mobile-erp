@@ -144,6 +144,7 @@ class EmployeeSearchResultsView(generic.ListView):
                     Q(fname__icontains=q) |
                     Q(lname__icontains=q)
                 )
+            object_list = set(object_list)
         return object_list
 
 
@@ -223,7 +224,7 @@ class CustomerSearchResultsView(generic.ListView):
                     Q(fname__icontains=q) |
                     Q(lname__icontains=q)
                 )
-
+        object_list = set(object_list)
         return object_list
 
 
@@ -301,6 +302,7 @@ class InventorySearchResultsView(generic.ListView):
                     Q(make__icontains=q) |
                     Q(model__icontains=q)
                 )
+        object_list = set(object_list)
         return object_list
 
 
@@ -569,10 +571,11 @@ class InvoiceDetailView(generic.DetailView):
         return context
 
 
+'''
 class InvoiceDelete(DeleteView):
     model = Invoice
     template_name = 'invoice/invoice_confirm_delete.html'
     success_url = reverse_lazy('invoice-list')
 
-
+'''
 

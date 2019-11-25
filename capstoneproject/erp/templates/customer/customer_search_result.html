@@ -10,20 +10,22 @@
 <h1>Customer search result</h1>
 </header>
 <table>
+    {% if object_list|length > 0 %}
     <tr>
         <th>Cust ID</th>
         <th>First Name</th>
         <th>Last Name</th>
     </tr>
+    {% endif %}
 
 {% for customer in object_list %}
     <tr>
         <td>{{customer.cust_id}}</td>
         <td>{{customer.fname}}</td>
         <td>{{customer.lname}}</td>
-        <td><a href="../customers/{{customer.cust_id}}">View</a></td>
-        <td><a href="../customers/customer_update/{{customer.cust_id}}">Update</a></td>
-        <td><a href="../customers/customer_confirm_delete/{{customer.cust_id}}">Delete</a></td>
+        <td><a href="{% url 'customer-detail' customer.cust_id %}">View</a></td>
+        <td><a href="{% url 'customer-update' customer.cust_id %}">Update</a></td>
+        <td><a href="{% url 'customer-delete' customer.cust_id %}">Delete</a></td>
     </tr>
 {% empty %}
     <li>No search result.</li>

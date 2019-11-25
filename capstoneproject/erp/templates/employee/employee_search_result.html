@@ -10,12 +10,14 @@
 <h1>Employee search result</h1>
 </header>
 <table>
+    {% if object_list|length > 0 %}
     <tr>
         <th>Emp ID</th>
         <th>Title</th>
         <th>First Name</th>
         <th>Last Name</th>
     </tr>
+    {% endif %}
 
 {% for employee in object_list %}
     <tr>
@@ -23,10 +25,10 @@
         <td>{{employee.title}}</td>
         <td>{{employee.fname}}</td>
         <td>{{employee.lname}}</td>
-        <td><a href="../employees/{{employee.emp_id}}">View</a></td>
-        <td><a href="../employees/employee_update/{{employee.emp_id}}">Update</a></td>
+        <td><a href="{% url 'employee-detail' employee.emp_id %}">View</a></td>
+        <td><a href="{% url 'employee-update' employee.emp_id %}">Update</a></td>
         {% if employee.title != "Owner" and employee.title != "Manager" %}
-             <td><a href="../employees/employee_confirm_delete/{{employee.emp_id}}">Delete</a></td>
+        <td><a href="{% url 'employee-delete' employee.emp_id %}">Delete</a></td>
         {% endif %}
     </tr>
 {% empty %}

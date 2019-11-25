@@ -22,9 +22,9 @@
         <td>{{customer.cust_id}}</td>
         <td>{{customer.fname}}</td>
         <td>{{customer.lname}}</td>
-        <td><a href="{{customer.cust_id}}">View</a></td>
-        <td><a href="customer_update/{{customer.cust_id}}">Update</a></td>
-        <td><a href="customer_confirm_delete/{{customer.cust_id}}">Delete</a></td>
+        <td><a href="{% url 'customer-detail' customer.cust_id %}">View</a></td>
+        <td><a href="{% url 'customer-update' customer.cust_id %}">Update</a></td>
+        <td><a href="{% url 'customer-delete' customer.cust_id %}">Delete</a></td>
     </tr>
 {% empty %}
     <li>No customers yet.</li>

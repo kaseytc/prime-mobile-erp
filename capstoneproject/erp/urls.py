@@ -62,7 +62,7 @@ urlpatterns += [
 urlpatterns += [
     path('invoices/', views.InvoiceListView.as_view(), name='invoice-list'),
     path('invoices/<pk>', views.InvoiceDetailView.as_view(), name='invoice-detail'),
-    path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
+    # path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
 ]
 
 # Report
@@ -73,3 +73,5 @@ urlpatterns += [
     path('report/employee_sales/', report.employee_sales, name='employee-sales'),
     path('report/customer_sales/', report.customer_sales, name='customer-sales'),
 ]
+
+

@@ -12,6 +12,7 @@
 <hr class="mt-0 mb-4">
 
 <p>Thank you. The order was stored. Waiting to be paid. The order ID is <span style="color: brown">{{request.session.new_order}}</span></p>
+<a href="{% url 'order-detail' request.session.new_order%}" class="no-print" style="float:right">Check Order Detail</a>
 
 {% endblock %}
 

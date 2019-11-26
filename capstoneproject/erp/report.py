@@ -1,5 +1,5 @@
 from bokeh.embed import components
-from bokeh.models import ColumnDataSource
+from bokeh.models import ColumnDataSource, FactorRange
 from bokeh.models.widgets import DataTable, DateFormatter, TableColumn
 from datetime import date
 from django.db import connection
@@ -14,6 +14,13 @@ from bokeh.core.properties import value
 from bokeh.io import show, output_file
 from bokeh.plotting import figure
 from bokeh.transform import dodge
+from bokeh.palettes import Spectral5
+import bokeh.palettes
+from bokeh.io import output_file, show
+from bokeh.palettes import Category20c
+from bokeh.plotting import figure
+from bokeh.transform import cumsum
+from math import pi
 
 from .models import Customer, Employee, Inventory, Invoice, Order, OrderDetail
 
@@ -130,12 +137,28 @@ def get_customer_sales_data():
     df_merge = pd.merge(df_c, df_merge_od_i_o, on='cust_id', how='right')
     df_merge = df_merge.drop(['dob', 'cust_id', 'order_id', ], axis=1)
 
-    # Group by 'age', 'make', 'model'
-    df_groupby = df_merge.groupby(['age', 'inventory_id', 'make', 'model', ], as_index=False).sum()
-    df = df_groupby
-    df = df.sort_values(by='age', ascending=True)
-    df = df.rename(columns={'age': 'Age', 'inventory_id': 'Inventory ID',
-                            'make': 'Make', 'model': 'Model', 'quantity': 'Unit Sold', })
+    df = df_merge.rename(columns={'age': 'Age', 'inventory_id': 'Inventory ID',
+                                  'make': 'Make', 'model': 'Model', 'quantity': 'Unit Sold', })
+
+    for i in df['Age'].iteritems():
+        if i[1] < 20:
+            df.at[i[0], 'Age Group'] = '< 20'
+        elif 20 <= i[1] < 30:
+            df.at[i[0], 'Age Group'] = '20-30'
+        elif 30 <= i[1] < 40:
+            df.at[i[0], 'Age Group'] = '30-40'
+        elif 40 <= i[1] < 50:
+            df.at[i[0], 'Age Group'] = '40-50'
+        elif 50 <= i[1] < 60:
+            df.at[i[0], 'Age Group'] = '50-60'
+        else:
+            df.at[i[0], 'Age Group'] = '> 60'
+
+    df = df[['Age Group', 'Age', 'Inventory ID', 'Make', 'Model', 'Unit Sold']]
+    df = df.groupby(['Age Group', 'Inventory ID', 'Make', 'Model'], as_index=False).sum()
+    df = df.sort_values(by=['Age Group', 'Unit Sold'], ascending=[True, False])
+    df = df.drop(['Age', ], axis=1)
+
     return df
 
 
@@ -147,26 +170,5 @@ def customer_sales_table(request):
     data_table = DataTable(columns=columns, source=source)
     script, div = components(data_table)
     return render(request, 'report/customer_sales_table.html', {'script': script, 'div': div, })
-
-
-# TODO: show bar chart
-def customer_sales_graph(request):
-    df = get_customer_sales_data()
-
-    source = ColumnDataSource(df)
-    columns = [TableColumn(field=Ci, title=Ci) for Ci in df.columns]  # bokeh columns
-    data_table = DataTable(columns=columns, source=source)
-    script, div = components(data_table)
-    return render(request, 'report/customer_sales_graph.html', {'script': script, 'div': div, })
-    #return render(request, 'report/customer_sales_graph.html',locals())
-
-
-
-
-
-
-
-
-
 
 

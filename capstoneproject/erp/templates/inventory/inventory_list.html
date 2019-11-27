@@ -11,12 +11,14 @@
 </header>
 
 <table>
+    {% if object_list|length > 0 %}
     <tr>
         <th>Inventory ID</th>
         <th>Make</th>
         <th>Model</th>
         <th>Quantity</th>
     </tr>
+     {% endif %}
 
 {% for inventory in object_list %}
     <tr>

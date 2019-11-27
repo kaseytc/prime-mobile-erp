@@ -152,7 +152,7 @@ class Order(models.Model):
     class Meta:
         managed = False
         db_table = 'Order'
-        ordering=['-status', '-order_dt', 'order_id', 'emp',]
+        ordering=['-order_dt', '-status', 'order_id', 'cust',]
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
 

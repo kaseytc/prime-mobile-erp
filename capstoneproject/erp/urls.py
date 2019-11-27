@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView
 from django.urls import path
 
-from . import views
+from . import views, report
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -63,6 +63,16 @@ urlpatterns += [
     path('invoices/', views.InvoiceListView.as_view(), name='invoice-list'),
     path('invoices/<pk>', views.InvoiceDetailView.as_view(), name='invoice-detail'),
     path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
+]
+
+# Report
+urlpatterns += [
+    path('report/', report.index, name='report'),
+    path('report/popular_phone/', report.popular_phone, name='popular-phone'),
+    path('report/inventory_profits/', report.inventory_profits, name='inventory-profits'),
+    path('report/employee_sales/', report.employee_sales, name='employee-sales'),
+    path('report/customer_sales_table/', report.customer_sales_table, name='customer-sales-table'),
+    path('report/customer_sales_graph/', report.customer_sales_graph, name='customer-sales-graph'),
 ]
 
 

@@ -22,6 +22,7 @@
         <tr><td><strong>Payment Type:</strong></td><td>{{invoice.pay_type}}</td></tr>
         <tr><td><strong>Employee:</strong></td><td>{{invoice.emp.fname}} {{invoice.emp.lname}}</td></tr>
         <tr><td><strong>Customer:</strong></td><td>{{invoice.cust.fname}} {{invoice.cust.lname}}</td></tr>
+        <tr><td><strong>Order ID:</strong></td><td>{{invoice.order_id}}</td></tr>
 
         {% for order_detail in order_details %}
         <tr><td><strong>Item:</strong></td><td>{{order_detail.inventory}} </td>

@@ -18,7 +18,7 @@ class EmployeeForm(forms.Form):
     title = forms.ChoiceField(widget=forms.RadioSelect, choices=TITLE_TYPE_CHOICES, required=True,)
     manager = forms.ModelChoiceField(queryset=Employee.objects.filter(title__in=["Manager", "Owner"]), required=False)
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
-                                    required=False, label='Date of Birth',
+                                    required=True, label='Date of Birth',
                                     help_text='DOB cannot be updated later')
     phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}))
@@ -56,7 +56,7 @@ class CustomerForm(forms.Form):
     first_name = forms.CharField(max_length=50, required=True)
     last_name = forms.CharField(max_length=50, required=True)
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(years=YEARS),
-                                    required=False, label='Date of Birth',
+                                    required=True, label='Date of Birth',
                                     help_text='DOB cannot be updated later')
     phone = forms.CharField(max_length=12, required=False, validators=[phone_regex],
                             widget=forms.TextInput(attrs={'placeholder': 'xxx-xxx-xxxx'}),)

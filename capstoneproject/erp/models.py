@@ -134,7 +134,7 @@ class Inventory(models.Model):
 
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True)
-    order_dt = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
+    order_dt = models.DateTimeField(auto_now=True, auto_now_add=False, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True, choices=ORDER_STATUS_CHOICES)
     cust = models.ForeignKey(Customer, models.DO_NOTHING, blank=True, null=True)
     emp = models.ForeignKey(Employee, models.DO_NOTHING, blank=True, null=True)
@@ -152,7 +152,7 @@ class Order(models.Model):
     class Meta:
         managed = False
         db_table = 'Order'
-        ordering=['-status', '-order_dt', 'order_id', 'emp',]
+        ordering=['-order_dt', '-status', 'order_id', 'cust',]
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
 
@@ -199,4 +199,6 @@ class Invoice(models.Model):
         ordering = ['-invoice_dt', ]
         verbose_name = 'Invoice'
         verbose_name_plural = 'Invoices'
+
+
 

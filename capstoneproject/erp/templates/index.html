@@ -97,7 +97,7 @@
         <div class="col-sm-4">
           <div class="well">
             <h4>User Admin</h4>
-            <p><a href="../admin/auth/user/">To Admin Site</a></p>
+            <p><a href="../admin/auth/user/">Admin Site</a></p>
           </div>
         </div>
       </div>
@@ -105,7 +105,8 @@
         <div class="col-sm-8">
           <div class="well">
             <h4>Reports</h4>
-            <p><a href="../admin/explorer/query/">View</a></p>
+            <p><a href="{% url 'report' %}">View</a></p>
+            <p><a href="../admin/explorer/query/">Explorer</a></p>
           </div>
         </div>
       </div>
@@ -154,7 +155,7 @@
       {% endif %}
   </div>
   </div>
-  <br><br>
+  <br><br><br>
   <footer>
         <p><small>Copyright © 2019. All rights reserved.</small></p>
   </footer>

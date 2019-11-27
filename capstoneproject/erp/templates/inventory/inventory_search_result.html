@@ -10,20 +10,22 @@
 <h1>Inventory search result</h1>
 </header>
 <table>
+    {% if object_list|length > 0 %}
     <tr>
         <th>Inventory ID</th>
         <th>Make</th>
         <th>Model</th>
     </tr>
+    {% endif %}
 
 {% for inventory in object_list %}
     <tr>
         <td>{{inventory.inventory_id}}</td>
         <td>{{inventory.make}}</td>
         <td>{{inventory.model}}</td>
-        <td><a href="../inventories/{{inventory.inventory_id}}">View</a></td>
-        <td><a href="../inventories/inventory_update/{{inventory.inventory_id}}">Update</a></td>
-        <td><a href="../inventories/inventory_confirm_delete/{{inventory.inventory_id}}">Delete</a></td>
+        <td><a href="{% url 'inventory-detail' inventory.inventory_id %}">View</a></td>
+        <td><a href="{% url 'inventory-update' inventory.inventory_id %}">Update</a></td>
+        <td><a href="{% url 'inventory-delete' inventory.inventory_id %}">Delete</a></td>
     </tr>
 {% empty %}
     <li>No search result.</li>

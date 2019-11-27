@@ -10,21 +10,23 @@
 <h1>Show orders data</h1>
 </header>
 <table>
+    {% if object_list|length > 0 %}
     <tr>
         <th>Order ID</th>
         <th>Order Time</th>
         <th>Status</th>
         <th>Customer Name</th>
     </tr>
+    {% endif %}
 
 {% for order in object_list %}
     <tr>
         <td>{{order.order_id}}</td>
         <td>{{order.order_dt}}</td>
-        <td>{{order.status}}</td>
         <td>{{order.cust.fname}} {{order.cust.lname}}</td>
+        <td>{{order.status}}</td>
         <td><a href="{{order.order_id}}">View</a></td>
-        {% if order.status != 'Complete' and order.status != 'Cancelled' %}
+        {% if order.status != 'Complete' and order.status != 'Cancelled' and order.status != 'Refund' %}
         <td><a href="order_update/{{order.order_id}}">Update</a></td>
         <td><a href="order_confirm_cancel/{{order.order_id}}">Cancel</a></td>
         {% endif %}

@@ -5,15 +5,11 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.db.models import F, Q
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-import operator
-from django.http import Http404
-from django.http import JsonResponse
-from django.template import RequestContext
 from decimal import Decimal
 from money.currency import Currency
 from money.money import Money
@@ -49,7 +45,7 @@ def logout_view(request):
     return render(request, 'logout.html', locals())
 
 
-@permission_required('can add employee')
+@permission_required('erp.add_employee')
 def add_employee(request):
     submitted = False
     inserted = False
@@ -103,7 +99,7 @@ class EmployeeDelete(PermissionRequiredMixin, DeleteView):
     model = Employee
     template_name = 'employee/employee_confirm_delete.html'
     success_url = reverse_lazy('employee-list')
-    permission_required = 'change_post'
+    permission_required = 'erp.delete_employee'
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object(*args)
@@ -127,7 +123,7 @@ class EmployeeUpdate(PermissionRequiredMixin, UpdateView):
     model = Employee
     form_class = EmployeeUpdateForm
     template_name = 'employee/employee_update_form.html'
-    permission_required = 'change_post'
+    permission_required = 'erp.change_employee'
 
 
 def search_employee(request):
@@ -148,6 +144,7 @@ class EmployeeSearchResultsView(generic.ListView):
                     Q(fname__icontains=q) |
                     Q(lname__icontains=q)
                 )
+            object_list = set(object_list)
         return object_list
 
 
@@ -227,7 +224,7 @@ class CustomerSearchResultsView(generic.ListView):
                     Q(fname__icontains=q) |
                     Q(lname__icontains=q)
                 )
-
+        object_list = set(object_list)
         return object_list
 
 
@@ -305,11 +302,10 @@ class InventorySearchResultsView(generic.ListView):
                     Q(make__icontains=q) |
                     Q(model__icontains=q)
                 )
+        object_list = set(object_list)
         return object_list
 
 
-# TODO: the ability to charge tax on an order. create, mark an invoice as paid when payment has been taken. \
-#  remove and store invoices for customers. assign and remove employees on an order.
 class OrderCreateView(CreateView):
     model = Order
     form_class = OrderCreateForm
@@ -430,6 +426,11 @@ class OrderSummaryView(generic.ListView):
         return context
 
     def post(self, request, *args, **kwargs):
+        if request.POST.get('cancel'):
+            order_id = self.request.session['new_order']
+            Order.objects.filter(order_id=order_id).delete()
+            return redirect('index')
+
         if request.POST.get('detail_id'):
             detail_id = request.POST.get('detail_id')
             OrderDetail.objects.filter(detail_id=detail_id).delete()
@@ -563,7 +564,6 @@ class InvoiceListView(generic.ListView):
     paginate_by = 25
 
 
-# TODO: invoice print
 class InvoiceDetailView(generic.DetailView):
     model = Invoice
     template_name = 'invoice/invoice_detail.html'
@@ -580,5 +580,21 @@ class InvoiceDelete(DeleteView):
     model = Invoice
     template_name = 'invoice/invoice_confirm_delete.html'
     success_url = reverse_lazy('invoice-list')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object(*args)
+
+        # delete invoice data
+        try:
+            order_id = self.object.order_id
+            order_details = OrderDetail.objects.filter(order_id=order_id)
+            for item in order_details:
+                Inventory.objects.filter(pk=item.inventory.pk).update(quantity=F('quantity') + item.quantity)
+
+            Order.objects.filter(pk=order_id).update(status='Refund')
+        except OrderDetail.DoesNotExist:
+            print("OrderDetail does not exist")
+        self.object.delete()
+        return HttpResponseRedirect(self.get_success_url())
 
 

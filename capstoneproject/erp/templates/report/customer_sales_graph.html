@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/bokeh-1.4.0.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bokeh-tables-1.4.0.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bokeh-widgets-1.4.0.min.js' %}"></script>
+    <title>Customer Sales</title>
+</head>
+<body>
+<header>
+<h1> Customer Sales </h1>
+</header>
+
+<div>
+    {{ script | safe }}
+    {{ div | safe }}
+</div>
+<br>
+<div>
+    {{ script2 | safe }}
+    {{ div2 | safe }}
+</div>
+<br>
+<div>
+    {{ script3 | safe }}
+    {{ div3 | safe }}
+</div>
+<br>
+<div>
+    {{ script4 | safe }}
+    {{ div4 | safe }}
+</div>
+<br>
+<div>
+    {{ script5 | safe }}
+    {{ div5 | safe }}
+</div>
+<br>
+<div>
+    {{ script6 | safe }}
+    {{ div6 | safe }}
+</div>
+
+</body>
+</html>

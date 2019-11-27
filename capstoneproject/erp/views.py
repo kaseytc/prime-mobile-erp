@@ -576,11 +576,25 @@ class InvoiceDetailView(generic.DetailView):
         return context
 
 
-'''
 class InvoiceDelete(DeleteView):
     model = Invoice
     template_name = 'invoice/invoice_confirm_delete.html'
     success_url = reverse_lazy('invoice-list')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object(*args)
 
-'''
+        # delete invoice data
+        try:
+            order_id = self.object.order_id
+            order_details = OrderDetail.objects.filter(order_id=order_id)
+            for item in order_details:
+                Inventory.objects.filter(pk=item.inventory.pk).update(quantity=F('quantity') + item.quantity)
+
+            Order.objects.filter(pk=order_id).update(status='Refund')
+        except OrderDetail.DoesNotExist:
+            print("OrderDetail does not exist")
+        self.object.delete()
+        return HttpResponseRedirect(self.get_success_url())
+
 

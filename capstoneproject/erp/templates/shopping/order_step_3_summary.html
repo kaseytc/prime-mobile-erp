@@ -39,6 +39,12 @@
     </form>
 {% empty %}
     <li>No items yet.</li>
+    <form action="" method="post" novalidate>{% csrf_token %}
+    <tr>
+        <td><input type="hidden" name="order" value="{{request.session.new_order}}" readonly >
+            <input type="submit" name="cancel" value="Cancel Order and Back Home"></td>
+    </tr>
+    </form>
     <br>
 </table>
 

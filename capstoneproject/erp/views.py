@@ -426,6 +426,11 @@ class OrderSummaryView(generic.ListView):
         return context
 
     def post(self, request, *args, **kwargs):
+        if request.POST.get('cancel'):
+            order_id = self.request.session['new_order']
+            Order.objects.filter(order_id=order_id).delete()
+            return redirect('index')
+
         if request.POST.get('detail_id'):
             detail_id = request.POST.get('detail_id')
             OrderDetail.objects.filter(detail_id=detail_id).delete()

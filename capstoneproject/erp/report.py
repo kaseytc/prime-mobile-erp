@@ -1,33 +1,16 @@
 from bokeh.embed import components
-from bokeh.models import ColumnDataSource, FactorRange
-from bokeh.models.widgets import DataTable, DateFormatter, TableColumn
+from bokeh.models import ColumnDataSource
+from bokeh.models.widgets import DataTable, TableColumn
 from datetime import date
 from django.db import connection
 from django.db.models import Sum
-from django.shortcuts import redirect, render, render_to_response
+from django.shortcuts import render
 from django_pandas.io import read_frame
-from bokeh.plotting import figure, output_file, show
-from bokeh.models.tools import HoverTool
-from bokeh.io import output_file, show
-from bokeh.transform import factor_cmap
-from bokeh.core.properties import value
-from bokeh.io import show, output_file
 from bokeh.plotting import figure
-from bokeh.transform import dodge
-from bokeh.palettes import Spectral5
-import bokeh.palettes
-from bokeh.io import output_file, show
-from bokeh.palettes import Category20c
-from bokeh.plotting import figure
-from bokeh.transform import cumsum
-from math import pi
 
 from .models import Customer, Employee, Inventory, Invoice, Order, OrderDetail
 
-import io
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 
 def index(request):
@@ -156,10 +139,30 @@ def get_customer_sales_data():
 
     df = df[['Age Group', 'Age', 'Inventory ID', 'Make', 'Model', 'Unit Sold']]
     df = df.groupby(['Age Group', 'Inventory ID', 'Make', 'Model'], as_index=False).sum()
+    df['Age Group'] = pd.Categorical(df['Age Group'], ['< 20', '20-30', '30-40', '40-50', '50-60', '> 60'])
     df = df.sort_values(by=['Age Group', 'Unit Sold'], ascending=[True, False])
     df = df.drop(['Age', ], axis=1)
 
     return df
+
+
+def get_age_group(age):
+    df = get_customer_sales_data()
+    df['Inventory'] = df['Make'] + " " + df['Model']
+    df = df.drop(['Inventory ID', ], axis=1)
+
+    if age is 0:
+        return df[df['Age Group'] == '< 20']
+    if age is 20:
+        return df[df['Age Group'] == '20-30']
+    if age is 30:
+        return df[df['Age Group'] == '30-40']
+    if age is 40:
+        return df[df['Age Group'] == '40-50']
+    if age is 50:
+        return df[df['Age Group'] == '50-60']
+    if age is 60:
+        return df[df['Age Group'] == '> 60']
 
 
 def customer_sales_table(request):
@@ -170,5 +173,80 @@ def customer_sales_table(request):
     data_table = DataTable(columns=columns, source=source)
     script, div = components(data_table)
     return render(request, 'report/customer_sales_table.html', {'script': script, 'div': div, })
+
+
+def get_plot(age):
+    df = get_age_group(age)
+
+    source = ColumnDataSource(df)
+    inventory = source.data['Inventory'].tolist()
+    unit_sold = source.data['Unit Sold'].tolist()
+    title = "Unit Sold: Age " + df.iloc[0]["Age Group"]
+
+    p = figure(x_range=inventory, plot_height=250, title=title,
+               toolbar_location=None, tools="")
+    p.vbar(x=inventory, top=unit_sold, width=0.6)
+
+    p.xgrid.grid_line_color = None
+    p.y_range.start = 0
+
+    return p
+
+
+def customer_sales_graph(request):
+    components_dict = dict()
+
+    try:
+        p_0 = get_plot(0)
+        script, div = components(p_0)
+        components_dict.update({'script': script, 'div': div, })
+    except IndexError:
+        pass
+
+    try:
+        p_20 = get_plot(20)
+        script2, div2 = components(p_20)
+        components_dict.update({'script2': script2, 'div2': div2, })
+    except IndexError:
+        pass
+
+    try:
+        p_30 = get_plot(30)
+        script3, div3 = components(p_30)
+        components_dict.update({'script3': script3, 'div3': div3, })
+    except IndexError:
+        pass
+
+    try:
+        p_40 = get_plot(40)
+        script4, div4 = components(p_40)
+        components_dict.update({'script4': script4, 'div4': div4, })
+    except IndexError:
+        pass
+
+    try:
+        p_50 = get_plot(50)
+        script5, div5 = components(p_50)
+        components_dict.update({'script5': script5, 'div5': div5, })
+    except IndexError:
+        pass
+
+    try:
+        p_60 = get_plot(60)
+        script6, div6 = components(p_60)
+        components_dict.update({'script6': script6, 'div6': div6, })
+    except IndexError:
+        pass
+
+    return render(request, 'report/customer_sales_graph.html', components_dict)
+
+
+
+
+
+
+
+
+
 
 

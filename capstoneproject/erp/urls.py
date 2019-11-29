@@ -62,7 +62,6 @@ urlpatterns += [
 urlpatterns += [
     path('invoices/', views.InvoiceListView.as_view(), name='invoice-list'),
     path('invoices/<pk>', views.InvoiceDetailView.as_view(), name='invoice-detail'),
-    path('invoices/invoice_confirm_delete/<pk>', views.InvoiceDelete.as_view(), name='invoice-delete'),
 ]
 
 # Report

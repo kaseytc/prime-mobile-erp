@@ -17,6 +17,7 @@
         <th>Invoice Number</th>
         <th>Payment Type</th>
         <th>Employee</th>
+        <th>Customer</th>
     </tr>
      {% endif %}
 
@@ -27,8 +28,8 @@
         <td>{{invoice.invoice_num}}</td>
         <td>{{invoice.pay_type}}</td>
         <td>{{invoice.emp}}</td>
+        <td>{{invoice.cust.fname}} {{invoice.cust.lname}}</td>
         <td><a href="{{invoice.invoice_id}}">View</a></td>
-        <td><a href="invoice_confirm_delete/{{invoice.invoice_id}}">Delete</a></td>
     </tr>
 {% empty %}
     <li>No orders yet.</li>

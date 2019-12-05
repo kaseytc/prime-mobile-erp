@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Cannot be deleted{% endblock %}
+
+{% block content %}
+<a href="javascript:history.back()">Back</a> |
+<a href="{% url 'index' %}">Home</a>
+
+<header>
+<h1>Cannot be deleted</h1>
+</header>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

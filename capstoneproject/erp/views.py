@@ -104,6 +104,7 @@ class EmployeeDelete(PermissionRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object(*args)
         user_account_id = None
+
         # delete ErpUser data
         try:
             user_account_id = ErpUser.objects.get(emp=self.object.emp_id).account_id
@@ -115,8 +116,14 @@ class EmployeeDelete(PermissionRequiredMixin, DeleteView):
             User.objects.get(pk=user_account_id).delete()
         except User.DoesNotExist:
             print("User does not exist")
-        self.object.delete()
-        return HttpResponseRedirect(self.get_success_url())
+
+        # check order
+        try:
+            self.object.delete()
+            return HttpResponseRedirect(self.get_success_url())
+        except IntegrityError:
+            messages.error(request, 'This Employee related to Order records. Cannot be deleted')
+            return render(request, 'delete_error.html', locals())
 
 
 class EmployeeUpdate(PermissionRequiredMixin, UpdateView):
@@ -199,6 +206,17 @@ class CustomerDelete(DeleteView):
     template_name = 'customer/customer_confirm_delete.html'
     success_url = reverse_lazy('customer-list')
 
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object(*args)
+
+        # check order
+        try:
+            self.object.delete()
+            return HttpResponseRedirect(self.get_success_url())
+        except IntegrityError:
+            messages.error(request, 'This Customer related to Order records. Cannot be deleted')
+            return render(request, 'delete_error.html', locals())
+
 
 class CustomerUpdate(UpdateView):
     model = Customer
@@ -277,6 +295,17 @@ class InventoryDelete(DeleteView):
     model = Inventory
     template_name = 'inventory/inventory_confirm_delete.html'
     success_url = reverse_lazy('inventory-list')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object(*args)
+
+        # check order
+        try:
+            self.object.delete()
+            return HttpResponseRedirect(self.get_success_url())
+        except IntegrityError:
+            messages.error(request, 'This Inventory related to Order records. Cannot be deleted')
+            return render(request, 'delete_error.html', locals())
 
 
 class InventoryUpdate(UpdateView):

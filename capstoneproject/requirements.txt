@@ -28,7 +28,7 @@ olefile==0.46
 openpyxl==3.0.2
 packaging==19.2
 pandas==0.25.3
-Pillow==6.2.1
+Pillow==8.1.1
 psycopg2==2.8.4
 py-money==0.4.0
 pyparsing==2.4.5
